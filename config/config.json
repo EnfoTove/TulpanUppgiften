@@ -1,0 +1,28 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "tulip-list-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/tulipList/TulipListWebPart.js",
+          "manifest": "./src/webparts/tulipList/TulipListWebPart.manifest.json"
+        }
+      ]
+    },
+    "add-item-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/addItem/AddItemWebPart.js",
+          "manifest": "./src/webparts/addItem/AddItemWebPart.manifest.json"
+        }
+      ]
+    }
+
+  },
+  "externals": {},
+  "localizedResources": {
+    "TulipListWebPartStrings": "lib/webparts/tulipList/loc/{locale}.js",
+    "AddItemWebPartStrings": "lib/webparts/addItem/loc/{locale}.js"
+  }
+}

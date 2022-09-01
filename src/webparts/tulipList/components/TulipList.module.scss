@@ -1,0 +1,72 @@
+@import '~office-ui-fabric-react/dist/sass/References.scss';
+
+.tulipList {
+  .container {
+    max-width: 700px;
+    margin: 0px auto;
+    padding:0.5rem;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  .row {
+    @include ms-Grid-row;
+    @include ms-fontColor-white;
+    background-color: $ms-color-themeDark;
+    padding: 20px;
+  }
+
+  .column {
+    @include ms-Grid-col;
+    @include ms-lg10;
+    @include ms-xl8;
+    @include ms-xlPush2;
+    @include ms-lgPush1;
+  }
+
+  .titleContainer{
+    width:80%;
+    margin:auto;
+
+    .title {
+      margin-left:32%;
+      @include ms-font-xl;
+      @include ms-fontColor-black;
+      font-weight: 600;
+    }
+  }
+
+  .subTitle {
+    @include ms-font-l;
+    @include ms-fontColor-white;
+  }
+
+  .description {
+    @include ms-font-l;
+    @include ms-fontColor-white;
+  }
+
+  .button {
+    margin:0.5rem 0;
+  }
+  #getTulipList{
+    width:8rem;
+    margin:1rem auto;
+  }
+
+  .label{
+    font-weight:600;
+    margin-right: 0.5rem;
+  }
+
+  .listItemContainer{
+    max-width:80%;
+
+    .listItems{
+      .listItem{
+        padding:0;
+        margin:0;
+
+      }
+    }
+  }
+}
