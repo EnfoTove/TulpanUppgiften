@@ -16,8 +16,9 @@ import TulipList from './components/TulipList';
 
 export interface ITulipListWebPartProps {
   description: string;
+  listName: string;
 }
-const listName = "EnfokamTulipsTove";
+const listName = "EnfokamTulipsTove6";
 export default class TulipListWebPart extends BaseClientSideWebPart<ITulipListWebPartProps> {
   private _tulips: ITulipsListItem[] = [];
 
@@ -27,6 +28,8 @@ export default class TulipListWebPart extends BaseClientSideWebPart<ITulipListWe
             {
               title: this.properties.description,
               listItems: this._tulips,
+              listName: this.properties.listName,
+              websiteURL:this.context.pageContext.web.absoluteUrl,
               onGetListItems: this._onGetListItems,
               onDeleteListItem: this._onDeleteListItem,
             }
@@ -167,15 +170,18 @@ export default class TulipListWebPart extends BaseClientSideWebPart<ITulipListWe
       return {
         pages: [
           {
-            header: {
-              description: strings.PropertyPaneDescription
-            },
+            // header: {
+            //   description: strings.PropertyPaneDescription
+            // },
             groups: [
               {
-                groupName: strings.BasicGroupName,
+                //groupName: strings.BasicGroupName,
                 groupFields: [
                   PropertyPaneTextField('description', {
                     label: strings.TitleFieldLabel
+                  }),
+                  PropertyPaneTextField('listName', {
+                    label: strings.ListNameFieldLabel
                   })
                 ]
               }

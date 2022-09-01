@@ -15,14 +15,15 @@
         "default": "Other"
       },
       "title": {
-        "default": "tulipList"
+        "default": "Enfokam Tulips"
       },
       "description": {
         "default": "tulipList description"
       },
-      "officeFabricIconFontName": "Page",
+      "officeFabricIconFontName": "Flower",
       "properties": {
-        "description": "Enfokam Tulips"
+        "description": "Enfokam Tulips",
+        "listName": "EnfokamTulipsTove6"
       }
     }
   ],

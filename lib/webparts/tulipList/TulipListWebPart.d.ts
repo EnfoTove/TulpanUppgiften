@@ -3,6 +3,7 @@ import { IPropertyPaneConfiguration } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 export interface ITulipListWebPartProps {
     description: string;
+    listName: string;
 }
 export default class TulipListWebPart extends BaseClientSideWebPart<ITulipListWebPartProps> {
     private _tulips;

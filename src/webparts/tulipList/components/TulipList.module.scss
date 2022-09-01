@@ -15,6 +15,10 @@
     padding: 20px;
   }
 
+  .listName{
+    font-size: 17px;
+  }
+
   .column {
     @include ms-Grid-col;
     @include ms-lg10;
@@ -35,9 +39,16 @@
     }
   }
 
+  .subTitleContainer{
+    display:flex;
+    gap:1rem;
+  }
+
   .subTitle {
     @include ms-font-l;
-    @include ms-fontColor-white;
+    @include ms-fontColor-black;
+    margin:0;
+    padding:0;
   }
 
   .description {

@@ -98,6 +98,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "cDcd");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TulipList.module.scss */ "CdNF");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! jquery */ "EVdn");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_2__);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -113,35 +115,47 @@ var __extends = (undefined && undefined.__extends) || (function () {
 })();
 
 
+
 var TulipList = /** @class */ (function (_super) {
     __extends(TulipList, _super);
-    function TulipList() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
+    function TulipList(props, state) {
+        var _this = _super.call(this, props) || this;
         _this._onGetListItemsClicked = function (event) {
             event.preventDefault();
             _this.props.onGetListItems();
         };
+        _this.state = {
+            listItems: [
+                {
+                    ID: null,
+                    Title: " ",
+                    ManufacturingPrice: null,
+                    RetailPrice: null,
+                    TulipResponsible: { Id: null },
+                    Author: { Id: null }
+                }
+            ],
+            title: " ",
+            listName: "EnfokamTulipsTove6"
+        };
+        TulipList.siteURL = _this.props.websiteURL;
         return _this;
     }
     TulipList.prototype.render = function () {
-        var _this = this;
-        var _a = this.props, title = _a.title, listItems = _a.listItems;
-        //   useEffect(() => {
-        //     try{
-        //         {this.props.onGetListItems()}
-        //       }
-        //       catch(error){
-        //         return alert("API call failed." + error);
-        //       }
-        // }, [])
+        // const {
+        //   title,
+        //   listItems,
+        //   listName
+        // } = this.props;
         return (react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].tulipList },
             react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].container },
                 react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].titleContainer },
                     react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("span", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].title }, this.props.title)),
-                react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].button, id: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].getTulipList },
-                    react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("button", { type: "button", onClick: this._onGetListItemsClicked }, "Get tulip list")),
+                react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].subTitleContainer },
+                    react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("span", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].subTitle }, "List: "),
+                    react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("span", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].listName }, this.props.listName)),
                 react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].listItemContainer },
-                    react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("ul", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].listItems }, listItems && listItems.map(function (list) {
+                    react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("ul", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].listItems }, this.state.listItems && this.state.listItems.map(function (list) {
                         return react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("li", { key: list.Title },
                             react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].listItem },
                                 react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("p", null,
@@ -167,14 +181,29 @@ var TulipList = /** @class */ (function (_super) {
                             react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].listItem },
                                 react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("p", null,
                                     react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("span", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].label }, "Tulip creator ID:"),
-                                    list.Author.Id)),
-                            react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].button },
-                                react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("button", { name: list.ID.toString(), type: "button", onClick: function () { return _this._clickHandler(list); } }, "Delete Item")));
+                                    list.Author.Id)));
                     }))))));
+    };
+    TulipList.prototype.componentDidMount = function () {
+        var context = this;
+        jquery__WEBPACK_IMPORTED_MODULE_2__["ajax"]({
+            url: TulipList.siteURL + "/_api/web/lists/getbytitle('" + this.props.listName + "')/items?$select= ID, Title, ManufacturingPrice, RetailPrice, TulipResponsible/Id, Author/Id&$expand=TulipResponsible/Id, Author/AuthorId",
+            type: "GET",
+            headers: { 'Accept': 'application/json; odata=verbose;' },
+            success: function (resultData) {
+                context.setState({
+                    listItems: resultData.d.results
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("jqXHR: " + jqXHR, "textStatus: " + textStatus, "errorThrown: " + errorThrown);
+            }
+        });
     };
     TulipList.prototype._clickHandler = function (item) {
         this.props.onDeleteListItem(item);
     };
+    TulipList.siteURL = "";
     return TulipList;
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]));
 /* harmony default export */ __webpack_exports__["default"] = (TulipList);
@@ -216,21 +245,23 @@ __webpack_require__.r(__webpack_exports__);
 /* tslint:disable */
 __webpack_require__(/*! ./TulipList.module.css */ "szXn");
 var styles = {
-    tulipList: 'tulipList_01c43cab',
-    container: 'container_01c43cab',
-    row: 'row_01c43cab',
-    column: 'column_01c43cab',
-    'ms-Grid': 'ms-Grid_01c43cab',
-    titleContainer: 'titleContainer_01c43cab',
-    title: 'title_01c43cab',
-    subTitle: 'subTitle_01c43cab',
-    description: 'description_01c43cab',
-    button: 'button_01c43cab',
-    getTulipList: 'getTulipList_01c43cab',
-    label: 'label_01c43cab',
-    listItemContainer: 'listItemContainer_01c43cab',
-    listItems: 'listItems_01c43cab',
-    listItem: 'listItem_01c43cab'
+    tulipList: 'tulipList_cf7183d8',
+    container: 'container_cf7183d8',
+    row: 'row_cf7183d8',
+    listName: 'listName_cf7183d8',
+    column: 'column_cf7183d8',
+    'ms-Grid': 'ms-Grid_cf7183d8',
+    titleContainer: 'titleContainer_cf7183d8',
+    title: 'title_cf7183d8',
+    subTitleContainer: 'subTitleContainer_cf7183d8',
+    subTitle: 'subTitle_cf7183d8',
+    description: 'description_cf7183d8',
+    button: 'button_cf7183d8',
+    getTulipList: 'getTulipList_cf7183d8',
+    label: 'label_cf7183d8',
+    listItemContainer: 'listItemContainer_cf7183d8',
+    listItems: 'listItems_cf7183d8',
+    listItem: 'listItem_cf7183d8'
 };
 /* harmony default export */ __webpack_exports__["default"] = (styles);
 /* tslint:enable */ 
@@ -11319,7 +11350,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
 
 
 
-var listName = "EnfokamTulipsTove";
+var listName = "EnfokamTulipsTove6";
 var TulipListWebPart = /** @class */ (function (_super) {
     __extends(TulipListWebPart, _super);
     function TulipListWebPart() {
@@ -11350,6 +11381,8 @@ var TulipListWebPart = /** @class */ (function (_super) {
         var element = react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_components_TulipList__WEBPACK_IMPORTED_MODULE_8__["default"], {
             title: this.properties.description,
             listItems: this._tulips,
+            listName: this.properties.listName,
+            websiteURL: this.context.pageContext.web.absoluteUrl,
             onGetListItems: this._onGetListItems,
             onDeleteListItem: this._onDeleteListItem,
         });
@@ -11456,15 +11489,18 @@ var TulipListWebPart = /** @class */ (function (_super) {
         return {
             pages: [
                 {
-                    header: {
-                        description: TulipListWebPartStrings__WEBPACK_IMPORTED_MODULE_5__["PropertyPaneDescription"]
-                    },
+                    // header: {
+                    //   description: strings.PropertyPaneDescription
+                    // },
                     groups: [
                         {
-                            groupName: TulipListWebPartStrings__WEBPACK_IMPORTED_MODULE_5__["BasicGroupName"],
+                            //groupName: strings.BasicGroupName,
                             groupFields: [
                                 Object(_microsoft_sp_property_pane__WEBPACK_IMPORTED_MODULE_3__["PropertyPaneTextField"])('description', {
                                     label: TulipListWebPartStrings__WEBPACK_IMPORTED_MODULE_5__["TitleFieldLabel"]
+                                }),
+                                Object(_microsoft_sp_property_pane__WEBPACK_IMPORTED_MODULE_3__["PropertyPaneTextField"])('listName', {
+                                    label: TulipListWebPartStrings__WEBPACK_IMPORTED_MODULE_5__["ListNameFieldLabel"]
                                 })
                             ]
                         }
@@ -11489,7 +11525,7 @@ var TulipListWebPart = /** @class */ (function (_super) {
 
 exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "JPst")(false);
 // Module
-exports.push([module.i, ".tulipList_01c43cab .container_01c43cab{max-width:700px;margin:0 auto;padding:.5rem;-webkit-box-shadow:0 2px 4px 0 rgba(0,0,0,.2),0 25px 50px 0 rgba(0,0,0,.1);box-shadow:0 2px 4px 0 rgba(0,0,0,.2),0 25px 50px 0 rgba(0,0,0,.1)}.tulipList_01c43cab .row_01c43cab{margin:0 -8px;-webkit-box-sizing:border-box;box-sizing:border-box;color:#fff;background-color:#005a9e;padding:20px}.tulipList_01c43cab .row_01c43cab:after,.tulipList_01c43cab .row_01c43cab:before{display:table;content:\"\";line-height:0}.tulipList_01c43cab .row_01c43cab:after{clear:both}.tulipList_01c43cab .column_01c43cab{position:relative;min-height:1px;padding-left:8px;padding-right:8px;-webkit-box-sizing:border-box;box-sizing:border-box}[dir=ltr] .tulipList_01c43cab .column_01c43cab{float:left}[dir=rtl] .tulipList_01c43cab .column_01c43cab{float:right}.tulipList_01c43cab .column_01c43cab .ms-Grid_01c43cab{padding:0}@media (min-width:640px){.tulipList_01c43cab .column_01c43cab{width:83.33333333333334%}}@media (min-width:1024px){.tulipList_01c43cab .column_01c43cab{width:66.66666666666666%}}@media (min-width:1024px){[dir=ltr] .tulipList_01c43cab .column_01c43cab{left:16.66667%}[dir=rtl] .tulipList_01c43cab .column_01c43cab{right:16.66667%}}@media (min-width:640px){[dir=ltr] .tulipList_01c43cab .column_01c43cab{left:8.33333%}[dir=rtl] .tulipList_01c43cab .column_01c43cab{right:8.33333%}}.tulipList_01c43cab .titleContainer_01c43cab{width:80%;margin:auto}.tulipList_01c43cab .titleContainer_01c43cab .title_01c43cab{margin-left:32%;font-size:21px;font-weight:100;color:#000;font-weight:600}.tulipList_01c43cab .description_01c43cab,.tulipList_01c43cab .subTitle_01c43cab{font-size:17px;font-weight:300;color:#fff}.tulipList_01c43cab .button_01c43cab{margin:.5rem 0}.tulipList_01c43cab #getTulipList_01c43cab{width:8rem;margin:1rem auto}.tulipList_01c43cab .label_01c43cab{font-weight:600;margin-right:.5rem}.tulipList_01c43cab .listItemContainer_01c43cab{max-width:80%}.tulipList_01c43cab .listItemContainer_01c43cab .listItems_01c43cab .listItem_01c43cab{padding:0;margin:0}", ""]);
+exports.push([module.i, ".tulipList_cf7183d8 .container_cf7183d8{max-width:700px;margin:0 auto;padding:.5rem;-webkit-box-shadow:0 2px 4px 0 rgba(0,0,0,.2),0 25px 50px 0 rgba(0,0,0,.1);box-shadow:0 2px 4px 0 rgba(0,0,0,.2),0 25px 50px 0 rgba(0,0,0,.1)}.tulipList_cf7183d8 .row_cf7183d8{margin:0 -8px;-webkit-box-sizing:border-box;box-sizing:border-box;color:#fff;background-color:#005a9e;padding:20px}.tulipList_cf7183d8 .row_cf7183d8:after,.tulipList_cf7183d8 .row_cf7183d8:before{display:table;content:\"\";line-height:0}.tulipList_cf7183d8 .row_cf7183d8:after{clear:both}.tulipList_cf7183d8 .listName_cf7183d8{font-size:17px}.tulipList_cf7183d8 .column_cf7183d8{position:relative;min-height:1px;padding-left:8px;padding-right:8px;-webkit-box-sizing:border-box;box-sizing:border-box}[dir=ltr] .tulipList_cf7183d8 .column_cf7183d8{float:left}[dir=rtl] .tulipList_cf7183d8 .column_cf7183d8{float:right}.tulipList_cf7183d8 .column_cf7183d8 .ms-Grid_cf7183d8{padding:0}@media (min-width:640px){.tulipList_cf7183d8 .column_cf7183d8{width:83.33333333333334%}}@media (min-width:1024px){.tulipList_cf7183d8 .column_cf7183d8{width:66.66666666666666%}}@media (min-width:1024px){[dir=ltr] .tulipList_cf7183d8 .column_cf7183d8{left:16.66667%}[dir=rtl] .tulipList_cf7183d8 .column_cf7183d8{right:16.66667%}}@media (min-width:640px){[dir=ltr] .tulipList_cf7183d8 .column_cf7183d8{left:8.33333%}[dir=rtl] .tulipList_cf7183d8 .column_cf7183d8{right:8.33333%}}.tulipList_cf7183d8 .titleContainer_cf7183d8{width:80%;margin:auto}.tulipList_cf7183d8 .titleContainer_cf7183d8 .title_cf7183d8{margin-left:32%;font-size:21px;font-weight:100;color:#000;font-weight:600}.tulipList_cf7183d8 .subTitleContainer_cf7183d8{display:-webkit-box;display:-ms-flexbox;display:flex;gap:1rem}.tulipList_cf7183d8 .subTitle_cf7183d8{font-size:17px;font-weight:300;color:#000;margin:0;padding:0}.tulipList_cf7183d8 .description_cf7183d8{font-size:17px;font-weight:300;color:#fff}.tulipList_cf7183d8 .button_cf7183d8{margin:.5rem 0}.tulipList_cf7183d8 #getTulipList_cf7183d8{width:8rem;margin:1rem auto}.tulipList_cf7183d8 .label_cf7183d8{font-weight:600;margin-right:.5rem}.tulipList_cf7183d8 .listItemContainer_cf7183d8{max-width:80%}.tulipList_cf7183d8 .listItemContainer_cf7183d8 .listItems_cf7183d8 .listItem_cf7183d8{padding:0;margin:0}", ""]);
 
 
 
