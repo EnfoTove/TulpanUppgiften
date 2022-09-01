@@ -56,17 +56,17 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
             </div> */}
           <div className={styles.listItemContainer}>
             <ul className={styles.listItems}>
-              {this.state.listItems && this.state.listItems.map((list) =>
-                <li key={list.Title}>
-                 <div className={styles.listItem}><p><span className={styles.label}>ID:</span>{list.ID}</p></div>
-                 <div className={styles.listItem}><p><span className={styles.label}>Title:</span> {list.Title}</p></div>
-                 <div className={styles.listItem}><p><span className={styles.label}>Manufacturing Price:</span>{list.ManufacturingPrice}</p></div>
-                 <div className={styles.listItem}><p><span className={styles.label}>Retail Price:</span>{list.RetailPrice}</p></div>
-                 <div className={styles.listItem}><p><span className={styles.label}>Tulip Responsible ID:</span>{list.TulipResponsible.Id}</p></div>
-                 <div className={styles.listItem}><p><span className={styles.label}>Tulip creator ID:</span>{list.Author.Id}</p></div>
-                 {/* { <div className={styles.button}>
-                   <button name={list.ID.toString()} type="button" onClick={()=> this._clickHandler(list)}>Delete Item</button>
-                  </div> } */}
+              {this.state.listItems && this.state.listItems.map((item) =>
+                <li key={item.Title}>
+                 <div className={styles.listItem}><p><span className={styles.label}>ID:</span>{item.ID}</p></div>
+                 <div className={styles.listItem}><p><span className={styles.label}>Title:</span> {item.Title}</p></div>
+                 <div className={styles.listItem}><p><span className={styles.label}>Manufacturing Price:</span>{item.ManufacturingPrice}</p></div>
+                 <div className={styles.listItem}><p><span className={styles.label}>Retail Price:</span>{item.RetailPrice}</p></div>
+                 <div className={styles.listItem}><p><span className={styles.label}>Tulip Responsible ID:</span>{item.TulipResponsible.Id}</p></div>
+                 <div className={styles.listItem}><p><span className={styles.label}>Tulip creator ID:</span>{item.Author.Id}</p></div>
+                     <div className={styles.button}>
+                   <button type="button" onClick={()=> this._clickHandler(item)}>Delete Item</button>
+                  </div>
                 </li>
               )
             }
@@ -101,10 +101,12 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     this.props.onDeleteListItem(item);
   }
 
-  private _onGetListItemsClicked = (event: React.MouseEvent<HTMLButtonElement>): void => {
-      event.preventDefault();
-      this.props.onGetListItems();
-    }
+
+
+  // private _onGetListItemsClicked = (event: React.MouseEvent<HTMLButtonElement>): void => {
+  //     event.preventDefault();
+  //     this.props.onGetListItems();
+  //   }
 
 }
 

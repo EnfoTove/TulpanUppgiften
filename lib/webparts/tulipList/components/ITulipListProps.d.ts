@@ -1,11 +1,11 @@
-import { ButtonClickedCallbackIndex } from "../../../models";
+import { ButtonClickedCallback, ButtonClickedCallbackIndex } from "../../../models";
 import { ITulipsListItem } from "../../../models/ITulipsListItem";
 export interface ITulipListProps {
     title: string;
     listItems: ITulipsListItem[];
     listName: string;
     websiteURL: string;
-    onGetListItems: any;
+    onGetListItems: ButtonClickedCallback;
     onDeleteListItem: ButtonClickedCallbackIndex;
 }
 //# sourceMappingURL=ITulipListProps.d.ts.map
