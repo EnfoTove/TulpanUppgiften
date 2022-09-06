@@ -13,6 +13,7 @@ export default class TulipListWebPart extends BaseClientSideWebPart<ITulipListWe
     private _onDeleteListItem;
     private _deleteListItem;
     private _getUserEmail;
+    private _getCurrentLoggedInUser;
     private _triggerEmail;
     protected onDispose(): void;
     protected readonly dataVersion: Version;
