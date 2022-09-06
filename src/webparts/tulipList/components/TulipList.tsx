@@ -37,12 +37,6 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     TulipList.siteURL=this.props.websiteURL;
   }
   public render(): React.ReactElement<ITulipListProps> {
-    // const {
-    //   title,
-    //   listItems,
-    //   listName
-    // } = this.props;
-
     return (
       <div className={ styles.tulipList }>
         <div className={ styles.container }>
@@ -53,9 +47,6 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
               <span className={ styles.subTitle }>List: </span>
               <span className={ styles.listName }>{this.props.listName}</span>
           </div>
-            {/* <div className={styles.button} id={styles.getTulipList}>
-              <button type="button" onClick={this._onGetListItemsClicked}>Get tulip list</button>
-            </div> */}
           <div className={styles.listItemContainer}>
             <ul className={styles.listItems}>
               {this.state.listItems && this.state.listItems.map((item) =>
@@ -63,9 +54,9 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
                  <div className={styles.listItem}><p><span className={styles.label}>ID:</span>{item.ID}</p></div>
                  <div className={styles.listItem}><p><span className={styles.label}>Title:</span> {item.Title}</p></div>
                  <div className={styles.listItem}><p><span className={styles.label}>Manufacturing Price:</span>{item.ManufacturingPrice}</p></div>
-                 <div className={styles.listItem}><p><span className={styles.label}>Retail Price:</span>{item.RetailPrice}</p></div>
-                 <div className={styles.listItem}><p><span className={styles.label}>Tulip Responsible ID:</span>{item.TulipResponsible.Id}</p></div>
-                 <div className={styles.listItem}><p><span className={styles.label}>Tulip creator ID:</span>{item.Author.Id}</p></div>
+                 <div className={styles.listItem}><p><span className={styles.label}>Retail Price:</span>{item.RetailPrice*1}</p></div>
+                 <div className={styles.listItem}><p><span className={styles.label}>Tulip Responsible:</span>{this._getUserName(item.TulipResponsible.Id)}</p></div>
+                 <div className={styles.listItem}><p><span className={styles.label}>Tulip creator ID:</span>{this._getUserName(item.Author.Id)}</p></div>
                      <div className={styles.button}>
                    <button type="button" onClick={()=> this._clickHandler(item)}>Delete Item</button>
                   </div>
@@ -106,12 +97,24 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     }
   }
 
-
-
-  // private _onGetListItemsClicked = (event: React.MouseEvent<HTMLButtonElement>): void => {
-  //     event.preventDefault();
-  //     this.props.onGetListItems();
-  //   }
+  private _getUserName(Id:number): string{
+      let tulipResponsibleEmail = null;
+        $.ajax({
+          url:  `${TulipList.siteURL}/_api/web/getuserbyid(${Id})`,
+          type: "GET",
+          headers: {
+              "Accept": "application/json; odata=verbose"
+          },
+          async: false,
+          success: function(data) {
+            tulipResponsibleEmail = data.d.Title;
+            },
+            error: function(error) {
+              console.log("fnGetUserProps:: " + error);
+            }
+          });
+          return tulipResponsibleEmail;
+  }
 
 }
 

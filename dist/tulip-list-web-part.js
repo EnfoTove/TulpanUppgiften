@@ -138,11 +138,6 @@ var TulipList = /** @class */ (function (_super) {
         return _this;
     }
     TulipList.prototype.render = function () {
-        // const {
-        //   title,
-        //   listItems,
-        //   listName
-        // } = this.props;
         var _this = this;
         return (react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].tulipList },
             react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].container },
@@ -170,15 +165,15 @@ var TulipList = /** @class */ (function (_super) {
                             react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].listItem },
                                 react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("p", null,
                                     react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("span", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].label }, "Retail Price:"),
-                                    item.RetailPrice)),
+                                    item.RetailPrice * 1)),
                             react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].listItem },
                                 react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("p", null,
-                                    react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("span", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].label }, "Tulip Responsible ID:"),
-                                    item.TulipResponsible.Id)),
+                                    react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("span", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].label }, "Tulip Responsible:"),
+                                    _this._getUserName(item.TulipResponsible.Id))),
                             react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].listItem },
                                 react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("p", null,
                                     react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("span", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].label }, "Tulip creator ID:"),
-                                    item.Author.Id)),
+                                    _this._getUserName(item.Author.Id))),
                             react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].button },
                                 react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("button", { type: "button", onClick: function () { return _this._clickHandler(item); } }, "Delete Item")));
                     }))))));
@@ -205,6 +200,24 @@ var TulipList = /** @class */ (function (_super) {
         if (deletionConfirmed) {
             this.props.onDeleteListItem(item);
         }
+    };
+    TulipList.prototype._getUserName = function (Id) {
+        var tulipResponsibleEmail = null;
+        jquery__WEBPACK_IMPORTED_MODULE_2__["ajax"]({
+            url: TulipList.siteURL + "/_api/web/getuserbyid(" + Id + ")",
+            type: "GET",
+            headers: {
+                "Accept": "application/json; odata=verbose"
+            },
+            async: false,
+            success: function (data) {
+                tulipResponsibleEmail = data.d.Title;
+            },
+            error: function (error) {
+                console.log("fnGetUserProps:: " + error);
+            }
+        });
+        return tulipResponsibleEmail;
     };
     TulipList.siteURL = "";
     return TulipList;
