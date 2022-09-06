@@ -12,5 +12,6 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     render(): React.ReactElement<ITulipListProps>;
     componentDidMount(): void;
     private _clickHandler;
+    private _getUserName;
 }
 //# sourceMappingURL=TulipList.d.ts.map
