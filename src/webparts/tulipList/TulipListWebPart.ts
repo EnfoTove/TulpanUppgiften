@@ -120,12 +120,32 @@ export default class TulipListWebPart extends BaseClientSideWebPart<ITulipListWe
           return tulipResponsibleEmail;
   }
 
+  private _getCurrentLoggedInUser(){
+    let loggedInUserTitle = null;
+    $.ajax({
+      url: this.context.pageContext.web.absoluteUrl + `/_api/Web/currentUser`,
+      type: "GET",
+      headers: {
+          "Accept": "application/json; odata=verbose"
+      },
+      async: false,
+      success: function(data) {
+        loggedInUserTitle = data.d.Title;
+        },
+        error: function(error) {
+          console.log("fnGetUserProps:: " + error);
+        }
+      });
+      console.log("INLOGGAD ANVÄNDARE:" + loggedInUserTitle)
+      return loggedInUserTitle;
+  }
+
     //Sends email to the tulip creator and tulip responsible
     private _triggerEmail(item:ITulipsListItem):any{
       let MailBody = '', MailSubject = 'Tulip removal'
       const tulipResponsible = this._getUserEmail(item.TulipResponsible.Id);
       const tulipCreator = this._getUserEmail(item.Author.Id);
-      MailBody    =  `'<p>Hi,<p> <p>${item.Title} (ID: ${item.ID}) has been removed from Enfokam Tulips'`;
+      MailBody    =  `'<p>Hi,<p> <p>${item.Title} (ID: ${item.ID}) has been removed by ${this._getCurrentLoggedInUser()} from Enfokam Tulips'`;
       var taMailBody = {
         properties: {
           __metadata: { 'type': 'SP.Utilities.EmailProperties' },
