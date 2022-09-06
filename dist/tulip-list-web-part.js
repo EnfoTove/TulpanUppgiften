@@ -132,7 +132,7 @@ var TulipList = /** @class */ (function (_super) {
                 }
             ],
             title: " ",
-            listName: "EnfokamTulipsTove6"
+            listName: _this.props.listName
         };
         TulipList.siteURL = _this.props.websiteURL;
         return _this;
@@ -200,7 +200,11 @@ var TulipList = /** @class */ (function (_super) {
         });
     };
     TulipList.prototype._clickHandler = function (item) {
-        this.props.onDeleteListItem(item);
+        var deletionConfirmed = confirm("Do you really want to delete this item?");
+        console.log(deletionConfirmed);
+        if (deletionConfirmed) {
+            this.props.onDeleteListItem(item);
+        }
     };
     TulipList.siteURL = "";
     return TulipList;
@@ -11349,7 +11353,6 @@ var __extends = (undefined && undefined.__extends) || (function () {
 
 
 
-var listName = "EnfokamTulipsTove6";
 var TulipListWebPart = /** @class */ (function (_super) {
     __extends(TulipListWebPart, _super);
     function TulipListWebPart() {
@@ -11389,7 +11392,7 @@ var TulipListWebPart = /** @class */ (function (_super) {
     };
     //Sends api-call to get all items in the list and returns response as ITulpListItem
     TulipListWebPart.prototype._getListItems = function () {
-        return this.context.spHttpClient.get(this.context.pageContext.web.absoluteUrl + ("/_api/web/lists/getbytitle('" + listName + "')/items?$select= ID, Title, ManufacturingPrice, RetailPrice, TulipResponsible/Id, Author/Id&$expand=TulipResponsible/Id, Author/AuthorId"), _microsoft_sp_http__WEBPACK_IMPORTED_MODULE_6__["SPHttpClient"].configurations.v1)
+        return this.context.spHttpClient.get(this.context.pageContext.web.absoluteUrl + ("/_api/web/lists/getbytitle('" + this.properties.listName + "')/items?$select= ID, Title, ManufacturingPrice, RetailPrice, TulipResponsible/Id, Author/Id&$expand=TulipResponsible/Id, Author/AuthorId"), _microsoft_sp_http__WEBPACK_IMPORTED_MODULE_6__["SPHttpClient"].configurations.v1)
             .then(function (response) {
             return response.json();
         })
@@ -11400,7 +11403,9 @@ var TulipListWebPart = /** @class */ (function (_super) {
     //Sends api-call to delete desired list item as well as triggering _triggerEmail()
     TulipListWebPart.prototype._deleteListItem = function (item) {
         var _this = this;
-        return this.context.spHttpClient.get(this.context.pageContext.web.absoluteUrl + ("/_api/web/lists/getbytitle('" + listName + "')/items(" + item.ID + ")?$select=Id"), _microsoft_sp_http__WEBPACK_IMPORTED_MODULE_6__["SPHttpClient"].configurations.v1)
+        console.log("ITEM TO DELETE:" + item.ID);
+        console.log("LIST NAME:" + this.properties.listName);
+        return this.context.spHttpClient.get(this.context.pageContext.web.absoluteUrl + ("/_api/web/lists/getbytitle('" + this.properties.listName + "')/items(" + item.ID + ")?$select=Id"), _microsoft_sp_http__WEBPACK_IMPORTED_MODULE_6__["SPHttpClient"].configurations.v1)
             .then(function (response) {
             return response.json();
         })
@@ -11414,7 +11419,7 @@ var TulipListWebPart = /** @class */ (function (_super) {
                 'IF-MATCH': '*'
             };
             var endpoint = _this.context.pageContext.web.absoluteUrl
-                + ("/_api/web/lists/getbytitle('" + listName + "')/items(" + item.ID + ")");
+                + ("/_api/web/lists/getbytitle('" + _this.properties.listName + "')/items(" + item.ID + ")");
             return _this.context.spHttpClient.post(endpoint, _microsoft_sp_http__WEBPACK_IMPORTED_MODULE_6__["SPHttpClient"].configurations.v1, request);
         }).then(this._triggerEmail(item));
     };

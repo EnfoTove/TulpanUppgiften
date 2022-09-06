@@ -13,12 +13,13 @@ import { ITulipsListItem } from '../../models/ITulipsListItem';
 import { SPHttpClient, SPHttpClientResponse, IDigestCache, DigestCache } from '@microsoft/sp-http';
 import * as $ from 'jquery';
 import TulipList from './components/TulipList';
+import { BaseDialog, Dialog } from '@microsoft/sp-dialog';
 
 export interface ITulipListWebPartProps {
   description: string;
   listName: string;
 }
-const listName = "EnfokamTulipsTove6";
+
 export default class TulipListWebPart extends BaseClientSideWebPart<ITulipListWebPartProps> {
   private _tulips: ITulipsListItem[] = [];
 
@@ -50,7 +51,7 @@ export default class TulipListWebPart extends BaseClientSideWebPart<ITulipListWe
         //Sends api-call to get all items in the list and returns response as ITulpListItem
         private _getListItems():Promise<ITulipsListItem[]>{
             return this.context.spHttpClient.get(
-        this.context.pageContext.web.absoluteUrl + `/_api/web/lists/getbytitle('${listName}')/items?$select= ID, Title, ManufacturingPrice, RetailPrice, TulipResponsible/Id, Author/Id&$expand=TulipResponsible/Id, Author/AuthorId`,
+        this.context.pageContext.web.absoluteUrl + `/_api/web/lists/getbytitle('${this.properties.listName}')/items?$select= ID, Title, ManufacturingPrice, RetailPrice, TulipResponsible/Id, Author/Id&$expand=TulipResponsible/Id, Author/AuthorId`,
         SPHttpClient.configurations.v1)
         .then(response=>{
           return response.json();
@@ -74,8 +75,10 @@ export default class TulipListWebPart extends BaseClientSideWebPart<ITulipListWe
 
         //Sends api-call to delete desired list item as well as triggering _triggerEmail()
       private _deleteListItem(item: ITulipsListItem):Promise<SPHttpClientResponse> {
+        console.log("ITEM TO DELETE:" + item.ID)
+        console.log("LIST NAME:" + this.properties.listName)
         return this.context.spHttpClient.get(
-          this.context.pageContext.web.absoluteUrl + `/_api/web/lists/getbytitle('${listName}')/items(${item.ID})?$select=Id`,
+          this.context.pageContext.web.absoluteUrl + `/_api/web/lists/getbytitle('${this.properties.listName}')/items(${item.ID})?$select=Id`,
           SPHttpClient.configurations.v1)
           .then(response=>{
             return response.json();
@@ -91,7 +94,7 @@ export default class TulipListWebPart extends BaseClientSideWebPart<ITulipListWe
             };
 
         const endpoint: string = this.context.pageContext.web.absoluteUrl
-        + `/_api/web/lists/getbytitle('${listName}')/items(${item.ID})`
+        + `/_api/web/lists/getbytitle('${this.properties.listName}')/items(${item.ID})`
 
         return this.context.spHttpClient.post(endpoint, SPHttpClient.configurations.v1, request);
       }).then( this._triggerEmail(item))

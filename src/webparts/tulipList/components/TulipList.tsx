@@ -6,6 +6,8 @@ import { useEffect } from 'react';
 import { SPHttpClient, SPHttpClientResponse, IDigestCache, DigestCache } from '@microsoft/sp-http';
 import { isTypedArray } from 'lodash';
 import * as $ from 'jquery';
+import { DefaultButton, DialogContent, DialogFooter, PrimaryButton } from 'office-ui-fabric-react';
+import { BaseDialog, Dialog, IDialogConfiguration } from '@microsoft/sp-dialog';
 
 
 export interface ITulipListPropsState{
@@ -30,7 +32,7 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
         }
       ],
       title: " ",
-      listName: "EnfokamTulipsTove6"
+      listName: this.props.listName
     };
     TulipList.siteURL=this.props.websiteURL;
   }
@@ -79,7 +81,6 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
 
   componentDidMount() {
    let context= this;
-
    $.ajax({
     url:`${TulipList.siteURL}/_api/web/lists/getbytitle('${this.props.listName}')/items?$select= ID, Title, ManufacturingPrice, RetailPrice, TulipResponsible/Id, Author/Id&$expand=TulipResponsible/Id, Author/AuthorId`,
     type:"GET",
@@ -91,14 +92,18 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     },
     error:function(jqXHR, textStatus, errorThrown){
       console.log("jqXHR: "+ jqXHR, "textStatus: " + textStatus, "errorThrown: " + errorThrown )
-
     }
 
    });
   }
 
   private _clickHandler(item: ITulipsListItem){
-    this.props.onDeleteListItem(item);
+    let deletionConfirmed = confirm("Do you really want to delete this item?");
+    console.log(deletionConfirmed);
+
+    if(deletionConfirmed){
+      this.props.onDeleteListItem(item);
+    }
   }
 
 
