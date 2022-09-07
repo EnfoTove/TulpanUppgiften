@@ -58,7 +58,7 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
                  <div className={styles.listItem}><p><span className={styles.label}>Tulip Responsible:</span>{this._getUserName(item.TulipResponsible.Id)}</p></div>
                  <div className={styles.listItem}><p><span className={styles.label}>Tulip creator ID:</span>{this._getUserName(item.Author.Id)}</p></div>
                      <div className={styles.button}>
-                   <button type="button" onClick={()=> this._clickHandler(item)}>Delete Item</button>
+                   <PrimaryButton onClick={()=> this._clickHandler(item)}>Delete Item</PrimaryButton>
                   </div>
                 </li>
               )
