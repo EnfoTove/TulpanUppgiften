@@ -1,11 +1,13 @@
 @import '~office-ui-fabric-react/dist/sass/References.scss';
 
 .tulipList {
+  padding-bottom: 1rem;
+
   .container {
     max-width: 700px;
     margin: 0px auto;
-    padding:0.5rem;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+    padding-bottom:1rem;
   }
 
   .row {
@@ -13,10 +15,6 @@
     @include ms-fontColor-white;
     background-color: $ms-color-themeDark;
     padding: 20px;
-  }
-
-  .listName{
-    font-size: 17px;
   }
 
   .column {
@@ -27,57 +25,41 @@
     @include ms-lgPush1;
   }
 
-  .titleContainer{
-    width:80%;
-    margin:auto;
-
-    .title {
-      margin-left:32%;
-      @include ms-font-xl;
-      @include ms-fontColor-black;
-      font-weight: 600;
-    }
-  }
-
-  .subTitleContainer{
-    display:flex;
-    gap:1rem;
+  .title {
+    max-width:100%;
+    background-color:#85a8a8;
+    padding:16px;
+    text-align:center;
+    @include ms-font-xl;
+    @include ms-fontColor-black;
+    font-weight: 400;
   }
 
   .subTitle {
-    @include ms-font-l;
+    @include ms-font-m;
     @include ms-fontColor-black;
-    margin:0;
-    padding:0;
+    margin:16px 32px;
   }
 
-  .description {
-    @include ms-font-l;
-    @include ms-fontColor-white;
-  }
+  table{
+    margin:24px auto;
+    td{
+      text-align:center;
+    }
 
-  .button {
-    margin:0.5rem 0;
-  }
-  #getTulipList{
-    width:8rem;
-    margin:1rem auto;
-  }
+    th, td {
+      border-bottom: 1px solid #ddd;
+    }
 
-  .label{
-    font-weight:600;
-    margin-right: 0.5rem;
-  }
+    th{
+      font-weight: 400;
+      @include ms-font-m;
+      @include ms-fontColor-black;
+      padding-bottom: 10px;
+    }
 
-  .listItemContainer{
-    max-width:80%;
-
-    .listItems{
-      .listItem{
-        padding:0;
-        margin:0;
-
-      }
+    .defaultButton{
+     margin:5px 5px 5px 20px;
     }
   }
 }
