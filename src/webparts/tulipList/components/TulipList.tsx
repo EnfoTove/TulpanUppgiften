@@ -2,12 +2,8 @@ import * as React from 'react';
 import styles from './TulipList.module.scss';
 import { ITulipListProps } from './ITulipListProps';
 import { ITulipsListItem } from '../../../models/ITulipsListItem';
-import { useEffect } from 'react';
-import { SPHttpClient, SPHttpClientResponse, IDigestCache, DigestCache } from '@microsoft/sp-http';
-import { isTypedArray } from 'lodash';
 import * as $ from 'jquery';
-import { DefaultButton, DialogContent, DialogFooter, PrimaryButton } from 'office-ui-fabric-react';
-import { BaseDialog, Dialog, IDialogConfiguration } from '@microsoft/sp-dialog';
+import { BaseButton, Button, DefaultButton, IconButton, PrimaryButton} from 'office-ui-fabric-react';
 
 
 export interface ITulipListPropsState{
@@ -40,33 +36,36 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     return (
       <div className={ styles.tulipList }>
         <div className={ styles.container }>
-          <div className={styles.titleContainer}>
-              <span className={ styles.title }>{this.props.title}</span>
-          </div>
-          <div className={styles.subTitleContainer}>
-              <span className={ styles.subTitle }>List: </span>
-              <span className={ styles.listName }>{this.props.listName}</span>
-          </div>
-          <div className={styles.listItemContainer}>
-            <ul className={styles.listItems}>
+            <div className={ styles.title }>{this.props.title}</div>
+              <div className={ styles.subTitle }>List: {this.props.listName}</div>
+            <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Manufacturing Price</th>
+                    <th>Retail Price</th>
+                    <th>Tulip Responsible</th>
+                    <th>Tulip creator</th>
+                  </tr>
+                </thead>
               {this.state.listItems && this.state.listItems.map((item) =>
-                <li key={item.Title}>
-                 <div className={styles.listItem}><p><span className={styles.label}>ID:</span>{item.ID}</p></div>
-                 <div className={styles.listItem}><p><span className={styles.label}>Title:</span> {item.Title}</p></div>
-                 <div className={styles.listItem}><p><span className={styles.label}>Manufacturing Price:</span>{item.ManufacturingPrice}</p></div>
-                 <div className={styles.listItem}><p><span className={styles.label}>Retail Price:</span>{item.RetailPrice*1}</p></div>
-                 <div className={styles.listItem}><p><span className={styles.label}>Tulip Responsible:</span>{this._getUserName(item.TulipResponsible.Id)}</p></div>
-                 <div className={styles.listItem}><p><span className={styles.label}>Tulip creator ID:</span>{this._getUserName(item.Author.Id)}</p></div>
-                     <div className={styles.button}>
-                   <PrimaryButton onClick={()=> this._clickHandler(item)}>Delete Item</PrimaryButton>
-                  </div>
-                </li>
+                <tbody>
+                    <tr  key={item.ID}>
+                      <td>{item.ID}</td>
+                      <td>{item.Title}</td>
+                      <td>{item.ManufacturingPrice}</td>
+                      <td>{item.RetailPrice * 1}</td>
+                      <td>{this._getUserName(item.TulipResponsible.Id)}</td>
+                      <td>{this._getUserName(item.Author.Id)}</td>
+                      <DefaultButton className={styles.defaultButton} onClick={() => this._clickHandler(item)}>Delete Item</DefaultButton>
+                    </tr>
+                </tbody>
               )
             }
-            </ul>
+            </table>
           </div>
         </div>
-      </div>
     );
   }
 
