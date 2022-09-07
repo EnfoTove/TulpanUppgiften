@@ -41,15 +41,18 @@ export default class TulipListWebPart extends BaseClientSideWebPart<ITulipListWe
 
           //Triggers api-call to get list items as well as re-renders the page
           private _onGetListItems = (): void =>{
+            console.log("_onGetListItems")
             this._getListItems()
             .then(response=>{
               this._tulips= response;
+              console.log(this._tulips[0].Title)
             });
             this.render();
           }
 
         //Sends api-call to get all items in the list and returns response as ITulpListItem
         private _getListItems():Promise<ITulipsListItem[]>{
+          console.log("_getListItems")
             return this.context.spHttpClient.get(
         this.context.pageContext.web.absoluteUrl + `/_api/web/lists/getbytitle('${this.properties.listName}')/items?$select= ID, Title, ManufacturingPrice, RetailPrice, TulipResponsible/Id, Author/Id&$expand=TulipResponsible/Id, Author/AuthorId`,
         SPHttpClient.configurations.v1)

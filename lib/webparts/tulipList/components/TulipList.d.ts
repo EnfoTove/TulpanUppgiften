@@ -11,6 +11,7 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     constructor(props: ITulipListProps, state: ITulipListPropsState);
     render(): React.ReactElement<ITulipListProps>;
     componentDidMount(): void;
+    getTulips(): Promise<void>;
     private _clickHandler;
     private _getUserName;
 }
