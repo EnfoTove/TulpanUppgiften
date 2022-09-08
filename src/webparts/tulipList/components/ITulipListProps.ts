@@ -7,7 +7,5 @@ export interface ITulipListProps {
   listItems: ITulipsListItem[];
   listName:string;
   websiteURL: string;
-  // onGetListItems: any;//ButtonClickedCallback;
-  // onDeleteListItem: ButtonClickedCallbackIndex;
   context:WebPartContext;
 }

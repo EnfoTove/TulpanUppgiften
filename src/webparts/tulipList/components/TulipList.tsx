@@ -4,14 +4,16 @@ import { ITulipListProps } from './ITulipListProps';
 import { ITulipsListItem } from '../../../models/ITulipsListItem';
 import * as $ from 'jquery';
 import { DefaultButton } from 'office-ui-fabric-react';
-import {ISPHttpClientOptions, SPHttpClient, SPHttpClientResponse} from '@microsoft/sp-http';
-
+import { SPHttpClient, SPHttpClientResponse, IDigestCache, DigestCache } from '@microsoft/sp-http';
+import { data } from 'jquery';
+import { IUserItem } from '../../../models/IUserItem';
 
 export interface ITulipListPropsState{
   listItem: ITulipsListItem,
   listItems: ITulipsListItem[],
   title:string,
   listName: string
+  tulipResponsible: string
 }
 
 export default class TulipList extends React.Component<ITulipListProps, ITulipListPropsState> {
@@ -31,7 +33,8 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
           Author:{Id: null}
         },
       title: " ",
-      listName: this.props.listName
+      listName: this.props.listName,
+      tulipResponsible: ""
     };
     TulipList.siteURL=this.props.websiteURL;
   }
@@ -84,7 +87,7 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     })as Promise<ITulipsListItem[]>;
   }
 
-  public bindDetailsList():void{
+  public bindDetailsList():any{
     console.log("bind details list")
 
     this._getListItems().then(listItems=>{
@@ -94,16 +97,10 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     });
   }
 
-//   componentWillReceiveProps(props) {
-//     console.log("will receive props")
-//     this.setState({
-//         listItems: this.props.listItems,
-//     })
-// }
 
 // componentDidUpdate(prevProps: Readonly<ITulipListProps>, prevState: Readonly<ITulipListPropsState>, snapshot?: any): void {
 //   console.log("component did update")
-//   this.state.listItems
+//   this.bindDetailsList();
 
 // }
 
@@ -121,7 +118,7 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     }
   }
 
-  private _getUserName(Id:number): string{
+private _getUserName(Id:number): string{
       let tulipResponsibleEmail = null;
         $.ajax({
           url:  `${TulipList.siteURL}/_api/web/getuserbyid(${Id})`,
@@ -134,11 +131,29 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
             tulipResponsibleEmail = data.d.Title;
             },
             error: function(error) {
-              console.log("fnGetUserProps:: " + error);
+              console.log("Error with fetching user name: " + error);
             }
           });
           return tulipResponsibleEmail;
   }
+
+
+//   private _getUserName(Id:number): string{
+//     let userName = ""
+//      this.props.context.spHttpClient.get(
+//       this.props.context.pageContext.web.absoluteUrl + `/_api/web/getuserbyid(${Id})`,
+//       SPHttpClient.configurations.v1)
+//       .then(response => {
+//         return response.json();
+//       })
+//       .then(json => {
+//         userName = json.Title;
+//         console.log("INSIDE:" + userName)
+//         //return json.value;
+//       })
+//       console.log("Outside: " + userName)
+//       return userName
+// }
 
   private _deleteListItem(item: ITulipsListItem):Promise<SPHttpClientResponse> {
     console.log("ITEM TO DELETE:" + item.ID)
@@ -163,14 +178,14 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     + `/_api/web/lists/getbytitle('${this.props.listName}')/items(${item.ID})`
 
     return this.props.context.spHttpClient.post(endpoint, SPHttpClient.configurations.v1, request);
-  })//.then( this._triggerEmail(item))
+  }).then( this._triggerEmail(item))
 }
 
 //Gets and returns the email address of the user by the id that's passed in.
 private _getUserEmail(Id:number):number{
   let tulipResponsibleEmail = null;
     $.ajax({
-      url: this.context.pageContext.web.absoluteUrl + `/_api/web/getuserbyid(${Id})`,
+      url: this.props.context.pageContext.web.absoluteUrl + `/_api/web/getuserbyid(${Id})`,
       type: "GET",
       headers: {
           "Accept": "application/json; odata=verbose"
@@ -180,7 +195,7 @@ private _getUserEmail(Id:number):number{
         tulipResponsibleEmail = data.d.Email;
         },
         error: function(error) {
-          console.log("fnGetUserProps:: " + error);
+          console.log("Error with fetching user email" + error);
         }
       });
       return tulipResponsibleEmail;
@@ -189,7 +204,7 @@ private _getUserEmail(Id:number):number{
 private _getCurrentLoggedInUser(){
 let loggedInUserTitle = null;
 $.ajax({
-  url: this.context.pageContext.web.absoluteUrl + `/_api/Web/currentUser`,
+  url: this.props.context.pageContext.web.absoluteUrl + `/_api/Web/currentUser`,
   type: "GET",
   headers: {
       "Accept": "application/json; odata=verbose"
@@ -199,7 +214,7 @@ $.ajax({
     loggedInUserTitle = data.d.Title;
     },
     error: function(error) {
-      console.log("fnGetUserProps:: " + error);
+      console.log("Error with fecthing current logged in user: " + error);
     }
   });
   console.log("INLOGGAD ANVÄNDARE:" + loggedInUserTitle)
@@ -207,45 +222,45 @@ $.ajax({
 }
 
  //Sends email to the tulip creator and tulip responsible
-//  private _triggerEmail(item:ITulipsListItem):any{
-//   let MailBody = '', MailSubject = 'Tulip removal'
-//   const tulipResponsible = this._getUserEmail(item.TulipResponsible.Id);
-//   const tulipCreator = this._getUserEmail(item.Author.Id);
-//   MailBody    =  `'<p>Hi,<p> <p>${item.Title} (ID: ${item.ID}) has been removed by ${this._getCurrentLoggedInUser()} from Enfokam Tulips'`;
-//   var taMailBody = {
-//     properties: {
-//       __metadata: { 'type': 'SP.Utilities.EmailProperties' },
-//       From: "From: no-reply@sharepointonline.com",
-//       To: { 'results': [tulipResponsible, tulipCreator] },
-//       Body: MailBody,
-//       Subject: MailSubject,
-//     }
-//   };
+ private _triggerEmail(item:ITulipsListItem):any{
+  let MailBody = '', MailSubject = 'Tulip removal'
+  const tulipResponsible = this._getUserEmail(item.TulipResponsible.Id);
+  const tulipCreator = this._getUserEmail(item.Author.Id);
+  MailBody    =  `'<p>Hi,<p> <p>${item.Title} (ID: ${item.ID}) has been removed by ${this._getCurrentLoggedInUser()} from Enfokam Tulips'`;
+  var taMailBody = {
+    properties: {
+      __metadata: { 'type': 'SP.Utilities.EmailProperties' },
+      From: "From: no-reply@sharepointonline.com",
+      To: { 'results': [tulipResponsible, tulipCreator] },
+      Body: MailBody,
+      Subject: MailSubject,
+    }
+  };
 
-//   const digestCache: IDigestCache = this.props.context.serviceScope.consume(DigestCache.serviceKey);
-//         digestCache.fetchDigest(this.context.pageContext.web.serverRelativeUrl).then((digest: string): void => {
+  const digestCache: IDigestCache = this.props.context.serviceScope.consume(DigestCache.serviceKey);
+        digestCache.fetchDigest(this.props.context.pageContext.web.serverRelativeUrl).then((digest: string): void => {
 
-//           $.ajax({
-//             contentType: 'application/json',
-//             url: this.props.context.pageContext.web.absoluteUrl + "/_api/SP.Utilities.Utility.SendEmail",
-//             type: "POST",
-//             data: JSON.stringify(taMailBody),
-//             headers: {
-//               "Accept": "application/json;odata=verbose",
-//               "content-type": "application/json;odata=verbose",
-//               "X-RequestDigest": digest
-//             },
-//             success: function (data) {
-//               console.log("Success");
-//             },
-//             error: function (data) {
+          $.ajax({
+            contentType: 'application/json',
+            url: this.props.context.pageContext.web.absoluteUrl + "/_api/SP.Utilities.Utility.SendEmail",
+            type: "POST",
+            data: JSON.stringify(taMailBody),
+            headers: {
+              "Accept": "application/json;odata=verbose",
+              "content-type": "application/json;odata=verbose",
+              "X-RequestDigest": digest
+            },
+            success: function (data) {
+              console.log("Success");
+            },
+            error: function (data) {
 
-//               console.log("Error: " + JSON.stringify(data));
-//             }
-//           });
-//         });
+              console.log("Error: " + JSON.stringify(data));
+            }
+          });
+        });
 
-// }
+}
 
 
 

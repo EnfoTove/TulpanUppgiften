@@ -136,7 +136,8 @@ var TulipList = /** @class */ (function (_super) {
                 Author: { Id: null }
             },
             title: " ",
-            listName: _this.props.listName
+            listName: _this.props.listName,
+            tulipResponsible: ""
         };
         TulipList.siteURL = _this.props.websiteURL;
         return _this;
@@ -190,15 +191,9 @@ var TulipList = /** @class */ (function (_super) {
             });
         });
     };
-    //   componentWillReceiveProps(props) {
-    //     console.log("will receive props")
-    //     this.setState({
-    //         listItems: this.props.listItems,
-    //     })
-    // }
     // componentDidUpdate(prevProps: Readonly<ITulipListProps>, prevState: Readonly<ITulipListPropsState>, snapshot?: any): void {
     //   console.log("component did update")
-    //   this.state.listItems
+    //   this.bindDetailsList();
     // }
     TulipList.prototype.componentDidMount = function () {
         console.log("component did mount");
@@ -224,11 +219,27 @@ var TulipList = /** @class */ (function (_super) {
                 tulipResponsibleEmail = data.d.Title;
             },
             error: function (error) {
-                console.log("fnGetUserProps:: " + error);
+                console.log("Error with fetching user name: " + error);
             }
         });
         return tulipResponsibleEmail;
     };
+    //   private _getUserName(Id:number): string{
+    //     let userName = ""
+    //      this.props.context.spHttpClient.get(
+    //       this.props.context.pageContext.web.absoluteUrl + `/_api/web/getuserbyid(${Id})`,
+    //       SPHttpClient.configurations.v1)
+    //       .then(response => {
+    //         return response.json();
+    //       })
+    //       .then(json => {
+    //         userName = json.Title;
+    //         console.log("INSIDE:" + userName)
+    //         //return json.value;
+    //       })
+    //       console.log("Outside: " + userName)
+    //       return userName
+    // }
     TulipList.prototype._deleteListItem = function (item) {
         var _this = this;
         console.log("ITEM TO DELETE:" + item.ID);
@@ -249,13 +260,13 @@ var TulipList = /** @class */ (function (_super) {
             var endpoint = _this.props.context.pageContext.web.absoluteUrl
                 + ("/_api/web/lists/getbytitle('" + _this.props.listName + "')/items(" + item.ID + ")");
             return _this.props.context.spHttpClient.post(endpoint, _microsoft_sp_http__WEBPACK_IMPORTED_MODULE_4__["SPHttpClient"].configurations.v1, request);
-        }); //.then( this._triggerEmail(item))
+        }).then(this._triggerEmail(item));
     };
     //Gets and returns the email address of the user by the id that's passed in.
     TulipList.prototype._getUserEmail = function (Id) {
         var tulipResponsibleEmail = null;
         jquery__WEBPACK_IMPORTED_MODULE_2__["ajax"]({
-            url: this.context.pageContext.web.absoluteUrl + ("/_api/web/getuserbyid(" + Id + ")"),
+            url: this.props.context.pageContext.web.absoluteUrl + ("/_api/web/getuserbyid(" + Id + ")"),
             type: "GET",
             headers: {
                 "Accept": "application/json; odata=verbose"
@@ -265,7 +276,7 @@ var TulipList = /** @class */ (function (_super) {
                 tulipResponsibleEmail = data.d.Email;
             },
             error: function (error) {
-                console.log("fnGetUserProps:: " + error);
+                console.log("Error with fetching user email" + error);
             }
         });
         return tulipResponsibleEmail;
@@ -273,7 +284,7 @@ var TulipList = /** @class */ (function (_super) {
     TulipList.prototype._getCurrentLoggedInUser = function () {
         var loggedInUserTitle = null;
         jquery__WEBPACK_IMPORTED_MODULE_2__["ajax"]({
-            url: this.context.pageContext.web.absoluteUrl + "/_api/Web/currentUser",
+            url: this.props.context.pageContext.web.absoluteUrl + "/_api/Web/currentUser",
             type: "GET",
             headers: {
                 "Accept": "application/json; odata=verbose"
@@ -283,11 +294,48 @@ var TulipList = /** @class */ (function (_super) {
                 loggedInUserTitle = data.d.Title;
             },
             error: function (error) {
-                console.log("fnGetUserProps:: " + error);
+                console.log("Error with fecthing current logged in user: " + error);
             }
         });
         console.log("INLOGGAD ANVÄNDARE:" + loggedInUserTitle);
         return loggedInUserTitle;
+    };
+    //Sends email to the tulip creator and tulip responsible
+    TulipList.prototype._triggerEmail = function (item) {
+        var _this = this;
+        var MailBody = '', MailSubject = 'Tulip removal';
+        var tulipResponsible = this._getUserEmail(item.TulipResponsible.Id);
+        var tulipCreator = this._getUserEmail(item.Author.Id);
+        MailBody = "'<p>Hi,<p> <p>" + item.Title + " (ID: " + item.ID + ") has been removed by " + this._getCurrentLoggedInUser() + " from Enfokam Tulips'";
+        var taMailBody = {
+            properties: {
+                __metadata: { 'type': 'SP.Utilities.EmailProperties' },
+                From: "From: no-reply@sharepointonline.com",
+                To: { 'results': [tulipResponsible, tulipCreator] },
+                Body: MailBody,
+                Subject: MailSubject,
+            }
+        };
+        var digestCache = this.props.context.serviceScope.consume(_microsoft_sp_http__WEBPACK_IMPORTED_MODULE_4__["DigestCache"].serviceKey);
+        digestCache.fetchDigest(this.props.context.pageContext.web.serverRelativeUrl).then(function (digest) {
+            jquery__WEBPACK_IMPORTED_MODULE_2__["ajax"]({
+                contentType: 'application/json',
+                url: _this.props.context.pageContext.web.absoluteUrl + "/_api/SP.Utilities.Utility.SendEmail",
+                type: "POST",
+                data: JSON.stringify(taMailBody),
+                headers: {
+                    "Accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose",
+                    "X-RequestDigest": digest
+                },
+                success: function (data) {
+                    console.log("Success");
+                },
+                error: function (data) {
+                    console.log("Error: " + JSON.stringify(data));
+                }
+            });
+        });
     };
     TulipList.siteURL = "";
     return TulipList;
@@ -60436,11 +60484,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _microsoft_sp_webpart_base__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_microsoft_sp_webpart_base__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var TulipListWebPartStrings__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! TulipListWebPartStrings */ "CEiy");
 /* harmony import */ var TulipListWebPartStrings__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(TulipListWebPartStrings__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _microsoft_sp_http__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @microsoft/sp-http */ "vlQI");
-/* harmony import */ var _microsoft_sp_http__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_microsoft_sp_http__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! jquery */ "EVdn");
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _components_TulipList__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/TulipList */ "+/Hm");
+/* harmony import */ var _components_TulipList__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/TulipList */ "+/Hm");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -60461,156 +60505,22 @@ var __extends = (undefined && undefined.__extends) || (function () {
 
 
 
-
-
 var TulipListWebPart = /** @class */ (function (_super) {
     __extends(TulipListWebPart, _super);
     function TulipListWebPart() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this._tulips = [];
-        //Triggers api-call to get list items as well as re-renders the page
-        _this._onGetListItems = function () {
-            console.log("_onGetListItems");
-            _this._getListItems()
-                .then(function (response) {
-                _this._tulips = response;
-                console.log(_this._tulips[0].Title);
-            });
-            _this.render();
-        };
-        //Triggers api-call to delete desired list item as well as re-renders the page with updated list items
-        _this._onDeleteListItem = function (item) {
-            _this._deleteListItem(item)
-                .then(function () {
-                _this._getListItems()
-                    .then(function (response) {
-                    _this._tulips = response;
-                    _this.render();
-                });
-            });
-        };
         return _this;
     }
     TulipListWebPart.prototype.render = function () {
-        var element = react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_components_TulipList__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        var element = react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_components_TulipList__WEBPACK_IMPORTED_MODULE_6__["default"], {
             title: this.properties.description,
             listItems: this._tulips,
             listName: this.properties.listName,
             websiteURL: this.context.pageContext.web.absoluteUrl,
-            // onGetListItems: this._onGetListItems,
-            // onDeleteListItem: this._onDeleteListItem,
             context: this.context,
         });
         react_dom__WEBPACK_IMPORTED_MODULE_1__["render"](element, this.domElement);
-    };
-    //Sends api-call to get all items in the list and returns response as ITulpListItem
-    TulipListWebPart.prototype._getListItems = function () {
-        console.log("_getListItems");
-        return this.context.spHttpClient.get(this.context.pageContext.web.absoluteUrl + ("/_api/web/lists/getbytitle('" + this.properties.listName + "')/items?$select= ID, Title, ManufacturingPrice, RetailPrice, TulipResponsible/Id, Author/Id&$expand=TulipResponsible/Id, Author/AuthorId"), _microsoft_sp_http__WEBPACK_IMPORTED_MODULE_6__["SPHttpClient"].configurations.v1)
-            .then(function (response) {
-            return response.json();
-        })
-            .then(function (jsonResponse) {
-            return jsonResponse.value;
-        });
-    };
-    //Sends api-call to delete desired list item as well as triggering _triggerEmail()
-    TulipListWebPart.prototype._deleteListItem = function (item) {
-        var _this = this;
-        console.log("ITEM TO DELETE:" + item.ID);
-        console.log("LIST NAME:" + this.properties.listName);
-        return this.context.spHttpClient.get(this.context.pageContext.web.absoluteUrl + ("/_api/web/lists/getbytitle('" + this.properties.listName + "')/items(" + item.ID + ")?$select=Id"), _microsoft_sp_http__WEBPACK_IMPORTED_MODULE_6__["SPHttpClient"].configurations.v1)
-            .then(function (response) {
-            return response.json();
-        })
-            .then(function (jsonResponse) {
-            return jsonResponse.value;
-        })
-            .then(function (listItem) {
-            var request = {};
-            request.headers = {
-                'X-HTTP-Method': 'DELETE',
-                'IF-MATCH': '*'
-            };
-            var endpoint = _this.context.pageContext.web.absoluteUrl
-                + ("/_api/web/lists/getbytitle('" + _this.properties.listName + "')/items(" + item.ID + ")");
-            return _this.context.spHttpClient.post(endpoint, _microsoft_sp_http__WEBPACK_IMPORTED_MODULE_6__["SPHttpClient"].configurations.v1, request);
-        }).then(this._triggerEmail(item));
-    };
-    //Gets and returns the email address of the user by the id that's passed in.
-    TulipListWebPart.prototype._getUserEmail = function (Id) {
-        var tulipResponsibleEmail = null;
-        jquery__WEBPACK_IMPORTED_MODULE_7__["ajax"]({
-            url: this.context.pageContext.web.absoluteUrl + ("/_api/web/getuserbyid(" + Id + ")"),
-            type: "GET",
-            headers: {
-                "Accept": "application/json; odata=verbose"
-            },
-            async: false,
-            success: function (data) {
-                tulipResponsibleEmail = data.d.Email;
-            },
-            error: function (error) {
-                console.log("fnGetUserProps:: " + error);
-            }
-        });
-        return tulipResponsibleEmail;
-    };
-    TulipListWebPart.prototype._getCurrentLoggedInUser = function () {
-        var loggedInUserTitle = null;
-        jquery__WEBPACK_IMPORTED_MODULE_7__["ajax"]({
-            url: this.context.pageContext.web.absoluteUrl + "/_api/Web/currentUser",
-            type: "GET",
-            headers: {
-                "Accept": "application/json; odata=verbose"
-            },
-            async: false,
-            success: function (data) {
-                loggedInUserTitle = data.d.Title;
-            },
-            error: function (error) {
-                console.log("fnGetUserProps:: " + error);
-            }
-        });
-        console.log("INLOGGAD ANVÄNDARE:" + loggedInUserTitle);
-        return loggedInUserTitle;
-    };
-    //Sends email to the tulip creator and tulip responsible
-    TulipListWebPart.prototype._triggerEmail = function (item) {
-        var _this = this;
-        var MailBody = '', MailSubject = 'Tulip removal';
-        var tulipResponsible = this._getUserEmail(item.TulipResponsible.Id);
-        var tulipCreator = this._getUserEmail(item.Author.Id);
-        MailBody = "'<p>Hi,<p> <p>" + item.Title + " (ID: " + item.ID + ") has been removed by " + this._getCurrentLoggedInUser() + " from Enfokam Tulips'";
-        var taMailBody = {
-            properties: {
-                __metadata: { 'type': 'SP.Utilities.EmailProperties' },
-                From: "From: no-reply@sharepointonline.com",
-                To: { 'results': [tulipResponsible, tulipCreator] },
-                Body: MailBody,
-                Subject: MailSubject,
-            }
-        };
-        var digestCache = this.context.serviceScope.consume(_microsoft_sp_http__WEBPACK_IMPORTED_MODULE_6__["DigestCache"].serviceKey);
-        digestCache.fetchDigest(this.context.pageContext.web.serverRelativeUrl).then(function (digest) {
-            jquery__WEBPACK_IMPORTED_MODULE_7__["ajax"]({
-                contentType: 'application/json',
-                url: _this.context.pageContext.web.absoluteUrl + "/_api/SP.Utilities.Utility.SendEmail",
-                type: "POST",
-                data: JSON.stringify(taMailBody),
-                headers: {
-                    "Accept": "application/json;odata=verbose",
-                    "content-type": "application/json;odata=verbose",
-                    "X-RequestDigest": digest
-                },
-                success: function (data) {
-                    console.log("Success");
-                },
-                error: function (data) {
-                    console.log("Error: " + JSON.stringify(data));
-                }
-            });
-        });
     };
     TulipListWebPart.prototype.onDispose = function () {
         react_dom__WEBPACK_IMPORTED_MODULE_1__["unmountComponentAtNode"](this.domElement);
@@ -60626,12 +60536,8 @@ var TulipListWebPart = /** @class */ (function (_super) {
         return {
             pages: [
                 {
-                    // header: {
-                    //   description: strings.PropertyPaneDescription
-                    // },
                     groups: [
                         {
-                            //groupName: strings.BasicGroupName,
                             groupFields: [
                                 Object(_microsoft_sp_property_pane__WEBPACK_IMPORTED_MODULE_3__["PropertyPaneTextField"])('description', {
                                     label: TulipListWebPartStrings__WEBPACK_IMPORTED_MODULE_5__["TitleFieldLabel"]
