@@ -137,7 +137,6 @@ var TulipList = /** @class */ (function (_super) {
             },
             title: " ",
             listName: _this.props.listName,
-            tulipResponsible: ""
         };
         TulipList.siteURL = _this.props.websiteURL;
         return _this;
@@ -191,10 +190,6 @@ var TulipList = /** @class */ (function (_super) {
             });
         });
     };
-    // componentDidUpdate(prevProps: Readonly<ITulipListProps>, prevState: Readonly<ITulipListPropsState>, snapshot?: any): void {
-    //   console.log("component did update")
-    //   this.bindDetailsList();
-    // }
     TulipList.prototype.componentDidMount = function () {
         console.log("component did mount");
         this.bindDetailsList();
@@ -224,22 +219,6 @@ var TulipList = /** @class */ (function (_super) {
         });
         return tulipResponsibleEmail;
     };
-    //   private _getUserName(Id:number): string{
-    //     let userName = ""
-    //      this.props.context.spHttpClient.get(
-    //       this.props.context.pageContext.web.absoluteUrl + `/_api/web/getuserbyid(${Id})`,
-    //       SPHttpClient.configurations.v1)
-    //       .then(response => {
-    //         return response.json();
-    //       })
-    //       .then(json => {
-    //         userName = json.Title;
-    //         console.log("INSIDE:" + userName)
-    //         //return json.value;
-    //       })
-    //       console.log("Outside: " + userName)
-    //       return userName
-    // }
     TulipList.prototype._deleteListItem = function (item) {
         var _this = this;
         console.log("ITEM TO DELETE:" + item.ID);

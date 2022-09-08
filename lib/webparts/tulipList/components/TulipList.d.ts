@@ -6,7 +6,6 @@ export interface ITulipListPropsState {
     listItems: ITulipsListItem[];
     title: string;
     listName: string;
-    tulipResponsible: string;
 }
 export default class TulipList extends React.Component<ITulipListProps, ITulipListPropsState> {
     static siteURL: string;

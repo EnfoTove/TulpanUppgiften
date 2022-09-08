@@ -5,15 +5,12 @@ import { ITulipsListItem } from '../../../models/ITulipsListItem';
 import * as $ from 'jquery';
 import { DefaultButton } from 'office-ui-fabric-react';
 import { SPHttpClient, SPHttpClientResponse, IDigestCache, DigestCache } from '@microsoft/sp-http';
-import { data } from 'jquery';
-import { IUserItem } from '../../../models/IUserItem';
 
 export interface ITulipListPropsState{
   listItem: ITulipsListItem,
   listItems: ITulipsListItem[],
   title:string,
   listName: string
-  tulipResponsible: string
 }
 
 export default class TulipList extends React.Component<ITulipListProps, ITulipListPropsState> {
@@ -34,7 +31,6 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
         },
       title: " ",
       listName: this.props.listName,
-      tulipResponsible: ""
     };
     TulipList.siteURL=this.props.websiteURL;
   }
@@ -97,13 +93,6 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     });
   }
 
-
-// componentDidUpdate(prevProps: Readonly<ITulipListProps>, prevState: Readonly<ITulipListPropsState>, snapshot?: any): void {
-//   console.log("component did update")
-//   this.bindDetailsList();
-
-// }
-
   componentDidMount() {
     console.log("component did mount")
     this.bindDetailsList();
@@ -136,24 +125,6 @@ private _getUserName(Id:number): string{
           });
           return tulipResponsibleEmail;
   }
-
-
-//   private _getUserName(Id:number): string{
-//     let userName = ""
-//      this.props.context.spHttpClient.get(
-//       this.props.context.pageContext.web.absoluteUrl + `/_api/web/getuserbyid(${Id})`,
-//       SPHttpClient.configurations.v1)
-//       .then(response => {
-//         return response.json();
-//       })
-//       .then(json => {
-//         userName = json.Title;
-//         console.log("INSIDE:" + userName)
-//         //return json.value;
-//       })
-//       console.log("Outside: " + userName)
-//       return userName
-// }
 
   private _deleteListItem(item: ITulipsListItem):Promise<SPHttpClientResponse> {
     console.log("ITEM TO DELETE:" + item.ID)
@@ -201,7 +172,7 @@ private _getUserEmail(Id:number):number{
       return tulipResponsibleEmail;
 }
 
-private _getCurrentLoggedInUser(){
+private _getCurrentLoggedInUser():string{
 let loggedInUserTitle = null;
 $.ajax({
   url: this.props.context.pageContext.web.absoluteUrl + `/_api/Web/currentUser`,
@@ -259,11 +230,7 @@ $.ajax({
             }
           });
         });
-
 }
-
-
-
 
 }
 
