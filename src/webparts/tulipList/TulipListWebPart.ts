@@ -31,8 +31,9 @@ export default class TulipListWebPart extends BaseClientSideWebPart<ITulipListWe
               listItems: this._tulips,
               listName: this.properties.listName,
               websiteURL:this.context.pageContext.web.absoluteUrl,
-              onGetListItems: this._onGetListItems,
-              onDeleteListItem: this._onDeleteListItem,
+              // onGetListItems: this._onGetListItems,
+              // onDeleteListItem: this._onDeleteListItem,
+              context:this.context,
             }
             );
 
