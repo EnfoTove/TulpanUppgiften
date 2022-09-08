@@ -5701,7 +5701,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!*********************************************************************************!*\
   !*** ./node_modules/office-ui-fabric-react/lib/components/DetailsList/index.js ***!
   \*********************************************************************************/
-/*! exports provided: SELECTION_CHANGE, SelectionDirection, SelectionMode, Selection, SelectionZone, CollapseAllVisibility, DetailsHeader, DetailsHeaderBase, SelectAllVisibility, DetailsList, DetailsListBase, buildColumns, ColumnActionsMode, ConstrainMode, ColumnDragEndLocation, DetailsListLayoutMode, CheckboxVisibility, DetailsRow, DetailsRowBase, DetailsRowCheck, DetailsColumnBase */
+/*! exports provided: CollapseAllVisibility, DetailsHeader, DetailsHeaderBase, SelectAllVisibility, DetailsList, DetailsListBase, buildColumns, ColumnActionsMode, ConstrainMode, ColumnDragEndLocation, DetailsListLayoutMode, CheckboxVisibility, DetailsRow, DetailsRowBase, DetailsRowCheck, DetailsColumnBase, SELECTION_CHANGE, SelectionDirection, SelectionMode, Selection, SelectionZone */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6373,7 +6373,7 @@ function initializeIcons(baseUrl, options) {
 /*!*******************************************************************************************!*\
   !*** ./node_modules/office-ui-fabric-react/node_modules/@uifabric/utilities/lib/index.js ***!
   \*******************************************************************************************/
-/*! exports provided: setFocusVisibility, setSSR, Async, AutoScroll, BaseComponent, nullRender, provideContext, DelayedRender, EventGroup, FabricPerformance, GlobalSettings, KeyCodes, Rectangle, appendFunction, mergeAriaAttributeValues, findIndex, find, createArray, toMatrix, removeIndex, replaceElement, addElementAtIndex, flatten, arraysEqual, asAsync, assertNever, autobind, classNamesFunction, createRef, css, Customizations, Customizer, CustomizerContext, customizable, mergeCustomizations, mergeSettings, mergeScopedSettings, getDocument, getWindow, extendComponent, getFirstFocusable, getLastFocusable, getFirstTabbable, getLastTabbable, focusFirstChild, getPreviousElement, getNextElement, isElementVisible, isElementTabbable, isElementFocusZone, isElementFocusSubZone, doesElementContainFocus, shouldWrapFocus, focusAsync, getFocusableByIndexPath, getElementIndexPath, hoistMethods, unhoistMethods, hoistStatics, initializeComponentRef, IsFocusVisibleClassName, initializeFocusRects, getInitials, isDirectionalKeyCode, addDirectionalKeyCode, getLanguage, setLanguage, getDistanceBetweenPoints, fitContentToBounds, calculatePrecision, precisionRound, setMemoizeWeakMap, resetMemoizations, memoize, memoizeFunction, merge, isIOS, shallowCompare, assign, filteredAssign, getId, resetIds, mapEnumByName, values, isMac, hasHorizontalOverflow, hasVerticalOverflow, hasOverflow, baseElementEvents, baseElementProperties, htmlElementProperties, labelProperties, audioProperties, videoProperties, olProperties, liProperties, anchorProperties, buttonProperties, inputProperties, textAreaProperties, selectProperties, optionProperties, tableProperties, trProperties, thProperties, tdProperties, colGroupProperties, colProperties, formProperties, iframeProperties, imgProperties, imageProperties, divProperties, getNativeProps, getResourceUrl, setBaseUrl, getRTL, setRTL, getRTLSafeKeyCode, safeRequestAnimationFrame, safeSetTimeout, DATA_IS_SCROLLABLE_ATTRIBUTE, allowScrollOnElement, disableBodyScroll, enableBodyScroll, getScrollbarWidth, findScrollableParent, format, styled, elementContains, elementContainsAttribute, findElementRecursive, getChildren, getParent, getRect, getVirtualParent, isVirtualElement, on, portalContainsElement, raiseClick, DATA_PORTAL_ATTRIBUTE, setPortalAttribute, setVirtualParent, SELECTION_CHANGE, SelectionMode, SelectionDirection, Selection, warn, setWarningCallback, warnConditionallyRequiredProps, warnDeprecations, warnMutuallyExclusive */
+/*! exports provided: setFocusVisibility, setSSR, Async, AutoScroll, BaseComponent, nullRender, provideContext, DelayedRender, EventGroup, FabricPerformance, GlobalSettings, KeyCodes, Rectangle, appendFunction, mergeAriaAttributeValues, findIndex, find, createArray, toMatrix, removeIndex, replaceElement, addElementAtIndex, flatten, arraysEqual, asAsync, assertNever, autobind, classNamesFunction, createRef, css, Customizations, Customizer, CustomizerContext, customizable, mergeCustomizations, mergeSettings, mergeScopedSettings, getWindow, extendComponent, getFirstFocusable, getLastFocusable, getFirstTabbable, getLastTabbable, focusFirstChild, getPreviousElement, getNextElement, isElementVisible, isElementTabbable, isElementFocusZone, isElementFocusSubZone, doesElementContainFocus, shouldWrapFocus, focusAsync, getFocusableByIndexPath, getElementIndexPath, hoistMethods, unhoistMethods, hoistStatics, initializeComponentRef, IsFocusVisibleClassName, initializeFocusRects, getInitials, isDirectionalKeyCode, addDirectionalKeyCode, getLanguage, setLanguage, getDistanceBetweenPoints, fitContentToBounds, calculatePrecision, precisionRound, setMemoizeWeakMap, resetMemoizations, memoize, memoizeFunction, merge, isIOS, shallowCompare, assign, filteredAssign, getId, resetIds, mapEnumByName, values, isMac, hasHorizontalOverflow, hasVerticalOverflow, hasOverflow, baseElementEvents, baseElementProperties, htmlElementProperties, labelProperties, audioProperties, videoProperties, olProperties, liProperties, anchorProperties, buttonProperties, inputProperties, textAreaProperties, selectProperties, optionProperties, tableProperties, trProperties, thProperties, tdProperties, colGroupProperties, colProperties, formProperties, iframeProperties, imgProperties, imageProperties, divProperties, getNativeProps, getResourceUrl, setBaseUrl, getRTL, setRTL, getRTLSafeKeyCode, safeRequestAnimationFrame, safeSetTimeout, DATA_IS_SCROLLABLE_ATTRIBUTE, allowScrollOnElement, disableBodyScroll, enableBodyScroll, getScrollbarWidth, findScrollableParent, format, styled, elementContains, elementContainsAttribute, findElementRecursive, getChildren, getDocument, getParent, getRect, getVirtualParent, isVirtualElement, on, portalContainsElement, raiseClick, DATA_PORTAL_ATTRIBUTE, setPortalAttribute, setVirtualParent, SELECTION_CHANGE, SelectionMode, SelectionDirection, Selection, warn, setWarningCallback, warnConditionallyRequiredProps, warnDeprecations, warnMutuallyExclusive */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6474,8 +6474,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "mergeScopedSettings", function() { return _customizations_mergeSettings__WEBPACK_IMPORTED_MODULE_24__["mergeScopedSettings"]; });
 
 /* harmony import */ var _dom__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./dom */ "FKf7");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getDocument", function() { return _dom__WEBPACK_IMPORTED_MODULE_25__["getDocument"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getWindow", function() { return _dom__WEBPACK_IMPORTED_MODULE_25__["getWindow"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "elementContains", function() { return _dom__WEBPACK_IMPORTED_MODULE_25__["elementContains"]; });
@@ -6485,6 +6483,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "findElementRecursive", function() { return _dom__WEBPACK_IMPORTED_MODULE_25__["findElementRecursive"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getChildren", function() { return _dom__WEBPACK_IMPORTED_MODULE_25__["getChildren"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getDocument", function() { return _dom__WEBPACK_IMPORTED_MODULE_25__["getDocument"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getParent", function() { return _dom__WEBPACK_IMPORTED_MODULE_25__["getParent"]; });
 
@@ -7104,7 +7104,7 @@ var KeytipManager = /** @class */ (function () {
 /*!**********************************************************!*\
   !*** ./node_modules/office-ui-fabric-react/lib/index.js ***!
   \**********************************************************/
-/*! exports provided: SelectableOptionMenuItemType, GroupSpacer, initializeIcons, MarqueeSelection, getPersonaInitialsColor, PivotItem, ShimmeredDetailsList, ShimmeredDetailsListBase, setFocusVisibility, setSSR, ActivityItem, Autofill, BaseAutoFill, Announced, AnnouncedBase, Breadcrumb, BreadcrumbBase, BaseButton, ElementType, ButtonType, Button, ActionButton, CommandBarButton, CommandButton, CompoundButton, DefaultButton, MessageBarButton, PrimaryButton, IconButton, Calendar, DayOfWeek, DateRangeType, FirstWeekOfYear, Callout, FocusTrapCallout, DirectionalHint, Check, getCheck, CheckBase, Checkbox, CheckboxBase, ChoiceGroup, ChoiceGroupBase, ChoiceGroupOption, Coachmark, COACHMARK_ATTRIBUTE_NAME, CoachmarkBase, Shade, isValidShade, isDark, getShade, getBackgroundShade, getContrastRatio, MAX_COLOR_SATURATION, MAX_COLOR_HUE, MAX_COLOR_VALUE, MAX_COLOR_RGB, MAX_COLOR_RGBA, MAX_COLOR_ALPHA, MIN_HEX_LENGTH, MAX_HEX_LENGTH, MIN_RGBA_LENGTH, MAX_RGBA_LENGTH, HEX_REGEX, RGBA_REGEX, cssColor, rgb2hex, clamp, hsl2rgb, hsl2hsv, hsv2rgb, hsv2hex, rgb2hsv, hsv2hsl, getColorFromString, getColorFromRGBA, getColorFromHSV, getFullColorString, updateSV, updateH, updateRGB, updateA, correctRGB, correctHSV, ColorPicker, ColorPickerBase, ComboBox, VirtualizedComboBox, CommandBar, CommandBarBase, ContextualMenu, getSubmenuItems, canAnyMenuItemsCheck, ContextualMenuBase, ContextualMenuItemType, ContextualMenuItem, ContextualMenuItemBase, DatePicker, DatePickerBase, SELECTION_CHANGE, SelectionDirection, SelectionMode, Selection, SelectionZone, CollapseAllVisibility, DetailsHeader, DetailsHeaderBase, SelectAllVisibility, DetailsList, DetailsListBase, buildColumns, ColumnActionsMode, ConstrainMode, ColumnDragEndLocation, DetailsListLayoutMode, CheckboxVisibility, DetailsRow, DetailsRowBase, DetailsRowCheck, DetailsColumnBase, Dialog, DialogBase, DialogContent, DialogContentBase, DialogFooter, DialogFooterBase, ResponsiveMode, DialogType, VerticalDivider, DocumentCard, DocumentCardType, DocumentCardActions, DocumentCardActivity, DocumentCardDetails, DocumentCardLocation, DocumentCardPreview, DocumentCardImage, DocumentCardTitle, DocumentCardLogo, DocumentCardStatus, Dropdown, DropdownBase, DropdownMenuItemType, BaseExtendedPicker, BaseExtendedPeoplePicker, ExtendedPeoplePicker, people, mru, groupOne, groupTwo, Fabric, FabricBase, OverflowButtonType, FacepileBase, Facepile, BaseFloatingPicker, BaseFloatingPeoplePicker, FloatingPeoplePicker, createItem, SuggestionsStore, SuggestionItemType, SuggestionsHeaderFooterItem, SuggestionsControl, SuggestionsCore, FocusTrapZone, FocusZone, FocusZoneTabbableElements, FocusZoneDirection, createComponent, withSlots, createFactory, getSlots, ThemeProvider, Grid, GridCell, GroupedList, GroupedListBase, GroupHeader, GroupFooter, GroupShowAll, HoverCard, HoverCardBase, OpenCardMode, HoverCardType, ExpandingCard, ExpandingCardBase, ExpandingCardMode, PlainCard, PlainCardBase, Icon, IconBase, IconType, getIconContent, FontIcon, getFontIcon, ImageIcon, Image, ImageBase, ImageFit, ImageCoverStyle, ImageLoadState, Keytip, KeytipData, KeytipLayer, KeytipLayerBase, LabelBase, Label, Layer, LayerBase, LayerHost, Link, LinkBase, List, ScrollToMode, MessageBar, MessageBarBase, MessageBarType, Modal, ModalBase, Nav, isRelativeUrl, NavBase, OverflowSet, OverflowSetBase, Overlay, OverlayBase, Panel, PanelType, Persona, PersonaBase, PersonaSize, PersonaPresence, PersonaInitialsColor, PersonaCoin, PersonaCoinBase, personaSize, personaPresenceSize, sizeBoolean, sizeToPixels, presenceBoolean, Suggestions, SuggestionActionType, SuggestionsItem, SuggestionsController, BasePicker, BasePickerListBelow, ValidationState, BasePeoplePicker, MemberListPeoplePicker, NormalPeoplePickerBase, CompactPeoplePickerBase, ListPeoplePickerBase, createGenericItem, NormalPeoplePicker, CompactPeoplePicker, ListPeoplePicker, PeoplePickerItemBase, PeoplePickerItem, PeoplePickerItemSuggestionBase, PeoplePickerItemSuggestion, TagPickerBase, TagPicker, TagItemBase, TagItem, TagItemSuggestionBase, TagItemSuggestion, Pivot, PivotBase, PivotLinkFormat, PivotLinkSize, Popup, PositioningContainer, ProgressIndicator, ProgressIndicatorBase, Rating, RatingBase, RatingSize, ResizeGroup, getMeasurementCache, getNextResizeGroupStateProvider, ResizeGroupBase, ResizeGroupDirection, ScrollablePane, ScrollablePaneBase, ScrollbarVisibility, SearchBox, SearchBoxBase, getAllSelectedOptions, BaseSelectedItemsList, BasePeopleSelectedItemsList, SelectedPeopleList, ExtendedSelectedItem, SeparatorBase, Separator, Shimmer, ShimmerBase, ShimmerElementType, ShimmerElementsDefaultHeights, ShimmerLine, ShimmerLineBase, ShimmerCircle, ShimmerCircleBase, ShimmerGap, ShimmerGapBase, ShimmerElementsGroup, ShimmerElementsGroupBase, Slider, ValuePosition, ONKEYDOWN_TIMEOUT_DURATION, SliderBase, KeyboardSpinDirection, SpinButton, Spinner, SpinnerBase, SpinnerSize, SpinnerType, StackItem, Stack, Sticky, StickyPositionType, AnimationClassNames, FontClassNames, ColorClassNames, AnimationStyles, AnimationVariables, DefaultPalette, DefaultFontStyles, registerDefaultFontFaces, FontSizes, FontWeights, IconFontSizes, createFontStyles, hiddenContentStyle, PulsingBeaconAnimationStyles, getGlobalClassNames, ThemeSettingName, getTheme, loadTheme, createTheme, registerOnThemeChangeCallback, removeOnThemeChangeCallback, buildClassMap, getIcon, registerIcons, registerIconAlias, unregisterIcons, setIconOptions, getIconClassName, InjectionMode, Stylesheet, concatStyleSets, fontFace, keyframes, mergeStyleSets, mergeStyles, SwatchColorPicker, SwatchColorPickerBase, ColorPickerGridCell, ColorPickerGridCellBase, TeachingBubble, TeachingBubbleBase, TeachingBubbleContent, TeachingBubbleContentBase, Text, TextView, TextStyles, TextField, TextFieldBase, DEFAULT_MASK_CHAR, MaskedTextField, ThemeGenerator, BaseSlots, FabricSlots, SemanticColorSlots, themeRulesStandardCreator, Toggle, ToggleBase, Tooltip, TooltipBase, TooltipDelay, TooltipHost, TooltipHostBase, TooltipOverflowMode, Async, AutoScroll, BaseComponent, nullRender, provideContext, DelayedRender, EventGroup, FabricPerformance, GlobalSettings, KeyCodes, Rectangle, appendFunction, mergeAriaAttributeValues, findIndex, find, createArray, toMatrix, removeIndex, replaceElement, addElementAtIndex, flatten, arraysEqual, asAsync, assertNever, autobind, classNamesFunction, createRef, css, Customizations, Customizer, CustomizerContext, customizable, mergeCustomizations, mergeSettings, mergeScopedSettings, getDocument, getWindow, extendComponent, getFirstFocusable, getLastFocusable, getFirstTabbable, getLastTabbable, focusFirstChild, getPreviousElement, getNextElement, isElementVisible, isElementTabbable, isElementFocusZone, isElementFocusSubZone, doesElementContainFocus, shouldWrapFocus, focusAsync, getFocusableByIndexPath, getElementIndexPath, hoistMethods, unhoistMethods, hoistStatics, initializeComponentRef, IsFocusVisibleClassName, initializeFocusRects, getInitials, isDirectionalKeyCode, addDirectionalKeyCode, getLanguage, setLanguage, getDistanceBetweenPoints, fitContentToBounds, calculatePrecision, precisionRound, setMemoizeWeakMap, resetMemoizations, memoize, memoizeFunction, merge, isIOS, shallowCompare, assign, filteredAssign, getId, resetIds, mapEnumByName, values, isMac, hasHorizontalOverflow, hasVerticalOverflow, hasOverflow, baseElementEvents, baseElementProperties, htmlElementProperties, labelProperties, audioProperties, videoProperties, olProperties, liProperties, anchorProperties, buttonProperties, inputProperties, textAreaProperties, selectProperties, optionProperties, tableProperties, trProperties, thProperties, tdProperties, colGroupProperties, colProperties, formProperties, iframeProperties, imgProperties, imageProperties, divProperties, getNativeProps, getResourceUrl, setBaseUrl, getRTL, setRTL, getRTLSafeKeyCode, safeRequestAnimationFrame, safeSetTimeout, DATA_IS_SCROLLABLE_ATTRIBUTE, allowScrollOnElement, disableBodyScroll, enableBodyScroll, getScrollbarWidth, findScrollableParent, format, styled, correctHex, getFocusStyle, focusClear, getFocusOutlineStyle, getThemedContext, HighContrastSelector, HighContrastSelectorWhite, HighContrastSelectorBlack, ScreenWidthMinSmall, ScreenWidthMinMedium, ScreenWidthMinLarge, ScreenWidthMinXLarge, ScreenWidthMinXXLarge, ScreenWidthMinXXXLarge, ScreenWidthMaxSmall, ScreenWidthMaxMedium, ScreenWidthMaxLarge, ScreenWidthMaxXLarge, ScreenWidthMaxXXLarge, ScreenWidthMinUhfMobile, getScreenSelector, normalize, noWrap, getFadedOverflowStyle, getPlaceholderStyles, ZIndexes, elementContains, elementContainsAttribute, findElementRecursive, getChildren, getParent, getRect, getVirtualParent, isVirtualElement, on, portalContainsElement, raiseClick, DATA_PORTAL_ATTRIBUTE, setPortalAttribute, setVirtualParent, warn, setWarningCallback, warnConditionallyRequiredProps, warnDeprecations, warnMutuallyExclusive */
+/*! exports provided: SelectableOptionMenuItemType, GroupSpacer, initializeIcons, MarqueeSelection, getPersonaInitialsColor, PivotItem, ShimmeredDetailsList, ShimmeredDetailsListBase, setFocusVisibility, setSSR, ActivityItem, Autofill, BaseAutoFill, Announced, AnnouncedBase, Breadcrumb, BreadcrumbBase, BaseButton, ElementType, ButtonType, Button, ActionButton, CommandBarButton, CommandButton, CompoundButton, DefaultButton, MessageBarButton, PrimaryButton, IconButton, Calendar, DayOfWeek, DateRangeType, FirstWeekOfYear, Callout, FocusTrapCallout, DirectionalHint, Check, getCheck, CheckBase, Checkbox, CheckboxBase, ChoiceGroup, ChoiceGroupBase, ChoiceGroupOption, Coachmark, COACHMARK_ATTRIBUTE_NAME, CoachmarkBase, MAX_COLOR_SATURATION, MAX_COLOR_HUE, MAX_COLOR_VALUE, MAX_COLOR_RGB, MAX_COLOR_RGBA, MAX_COLOR_ALPHA, MIN_HEX_LENGTH, MAX_HEX_LENGTH, MIN_RGBA_LENGTH, MAX_RGBA_LENGTH, HEX_REGEX, RGBA_REGEX, cssColor, rgb2hex, clamp, hsl2rgb, hsl2hsv, hsv2rgb, hsv2hex, rgb2hsv, hsv2hsl, getColorFromString, getColorFromRGBA, getColorFromHSV, getFullColorString, updateSV, updateH, updateRGB, updateA, correctRGB, correctHSV, correctHex, Shade, isValidShade, isDark, getShade, getBackgroundShade, getContrastRatio, ColorPicker, ColorPickerBase, ComboBox, VirtualizedComboBox, CommandBar, CommandBarBase, ContextualMenu, getSubmenuItems, canAnyMenuItemsCheck, ContextualMenuBase, ContextualMenuItemType, ContextualMenuItem, ContextualMenuItemBase, DatePicker, DatePickerBase, CollapseAllVisibility, DetailsHeader, DetailsHeaderBase, SelectAllVisibility, DetailsList, DetailsListBase, buildColumns, ColumnActionsMode, ConstrainMode, ColumnDragEndLocation, DetailsListLayoutMode, CheckboxVisibility, DetailsRow, DetailsRowBase, DetailsRowCheck, DetailsColumnBase, Dialog, DialogBase, DialogContent, DialogContentBase, DialogFooter, DialogFooterBase, ResponsiveMode, DialogType, VerticalDivider, DocumentCard, DocumentCardType, DocumentCardActions, DocumentCardActivity, DocumentCardDetails, DocumentCardLocation, DocumentCardPreview, DocumentCardImage, DocumentCardTitle, DocumentCardLogo, DocumentCardStatus, Dropdown, DropdownBase, DropdownMenuItemType, BaseExtendedPicker, BaseExtendedPeoplePicker, ExtendedPeoplePicker, people, mru, groupOne, groupTwo, Fabric, FabricBase, OverflowButtonType, FacepileBase, Facepile, BaseFloatingPicker, BaseFloatingPeoplePicker, FloatingPeoplePicker, createItem, SuggestionsStore, SuggestionItemType, SuggestionsHeaderFooterItem, SuggestionsControl, SuggestionsCore, FocusTrapZone, FocusZone, FocusZoneTabbableElements, FocusZoneDirection, createComponent, withSlots, createFactory, getSlots, ThemeProvider, Grid, GridCell, GroupedList, GroupedListBase, GroupHeader, GroupFooter, GroupShowAll, HoverCard, HoverCardBase, OpenCardMode, HoverCardType, ExpandingCard, ExpandingCardBase, ExpandingCardMode, PlainCard, PlainCardBase, Icon, IconBase, IconType, getIconContent, FontIcon, getFontIcon, ImageIcon, Image, ImageBase, ImageFit, ImageCoverStyle, ImageLoadState, Keytip, KeytipData, KeytipLayer, KeytipLayerBase, LabelBase, Label, Layer, LayerBase, LayerHost, Link, LinkBase, List, ScrollToMode, SELECTION_CHANGE, SelectionDirection, SelectionMode, Selection, SelectionZone, MessageBar, MessageBarBase, MessageBarType, Modal, ModalBase, Nav, isRelativeUrl, NavBase, OverflowSet, OverflowSetBase, Overlay, OverlayBase, Panel, PanelType, Persona, PersonaBase, PersonaSize, PersonaPresence, PersonaInitialsColor, PersonaCoin, PersonaCoinBase, personaSize, personaPresenceSize, sizeBoolean, sizeToPixels, presenceBoolean, Suggestions, SuggestionActionType, SuggestionsItem, SuggestionsController, BasePicker, BasePickerListBelow, ValidationState, BasePeoplePicker, MemberListPeoplePicker, NormalPeoplePickerBase, CompactPeoplePickerBase, ListPeoplePickerBase, createGenericItem, NormalPeoplePicker, CompactPeoplePicker, ListPeoplePicker, PeoplePickerItemBase, PeoplePickerItem, PeoplePickerItemSuggestionBase, PeoplePickerItemSuggestion, TagPickerBase, TagPicker, TagItemBase, TagItem, TagItemSuggestionBase, TagItemSuggestion, Pivot, PivotBase, PivotLinkFormat, PivotLinkSize, Popup, PositioningContainer, ProgressIndicator, ProgressIndicatorBase, Rating, RatingBase, RatingSize, ResizeGroup, getMeasurementCache, getNextResizeGroupStateProvider, ResizeGroupBase, ResizeGroupDirection, ScrollablePane, ScrollablePaneBase, ScrollbarVisibility, SearchBox, SearchBoxBase, getAllSelectedOptions, BaseSelectedItemsList, BasePeopleSelectedItemsList, SelectedPeopleList, ExtendedSelectedItem, SeparatorBase, Separator, Shimmer, ShimmerBase, ShimmerElementType, ShimmerElementsDefaultHeights, ShimmerLine, ShimmerLineBase, ShimmerCircle, ShimmerCircleBase, ShimmerGap, ShimmerGapBase, ShimmerElementsGroup, ShimmerElementsGroupBase, Slider, ValuePosition, ONKEYDOWN_TIMEOUT_DURATION, SliderBase, KeyboardSpinDirection, SpinButton, Spinner, SpinnerBase, SpinnerSize, SpinnerType, StackItem, Stack, Sticky, StickyPositionType, AnimationClassNames, FontClassNames, ColorClassNames, AnimationStyles, AnimationVariables, DefaultPalette, DefaultFontStyles, registerDefaultFontFaces, FontSizes, FontWeights, IconFontSizes, createFontStyles, hiddenContentStyle, PulsingBeaconAnimationStyles, getGlobalClassNames, ThemeSettingName, getTheme, loadTheme, createTheme, registerOnThemeChangeCallback, removeOnThemeChangeCallback, buildClassMap, getIcon, registerIcons, registerIconAlias, unregisterIcons, setIconOptions, getIconClassName, InjectionMode, Stylesheet, concatStyleSets, fontFace, keyframes, mergeStyleSets, mergeStyles, SwatchColorPicker, SwatchColorPickerBase, ColorPickerGridCell, ColorPickerGridCellBase, TeachingBubble, TeachingBubbleBase, TeachingBubbleContent, TeachingBubbleContentBase, Text, TextView, TextStyles, TextField, TextFieldBase, DEFAULT_MASK_CHAR, MaskedTextField, ThemeGenerator, BaseSlots, FabricSlots, SemanticColorSlots, themeRulesStandardCreator, Toggle, ToggleBase, Tooltip, TooltipBase, TooltipDelay, TooltipHost, TooltipHostBase, TooltipOverflowMode, Async, AutoScroll, BaseComponent, nullRender, provideContext, DelayedRender, EventGroup, FabricPerformance, GlobalSettings, KeyCodes, Rectangle, appendFunction, mergeAriaAttributeValues, findIndex, find, createArray, toMatrix, removeIndex, replaceElement, addElementAtIndex, flatten, arraysEqual, asAsync, assertNever, autobind, classNamesFunction, createRef, css, Customizations, Customizer, CustomizerContext, customizable, mergeCustomizations, mergeSettings, mergeScopedSettings, getWindow, extendComponent, getFirstFocusable, getLastFocusable, getFirstTabbable, getLastTabbable, focusFirstChild, getPreviousElement, getNextElement, isElementVisible, isElementTabbable, isElementFocusZone, isElementFocusSubZone, doesElementContainFocus, shouldWrapFocus, focusAsync, getFocusableByIndexPath, getElementIndexPath, hoistMethods, unhoistMethods, hoistStatics, initializeComponentRef, IsFocusVisibleClassName, initializeFocusRects, getInitials, isDirectionalKeyCode, addDirectionalKeyCode, getLanguage, setLanguage, getDistanceBetweenPoints, fitContentToBounds, calculatePrecision, precisionRound, setMemoizeWeakMap, resetMemoizations, memoize, memoizeFunction, merge, isIOS, shallowCompare, assign, filteredAssign, getId, resetIds, mapEnumByName, values, isMac, hasHorizontalOverflow, hasVerticalOverflow, hasOverflow, baseElementEvents, baseElementProperties, htmlElementProperties, labelProperties, audioProperties, videoProperties, olProperties, liProperties, anchorProperties, buttonProperties, inputProperties, textAreaProperties, selectProperties, optionProperties, tableProperties, trProperties, thProperties, tdProperties, colGroupProperties, colProperties, formProperties, iframeProperties, imgProperties, imageProperties, divProperties, getNativeProps, getResourceUrl, setBaseUrl, getRTL, setRTL, getRTLSafeKeyCode, safeRequestAnimationFrame, safeSetTimeout, DATA_IS_SCROLLABLE_ATTRIBUTE, allowScrollOnElement, disableBodyScroll, enableBodyScroll, getScrollbarWidth, findScrollableParent, format, styled, getFocusStyle, focusClear, getFocusOutlineStyle, getThemedContext, HighContrastSelector, HighContrastSelectorWhite, HighContrastSelectorBlack, ScreenWidthMinSmall, ScreenWidthMinMedium, ScreenWidthMinLarge, ScreenWidthMinXLarge, ScreenWidthMinXXLarge, ScreenWidthMinXXXLarge, ScreenWidthMaxSmall, ScreenWidthMaxMedium, ScreenWidthMaxLarge, ScreenWidthMaxXLarge, ScreenWidthMaxXXLarge, ScreenWidthMinUhfMobile, getScreenSelector, normalize, noWrap, getFadedOverflowStyle, getPlaceholderStyles, ZIndexes, elementContains, elementContainsAttribute, findElementRecursive, getChildren, getDocument, getParent, getRect, getVirtualParent, isVirtualElement, on, portalContainsElement, raiseClick, DATA_PORTAL_ATTRIBUTE, setPortalAttribute, setVirtualParent, warn, setWarningCallback, warnConditionallyRequiredProps, warnDeprecations, warnMutuallyExclusive */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7196,18 +7196,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CoachmarkBase", function() { return _Coachmark__WEBPACK_IMPORTED_MODULE_11__["CoachmarkBase"]; });
 
 /* harmony import */ var _Color__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Color */ "cLrF");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Shade", function() { return _Color__WEBPACK_IMPORTED_MODULE_12__["Shade"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isValidShade", function() { return _Color__WEBPACK_IMPORTED_MODULE_12__["isValidShade"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isDark", function() { return _Color__WEBPACK_IMPORTED_MODULE_12__["isDark"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getShade", function() { return _Color__WEBPACK_IMPORTED_MODULE_12__["getShade"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getBackgroundShade", function() { return _Color__WEBPACK_IMPORTED_MODULE_12__["getBackgroundShade"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getContrastRatio", function() { return _Color__WEBPACK_IMPORTED_MODULE_12__["getContrastRatio"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MAX_COLOR_SATURATION", function() { return _Color__WEBPACK_IMPORTED_MODULE_12__["MAX_COLOR_SATURATION"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MAX_COLOR_HUE", function() { return _Color__WEBPACK_IMPORTED_MODULE_12__["MAX_COLOR_HUE"]; });
@@ -7272,6 +7260,18 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "correctHex", function() { return _Color__WEBPACK_IMPORTED_MODULE_12__["correctHex"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Shade", function() { return _Color__WEBPACK_IMPORTED_MODULE_12__["Shade"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isValidShade", function() { return _Color__WEBPACK_IMPORTED_MODULE_12__["isValidShade"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isDark", function() { return _Color__WEBPACK_IMPORTED_MODULE_12__["isDark"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getShade", function() { return _Color__WEBPACK_IMPORTED_MODULE_12__["getShade"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getBackgroundShade", function() { return _Color__WEBPACK_IMPORTED_MODULE_12__["getBackgroundShade"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getContrastRatio", function() { return _Color__WEBPACK_IMPORTED_MODULE_12__["getContrastRatio"]; });
+
 /* harmony import */ var _ColorPicker__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./ColorPicker */ "rE1q");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ColorPicker", function() { return _ColorPicker__WEBPACK_IMPORTED_MODULE_13__["ColorPicker"]; });
 
@@ -7310,16 +7310,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DatePickerBase", function() { return _DatePicker__WEBPACK_IMPORTED_MODULE_17__["DatePickerBase"]; });
 
 /* harmony import */ var _DetailsList__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./DetailsList */ "mBXz");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SELECTION_CHANGE", function() { return _DetailsList__WEBPACK_IMPORTED_MODULE_18__["SELECTION_CHANGE"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SelectionDirection", function() { return _DetailsList__WEBPACK_IMPORTED_MODULE_18__["SelectionDirection"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SelectionMode", function() { return _DetailsList__WEBPACK_IMPORTED_MODULE_18__["SelectionMode"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Selection", function() { return _DetailsList__WEBPACK_IMPORTED_MODULE_18__["Selection"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SelectionZone", function() { return _DetailsList__WEBPACK_IMPORTED_MODULE_18__["SelectionZone"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollapseAllVisibility", function() { return _DetailsList__WEBPACK_IMPORTED_MODULE_18__["CollapseAllVisibility"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DetailsHeader", function() { return _DetailsList__WEBPACK_IMPORTED_MODULE_18__["DetailsHeader"]; });
@@ -7351,6 +7341,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DetailsRowCheck", function() { return _DetailsList__WEBPACK_IMPORTED_MODULE_18__["DetailsRowCheck"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DetailsColumnBase", function() { return _DetailsList__WEBPACK_IMPORTED_MODULE_18__["DetailsColumnBase"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SELECTION_CHANGE", function() { return _DetailsList__WEBPACK_IMPORTED_MODULE_18__["SELECTION_CHANGE"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SelectionDirection", function() { return _DetailsList__WEBPACK_IMPORTED_MODULE_18__["SelectionDirection"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SelectionMode", function() { return _DetailsList__WEBPACK_IMPORTED_MODULE_18__["SelectionMode"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Selection", function() { return _DetailsList__WEBPACK_IMPORTED_MODULE_18__["Selection"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SelectionZone", function() { return _DetailsList__WEBPACK_IMPORTED_MODULE_18__["SelectionZone"]; });
 
 /* harmony import */ var _Dialog__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./Dialog */ "joNx");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Dialog", function() { return _Dialog__WEBPACK_IMPORTED_MODULE_19__["Dialog"]; });
@@ -8078,8 +8078,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "mergeScopedSettings", function() { return _Utilities__WEBPACK_IMPORTED_MODULE_80__["mergeScopedSettings"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getDocument", function() { return _Utilities__WEBPACK_IMPORTED_MODULE_80__["getDocument"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getWindow", function() { return _Utilities__WEBPACK_IMPORTED_MODULE_80__["getWindow"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "extendComponent", function() { return _Utilities__WEBPACK_IMPORTED_MODULE_80__["extendComponent"]; });
@@ -8269,6 +8267,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "findElementRecursive", function() { return _Utilities__WEBPACK_IMPORTED_MODULE_80__["findElementRecursive"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getChildren", function() { return _Utilities__WEBPACK_IMPORTED_MODULE_80__["getChildren"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getDocument", function() { return _Utilities__WEBPACK_IMPORTED_MODULE_80__["getDocument"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getParent", function() { return _Utilities__WEBPACK_IMPORTED_MODULE_80__["getParent"]; });
 
@@ -29920,7 +29920,7 @@ var getStyles = function (props) {
 /*!*****************************************************************************************!*\
   !*** ./node_modules/office-ui-fabric-react/node_modules/@uifabric/utilities/lib/dom.js ***!
   \*****************************************************************************************/
-/*! exports provided: getDocument, getWindow, elementContains, elementContainsAttribute, findElementRecursive, getChildren, getParent, getRect, getVirtualParent, isVirtualElement, on, portalContainsElement, raiseClick, DATA_PORTAL_ATTRIBUTE, setPortalAttribute, setVirtualParent */
+/*! exports provided: getWindow, elementContains, elementContainsAttribute, findElementRecursive, getChildren, getDocument, getParent, getRect, getVirtualParent, isVirtualElement, on, portalContainsElement, raiseClick, DATA_PORTAL_ATTRIBUTE, setPortalAttribute, setVirtualParent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -35430,7 +35430,7 @@ function updateA(color, a) {
 /*!**************************************************************!*\
   !*** ./node_modules/office-ui-fabric-react/lib/Utilities.js ***!
   \**************************************************************/
-/*! exports provided: setFocusVisibility, setSSR, Async, AutoScroll, BaseComponent, nullRender, provideContext, DelayedRender, EventGroup, FabricPerformance, GlobalSettings, KeyCodes, Rectangle, appendFunction, mergeAriaAttributeValues, findIndex, find, createArray, toMatrix, removeIndex, replaceElement, addElementAtIndex, flatten, arraysEqual, asAsync, assertNever, autobind, classNamesFunction, createRef, css, Customizations, Customizer, CustomizerContext, customizable, mergeCustomizations, mergeSettings, mergeScopedSettings, getDocument, getWindow, extendComponent, getFirstFocusable, getLastFocusable, getFirstTabbable, getLastTabbable, focusFirstChild, getPreviousElement, getNextElement, isElementVisible, isElementTabbable, isElementFocusZone, isElementFocusSubZone, doesElementContainFocus, shouldWrapFocus, focusAsync, getFocusableByIndexPath, getElementIndexPath, hoistMethods, unhoistMethods, hoistStatics, initializeComponentRef, IsFocusVisibleClassName, initializeFocusRects, getInitials, isDirectionalKeyCode, addDirectionalKeyCode, getLanguage, setLanguage, getDistanceBetweenPoints, fitContentToBounds, calculatePrecision, precisionRound, setMemoizeWeakMap, resetMemoizations, memoize, memoizeFunction, merge, isIOS, shallowCompare, assign, filteredAssign, getId, resetIds, mapEnumByName, values, isMac, hasHorizontalOverflow, hasVerticalOverflow, hasOverflow, baseElementEvents, baseElementProperties, htmlElementProperties, labelProperties, audioProperties, videoProperties, olProperties, liProperties, anchorProperties, buttonProperties, inputProperties, textAreaProperties, selectProperties, optionProperties, tableProperties, trProperties, thProperties, tdProperties, colGroupProperties, colProperties, formProperties, iframeProperties, imgProperties, imageProperties, divProperties, getNativeProps, getResourceUrl, setBaseUrl, getRTL, setRTL, getRTLSafeKeyCode, safeRequestAnimationFrame, safeSetTimeout, DATA_IS_SCROLLABLE_ATTRIBUTE, allowScrollOnElement, disableBodyScroll, enableBodyScroll, getScrollbarWidth, findScrollableParent, format, styled, elementContains, elementContainsAttribute, findElementRecursive, getChildren, getParent, getRect, getVirtualParent, isVirtualElement, on, portalContainsElement, raiseClick, DATA_PORTAL_ATTRIBUTE, setPortalAttribute, setVirtualParent, SELECTION_CHANGE, SelectionMode, SelectionDirection, Selection, warn, setWarningCallback, warnConditionallyRequiredProps, warnDeprecations, warnMutuallyExclusive */
+/*! exports provided: setFocusVisibility, setSSR, Async, AutoScroll, BaseComponent, nullRender, provideContext, DelayedRender, EventGroup, FabricPerformance, GlobalSettings, KeyCodes, Rectangle, appendFunction, mergeAriaAttributeValues, findIndex, find, createArray, toMatrix, removeIndex, replaceElement, addElementAtIndex, flatten, arraysEqual, asAsync, assertNever, autobind, classNamesFunction, createRef, css, Customizations, Customizer, CustomizerContext, customizable, mergeCustomizations, mergeSettings, mergeScopedSettings, getWindow, extendComponent, getFirstFocusable, getLastFocusable, getFirstTabbable, getLastTabbable, focusFirstChild, getPreviousElement, getNextElement, isElementVisible, isElementTabbable, isElementFocusZone, isElementFocusSubZone, doesElementContainFocus, shouldWrapFocus, focusAsync, getFocusableByIndexPath, getElementIndexPath, hoistMethods, unhoistMethods, hoistStatics, initializeComponentRef, IsFocusVisibleClassName, initializeFocusRects, getInitials, isDirectionalKeyCode, addDirectionalKeyCode, getLanguage, setLanguage, getDistanceBetweenPoints, fitContentToBounds, calculatePrecision, precisionRound, setMemoizeWeakMap, resetMemoizations, memoize, memoizeFunction, merge, isIOS, shallowCompare, assign, filteredAssign, getId, resetIds, mapEnumByName, values, isMac, hasHorizontalOverflow, hasVerticalOverflow, hasOverflow, baseElementEvents, baseElementProperties, htmlElementProperties, labelProperties, audioProperties, videoProperties, olProperties, liProperties, anchorProperties, buttonProperties, inputProperties, textAreaProperties, selectProperties, optionProperties, tableProperties, trProperties, thProperties, tdProperties, colGroupProperties, colProperties, formProperties, iframeProperties, imgProperties, imageProperties, divProperties, getNativeProps, getResourceUrl, setBaseUrl, getRTL, setRTL, getRTLSafeKeyCode, safeRequestAnimationFrame, safeSetTimeout, DATA_IS_SCROLLABLE_ATTRIBUTE, allowScrollOnElement, disableBodyScroll, enableBodyScroll, getScrollbarWidth, findScrollableParent, format, styled, elementContains, elementContainsAttribute, findElementRecursive, getChildren, getDocument, getParent, getRect, getVirtualParent, isVirtualElement, on, portalContainsElement, raiseClick, DATA_PORTAL_ATTRIBUTE, setPortalAttribute, setVirtualParent, SELECTION_CHANGE, SelectionMode, SelectionDirection, Selection, warn, setWarningCallback, warnConditionallyRequiredProps, warnDeprecations, warnMutuallyExclusive */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -35510,8 +35510,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "mergeSettings", function() { return _uifabric_utilities__WEBPACK_IMPORTED_MODULE_1__["mergeSettings"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "mergeScopedSettings", function() { return _uifabric_utilities__WEBPACK_IMPORTED_MODULE_1__["mergeScopedSettings"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getDocument", function() { return _uifabric_utilities__WEBPACK_IMPORTED_MODULE_1__["getDocument"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getWindow", function() { return _uifabric_utilities__WEBPACK_IMPORTED_MODULE_1__["getWindow"]; });
 
@@ -35702,6 +35700,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "findElementRecursive", function() { return _uifabric_utilities__WEBPACK_IMPORTED_MODULE_1__["findElementRecursive"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getChildren", function() { return _uifabric_utilities__WEBPACK_IMPORTED_MODULE_1__["getChildren"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getDocument", function() { return _uifabric_utilities__WEBPACK_IMPORTED_MODULE_1__["getDocument"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getParent", function() { return _uifabric_utilities__WEBPACK_IMPORTED_MODULE_1__["getParent"]; });
 
@@ -42705,7 +42705,7 @@ var MessageBarButton = /** @class */ (function (_super) {
 /*!**************************************************************************!*\
   !*** ./node_modules/office-ui-fabric-react/lib/utilities/color/index.js ***!
   \**************************************************************************/
-/*! exports provided: Shade, isValidShade, isDark, getShade, getBackgroundShade, getContrastRatio, MAX_COLOR_SATURATION, MAX_COLOR_HUE, MAX_COLOR_VALUE, MAX_COLOR_RGB, MAX_COLOR_RGBA, MAX_COLOR_ALPHA, MIN_HEX_LENGTH, MAX_HEX_LENGTH, MIN_RGBA_LENGTH, MAX_RGBA_LENGTH, HEX_REGEX, RGBA_REGEX, cssColor, rgb2hex, clamp, hsl2rgb, hsl2hsv, hsv2rgb, hsv2hex, rgb2hsv, hsv2hsl, getColorFromString, getColorFromRGBA, getColorFromHSV, getFullColorString, updateSV, updateH, updateRGB, updateA, correctRGB, correctHSV, correctHex */
+/*! exports provided: MAX_COLOR_SATURATION, MAX_COLOR_HUE, MAX_COLOR_VALUE, MAX_COLOR_RGB, MAX_COLOR_RGBA, MAX_COLOR_ALPHA, MIN_HEX_LENGTH, MAX_HEX_LENGTH, MIN_RGBA_LENGTH, MAX_RGBA_LENGTH, HEX_REGEX, RGBA_REGEX, cssColor, rgb2hex, clamp, hsl2rgb, hsl2hsv, hsv2rgb, hsv2hex, rgb2hsv, hsv2hsl, getColorFromString, getColorFromRGBA, getColorFromHSV, getFullColorString, updateSV, updateH, updateRGB, updateA, correctRGB, correctHSV, correctHex, Shade, isValidShade, isDark, getShade, getBackgroundShade, getContrastRatio */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -55091,24 +55091,12 @@ var Panel = Object(_Utilities__WEBPACK_IMPORTED_MODULE_0__["styled"])(_Panel_bas
 /*!**********************************************************!*\
   !*** ./node_modules/office-ui-fabric-react/lib/Color.js ***!
   \**********************************************************/
-/*! exports provided: Shade, isValidShade, isDark, getShade, getBackgroundShade, getContrastRatio, MAX_COLOR_SATURATION, MAX_COLOR_HUE, MAX_COLOR_VALUE, MAX_COLOR_RGB, MAX_COLOR_RGBA, MAX_COLOR_ALPHA, MIN_HEX_LENGTH, MAX_HEX_LENGTH, MIN_RGBA_LENGTH, MAX_RGBA_LENGTH, HEX_REGEX, RGBA_REGEX, cssColor, rgb2hex, clamp, hsl2rgb, hsl2hsv, hsv2rgb, hsv2hex, rgb2hsv, hsv2hsl, getColorFromString, getColorFromRGBA, getColorFromHSV, getFullColorString, updateSV, updateH, updateRGB, updateA, correctRGB, correctHSV, correctHex */
+/*! exports provided: MAX_COLOR_SATURATION, MAX_COLOR_HUE, MAX_COLOR_VALUE, MAX_COLOR_RGB, MAX_COLOR_RGBA, MAX_COLOR_ALPHA, MIN_HEX_LENGTH, MAX_HEX_LENGTH, MIN_RGBA_LENGTH, MAX_RGBA_LENGTH, HEX_REGEX, RGBA_REGEX, cssColor, rgb2hex, clamp, hsl2rgb, hsl2hsv, hsv2rgb, hsv2hex, rgb2hsv, hsv2hsl, getColorFromString, getColorFromRGBA, getColorFromHSV, getFullColorString, updateSV, updateH, updateRGB, updateA, correctRGB, correctHSV, correctHex, Shade, isValidShade, isDark, getShade, getBackgroundShade, getContrastRatio */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utilities_color_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utilities/color/index */ "S6XE");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Shade", function() { return _utilities_color_index__WEBPACK_IMPORTED_MODULE_0__["Shade"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isValidShade", function() { return _utilities_color_index__WEBPACK_IMPORTED_MODULE_0__["isValidShade"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isDark", function() { return _utilities_color_index__WEBPACK_IMPORTED_MODULE_0__["isDark"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getShade", function() { return _utilities_color_index__WEBPACK_IMPORTED_MODULE_0__["getShade"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getBackgroundShade", function() { return _utilities_color_index__WEBPACK_IMPORTED_MODULE_0__["getBackgroundShade"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getContrastRatio", function() { return _utilities_color_index__WEBPACK_IMPORTED_MODULE_0__["getContrastRatio"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MAX_COLOR_SATURATION", function() { return _utilities_color_index__WEBPACK_IMPORTED_MODULE_0__["MAX_COLOR_SATURATION"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MAX_COLOR_HUE", function() { return _utilities_color_index__WEBPACK_IMPORTED_MODULE_0__["MAX_COLOR_HUE"]; });
@@ -55172,6 +55160,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "correctHSV", function() { return _utilities_color_index__WEBPACK_IMPORTED_MODULE_0__["correctHSV"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "correctHex", function() { return _utilities_color_index__WEBPACK_IMPORTED_MODULE_0__["correctHex"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Shade", function() { return _utilities_color_index__WEBPACK_IMPORTED_MODULE_0__["Shade"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isValidShade", function() { return _utilities_color_index__WEBPACK_IMPORTED_MODULE_0__["isValidShade"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isDark", function() { return _utilities_color_index__WEBPACK_IMPORTED_MODULE_0__["isDark"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getShade", function() { return _utilities_color_index__WEBPACK_IMPORTED_MODULE_0__["getShade"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getBackgroundShade", function() { return _utilities_color_index__WEBPACK_IMPORTED_MODULE_0__["getBackgroundShade"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getContrastRatio", function() { return _utilities_color_index__WEBPACK_IMPORTED_MODULE_0__["getContrastRatio"]; });
 
 
 //# sourceMappingURL=Color.js.map
@@ -66513,22 +66513,12 @@ var getComboBoxOptionClassNames = Object(_Utilities__WEBPACK_IMPORTED_MODULE_0__
 /*!****************************************************************!*\
   !*** ./node_modules/office-ui-fabric-react/lib/DetailsList.js ***!
   \****************************************************************/
-/*! exports provided: SELECTION_CHANGE, SelectionDirection, SelectionMode, Selection, SelectionZone, CollapseAllVisibility, DetailsHeader, DetailsHeaderBase, SelectAllVisibility, DetailsList, DetailsListBase, buildColumns, ColumnActionsMode, ConstrainMode, ColumnDragEndLocation, DetailsListLayoutMode, CheckboxVisibility, DetailsRow, DetailsRowBase, DetailsRowCheck, DetailsColumnBase */
+/*! exports provided: CollapseAllVisibility, DetailsHeader, DetailsHeaderBase, SelectAllVisibility, DetailsList, DetailsListBase, buildColumns, ColumnActionsMode, ConstrainMode, ColumnDragEndLocation, DetailsListLayoutMode, CheckboxVisibility, DetailsRow, DetailsRowBase, DetailsRowCheck, DetailsColumnBase, SELECTION_CHANGE, SelectionDirection, SelectionMode, Selection, SelectionZone */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_DetailsList_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/DetailsList/index */ "3ZFk");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SELECTION_CHANGE", function() { return _components_DetailsList_index__WEBPACK_IMPORTED_MODULE_0__["SELECTION_CHANGE"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SelectionDirection", function() { return _components_DetailsList_index__WEBPACK_IMPORTED_MODULE_0__["SelectionDirection"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SelectionMode", function() { return _components_DetailsList_index__WEBPACK_IMPORTED_MODULE_0__["SelectionMode"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Selection", function() { return _components_DetailsList_index__WEBPACK_IMPORTED_MODULE_0__["Selection"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SelectionZone", function() { return _components_DetailsList_index__WEBPACK_IMPORTED_MODULE_0__["SelectionZone"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollapseAllVisibility", function() { return _components_DetailsList_index__WEBPACK_IMPORTED_MODULE_0__["CollapseAllVisibility"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DetailsHeader", function() { return _components_DetailsList_index__WEBPACK_IMPORTED_MODULE_0__["DetailsHeader"]; });
@@ -66560,6 +66550,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DetailsRowCheck", function() { return _components_DetailsList_index__WEBPACK_IMPORTED_MODULE_0__["DetailsRowCheck"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DetailsColumnBase", function() { return _components_DetailsList_index__WEBPACK_IMPORTED_MODULE_0__["DetailsColumnBase"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SELECTION_CHANGE", function() { return _components_DetailsList_index__WEBPACK_IMPORTED_MODULE_0__["SELECTION_CHANGE"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SelectionDirection", function() { return _components_DetailsList_index__WEBPACK_IMPORTED_MODULE_0__["SelectionDirection"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SelectionMode", function() { return _components_DetailsList_index__WEBPACK_IMPORTED_MODULE_0__["SelectionMode"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Selection", function() { return _components_DetailsList_index__WEBPACK_IMPORTED_MODULE_0__["Selection"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SelectionZone", function() { return _components_DetailsList_index__WEBPACK_IMPORTED_MODULE_0__["SelectionZone"]; });
 
 
 //# sourceMappingURL=DetailsList.js.map
