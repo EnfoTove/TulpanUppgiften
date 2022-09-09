@@ -8,13 +8,6 @@ export interface ITulipListWebPartProps {
 export default class TulipListWebPart extends BaseClientSideWebPart<ITulipListWebPartProps> {
     private _tulips;
     render(): void;
-    private _onGetListItems;
-    private _getListItems;
-    private _onDeleteListItem;
-    private _deleteListItem;
-    private _getUserEmail;
-    private _getCurrentLoggedInUser;
-    private _triggerEmail;
     protected onDispose(): void;
     protected readonly dataVersion: Version;
     protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration;
