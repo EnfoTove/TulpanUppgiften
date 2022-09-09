@@ -170,6 +170,10 @@ var TulipList = /** @class */ (function (_super) {
                                 react__WEBPACK_IMPORTED_MODULE_0__["createElement"](office_ui_fabric_react__WEBPACK_IMPORTED_MODULE_3__["DefaultButton"], { className: _TulipList_module_scss__WEBPACK_IMPORTED_MODULE_1__["default"].defaultButton, onClick: function () { return _this._clickHandler(item); } }, "Delete Item")));
                     })))));
     };
+    TulipList.prototype.componentDidMount = function () {
+        console.log("component did mount");
+        this.bindDetailsList();
+    };
     TulipList.prototype._getListItems = function () {
         console.log("get list items");
         var url = TulipList.siteURL + ("/_api/web/lists/getbytitle('" + this.props.listName + "')/items?$select= ID, Title, ManufacturingPrice, RetailPrice, TulipResponsible/Id, Author/Id&$expand=TulipResponsible/Id, Author/AuthorId");
@@ -190,17 +194,6 @@ var TulipList = /** @class */ (function (_super) {
             });
         });
     };
-    TulipList.prototype.componentDidMount = function () {
-        console.log("component did mount");
-        this.bindDetailsList();
-    };
-    TulipList.prototype._clickHandler = function (item) {
-        var deletionConfirmed = confirm("Do you really want to delete this item?");
-        console.log(deletionConfirmed);
-        if (deletionConfirmed) {
-            this._deleteListItem(item);
-        }
-    };
     TulipList.prototype._getUserName = function (Id) {
         var tulipResponsibleEmail = null;
         jquery__WEBPACK_IMPORTED_MODULE_2__["ajax"]({
@@ -218,6 +211,13 @@ var TulipList = /** @class */ (function (_super) {
             }
         });
         return tulipResponsibleEmail;
+    };
+    TulipList.prototype._clickHandler = function (item) {
+        var deletionConfirmed = confirm("Do you really want to delete this item?");
+        console.log(deletionConfirmed);
+        if (deletionConfirmed) {
+            this._deleteListItem(item);
+        }
     };
     TulipList.prototype._deleteListItem = function (item) {
         var _this = this;

@@ -71,6 +71,12 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     );
   }
 
+  componentDidMount() {
+    console.log("component did mount")
+    this.bindDetailsList();
+  }
+
+
   private _getListItems(): Promise<ITulipsListItem[]>{
     console.log("get list items")
     const url = TulipList.siteURL + `/_api/web/lists/getbytitle('${this.props.listName}')/items?$select= ID, Title, ManufacturingPrice, RetailPrice, TulipResponsible/Id, Author/Id&$expand=TulipResponsible/Id, Author/AuthorId`;
@@ -93,38 +99,34 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     });
   }
 
-  componentDidMount() {
-    console.log("component did mount")
-    this.bindDetailsList();
+
+  private _getUserName(Id:number): string{
+    let tulipResponsibleEmail = null;
+    $.ajax({
+      url:  `${TulipList.siteURL}/_api/web/getuserbyid(${Id})`,
+      type: "GET",
+      headers: {
+        "Accept": "application/json; odata=verbose"
+      },
+      async: false,
+      success: function(data) {
+        tulipResponsibleEmail = data.d.Title;
+      },
+      error: function(error) {
+        console.log("Error with fetching user name: " + error);
+      }
+    });
+    return tulipResponsibleEmail;
   }
 
-  private _clickHandler(item: ITulipsListItem){
-    let deletionConfirmed = confirm("Do you really want to delete this item?");
-    console.log(deletionConfirmed);
+    private _clickHandler(item: ITulipsListItem){
+      let deletionConfirmed = confirm("Do you really want to delete this item?");
+      console.log(deletionConfirmed);
 
-    if(deletionConfirmed){
-      this._deleteListItem(item);
+      if(deletionConfirmed){
+        this._deleteListItem(item);
+      }
     }
-  }
-
-private _getUserName(Id:number): string{
-      let tulipResponsibleEmail = null;
-        $.ajax({
-          url:  `${TulipList.siteURL}/_api/web/getuserbyid(${Id})`,
-          type: "GET",
-          headers: {
-              "Accept": "application/json; odata=verbose"
-          },
-          async: false,
-          success: function(data) {
-            tulipResponsibleEmail = data.d.Title;
-            },
-            error: function(error) {
-              console.log("Error with fetching user name: " + error);
-            }
-          });
-          return tulipResponsibleEmail;
-  }
 
   private _deleteListItem(item: ITulipsListItem):void {
     const endpoint: string = this.props.context.pageContext.web.absoluteUrl
