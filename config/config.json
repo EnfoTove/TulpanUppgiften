@@ -9,20 +9,10 @@
           "manifest": "./src/webparts/tulipList/TulipListWebPart.manifest.json"
         }
       ]
-    },
-    "add-item-web-part": {
-      "components": [
-        {
-          "entrypoint": "./lib/webparts/addItem/AddItemWebPart.js",
-          "manifest": "./src/webparts/addItem/AddItemWebPart.manifest.json"
-        }
-      ]
     }
-
   },
   "externals": {},
   "localizedResources": {
-    "TulipListWebPartStrings": "lib/webparts/tulipList/loc/{locale}.js",
-    "AddItemWebPartStrings": "lib/webparts/addItem/loc/{locale}.js"
+    "TulipListWebPartStrings": "lib/webparts/tulipList/loc/{locale}.js"
   }
 }
