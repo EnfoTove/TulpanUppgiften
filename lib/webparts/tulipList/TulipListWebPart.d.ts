@@ -7,6 +7,7 @@ export interface ITulipListWebPartProps {
 }
 export default class TulipListWebPart extends BaseClientSideWebPart<ITulipListWebPartProps> {
     private _tulips;
+    onInit(): Promise<void>;
     render(): void;
     protected onDispose(): void;
     protected readonly dataVersion: Version;

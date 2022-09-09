@@ -11,6 +11,7 @@ import * as strings from 'TulipListWebPartStrings';
 import { ITulipListProps } from './components/ITulipListProps';
 import { ITulipsListItem } from '../../models/ITulipsListItem';
 import TulipList from './components/TulipList';
+import { sp } from '@pnp/pnpjs';
 
 export interface ITulipListWebPartProps {
   description: string;
@@ -19,6 +20,15 @@ export interface ITulipListWebPartProps {
 
 export default class TulipListWebPart extends BaseClientSideWebPart<ITulipListWebPartProps> {
   private _tulips: ITulipsListItem[] = [];
+  public onInit(): Promise<void> {
+    return super.onInit().then(_=>{
+      sp.setup({
+        spfxContext:this.context
+      });
+    });
+
+  }
+
 
         public render(): void {
           const element: React.ReactElement<ITulipListProps> = React.createElement(
