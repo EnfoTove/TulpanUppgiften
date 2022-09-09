@@ -60507,6 +60507,17 @@ var TulipListWebPart = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(TulipListWebPart.prototype, "disableReactivePropertyChanges", {
+        get: function () {
+            return true;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TulipListWebPart.prototype.onAfterPropertyPaneChangesApplied = function () {
+        react_dom__WEBPACK_IMPORTED_MODULE_1__["unmountComponentAtNode"](this.domElement);
+        this.render();
+    };
     TulipListWebPart.prototype.getPropertyPaneConfiguration = function () {
         return {
             pages: [

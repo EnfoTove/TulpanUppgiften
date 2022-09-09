@@ -10,6 +10,8 @@ export default class TulipListWebPart extends BaseClientSideWebPart<ITulipListWe
     render(): void;
     protected onDispose(): void;
     protected readonly dataVersion: Version;
+    protected readonly disableReactivePropertyChanges: boolean;
+    protected onAfterPropertyPaneChangesApplied(): void;
     protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration;
 }
 //# sourceMappingURL=TulipListWebPart.d.ts.map

@@ -3,6 +3,7 @@ import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
 import {
   IPropertyPaneConfiguration,
+  PropertyPaneButton,
   PropertyPaneTextField
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
@@ -40,6 +41,15 @@ export default class TulipListWebPart extends BaseClientSideWebPart<ITulipListWe
 
     protected get dataVersion(): Version {
       return Version.parse('1.0');
+    }
+
+    protected get disableReactivePropertyChanges(): boolean {
+      return true;
+    }
+
+    protected onAfterPropertyPaneChangesApplied(): void {
+      ReactDom.unmountComponentAtNode(this.domElement);
+      this.render();
     }
 
     protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
