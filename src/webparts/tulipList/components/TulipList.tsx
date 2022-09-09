@@ -4,7 +4,7 @@ import { ITulipListProps } from './ITulipListProps';
 import { ITulipsListItem } from '../../../models/ITulipsListItem';
 import * as $ from 'jquery';
 import { DefaultButton } from 'office-ui-fabric-react';
-import { SPHttpClient, SPHttpClientResponse, IDigestCache, DigestCache } from '@microsoft/sp-http';
+import { SPHttpClient, ISPHttpClientOptions, SPHttpClientResponse, IDigestCache, DigestCache } from '@microsoft/sp-http';
 
 export interface ITulipListPropsState{
   listItem: ITulipsListItem,
@@ -126,30 +126,28 @@ private _getUserName(Id:number): string{
           return tulipResponsibleEmail;
   }
 
-  private _deleteListItem(item: ITulipsListItem):Promise<SPHttpClientResponse> {
-    console.log("ITEM TO DELETE:" + item.ID)
-    console.log("LIST NAME:" + this.props.listName)
-    return this.props.context.spHttpClient.get(
-      this.props.context.pageContext.web.absoluteUrl + `/_api/web/lists/getbytitle('${this.props.listName}')/items(${item.ID})?$select=Id`,
-      SPHttpClient.configurations.v1)
-      .then(response=>{
-        return response.json();
-      })
-      .then(jsonResponse=>{
-        return jsonResponse.value
-      })
-      .then((listItem: ITulipsListItem) => {
-        const request: any = {};
-        request.headers = {
-          'X-HTTP-Method': 'DELETE',
-          'IF-MATCH': '*'
-        };
-
+  private _deleteListItem(item: ITulipsListItem):void {
     const endpoint: string = this.props.context.pageContext.web.absoluteUrl
     + `/_api/web/lists/getbytitle('${this.props.listName}')/items(${item.ID})`
 
-    return this.props.context.spHttpClient.post(endpoint, SPHttpClient.configurations.v1, request);
-  }).then( this._triggerEmail(item))
+    const headers: any = { 'X-HTTP-Method': 'DELETE', 'IF-MATCH': '*'}
+
+    const spHttpClientOptions: ISPHttpClientOptions = {
+      "headers": headers
+    }
+
+     this.props.context.spHttpClient.post(endpoint, SPHttpClient.configurations.v1, spHttpClientOptions)
+     .then((response: SPHttpClientResponse)=>{
+      if (response.status=== 204){
+        console.log("deletion done");
+        this._triggerEmail(item)
+        this.bindDetailsList();
+      }
+      else{
+        let errormsg: string = "An error has occured: " + response.status + response.statusText
+        console.log(errormsg)
+      }
+     })
 }
 
 //Gets and returns the email address of the user by the id that's passed in.
