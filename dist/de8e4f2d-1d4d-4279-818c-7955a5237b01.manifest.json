@@ -67,11 +67,6 @@
         "version": "16.8.5",
         "id": "aa0a46ec-1505-43cd-a44a-93f3a5aa460a",
         "failoverPath": "node_modules/react-dom/dist/react-dom.js"
-      },
-      "@microsoft/sp-http": {
-        "type": "component",
-        "version": "1.11.0",
-        "id": "c07208f0-ea3b-4c1a-9965-ac1b825211a6"
       }
     }
   }

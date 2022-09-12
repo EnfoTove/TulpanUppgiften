@@ -3,6 +3,7 @@ import { ITulipListProps } from './ITulipListProps';
 import { ITulipsListItem } from '../../../models/ITulipsListItem';
 import { IAuthorItem } from '../../../models/IAuthorItem';
 import { ITulipResponsibleItem } from '../../../models/ITulipResponsibleItem';
+import "@pnp/sp/sputilities";
 export interface ITulipListPropsState {
     listItem: ITulipsListItem;
     listItems: ITulipsListItem[];
@@ -14,20 +15,31 @@ export interface ITulipListPropsState {
     tulipResponsibleItems: ITulipResponsibleItem[];
     finishLoading: boolean;
 }
+export interface TypedHash<T> {
+    [key: string]: T;
+}
+export interface EmailProperties {
+    To: string[];
+    CC?: string[];
+    BCC?: string[];
+    Subject: string;
+    Body: string;
+    AdditionalHeaders?: TypedHash<string>;
+    From?: string;
+}
 export default class TulipList extends React.Component<ITulipListProps, ITulipListPropsState> {
     static siteURL: string;
     constructor(props: ITulipListProps, state: ITulipListPropsState);
     render(): React.ReactElement<ITulipListProps>;
     componentDidMount(): void;
-    private _getCurrentListItemsPnp;
-    private _getTulipResponsibleInfo;
-    private _getAuthorInfo;
+    private _getCurrentListItems;
+    private _getTulipResponsibleTitle;
+    private _getAuthorTitle;
     private _setListStates;
-    _getUserNamePnp(id: number): Promise<string>;
     private _clickHandler;
     _deleteListItem(item: ITulipsListItem): Promise<void>;
     _getUserEmailPnp(id: number): Promise<string>;
     private _getCurrentLoggedInUser;
-    private _triggerEmail;
+    private _sendEmail;
 }
 //# sourceMappingURL=TulipList.d.ts.map

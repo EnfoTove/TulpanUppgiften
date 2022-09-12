@@ -1,0 +1,1 @@
+{"version":3,"file":"ITulipsListItem.d.ts","sourceRoot":"","sources":["../../../src/models/interfaces/ITulipsListItem.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,eAAe;IAC9B,EAAE,CAAC,EAAE,MAAM,CAAC;IACZ,KAAK,EAAE,MAAM,CAAC;IACd,kBAAkB,CAAC,EAAE,MAAM,CAAC;IAC5B,WAAW,CAAC,EAAE,MAAM,CAAC;IAErB,kBAAkB,CAAC,EAAE,MAAM,CAAC;IAE5B,QAAQ,EAAE,MAAM,CAAC;CAClB"}

@@ -2,12 +2,12 @@ import * as React from 'react';
 import styles from './TulipList.module.scss';
 import { ITulipListProps } from './ITulipListProps';
 import { ITulipsListItem } from '../../../models/ITulipsListItem';
-import * as $ from 'jquery';
 import { DefaultButton, Spinner, SpinnerSize } from 'office-ui-fabric-react';
-import { SPHttpClient, ISPHttpClientOptions, SPHttpClientResponse, IDigestCache, DigestCache } from '@microsoft/sp-http';
 import { sp } from '@pnp/pnpjs';
 import { IAuthorItem } from '../../../models/IAuthorItem';
 import { ITulipResponsibleItem } from '../../../models/ITulipResponsibleItem';
+import "@pnp/sp/sputilities";
+import { IEmailProperties } from "@pnp/sp/sputilities";
 
 export interface ITulipListPropsState{
   listItem: ITulipsListItem,
@@ -19,6 +19,20 @@ export interface ITulipListPropsState{
   tulipResponsibleItem: ITulipResponsibleItem,
   tulipResponsibleItems: ITulipResponsibleItem[],
   finishLoading: boolean,
+}
+
+export interface TypedHash<T> {
+  [key: string]: T;
+}
+
+export interface EmailProperties {
+  To: string[];
+  CC?: string[];
+  BCC?: string[];
+  Subject: string;
+  Body: string;
+  AdditionalHeaders?: TypedHash<string>;
+  From?: string;
 }
 
 export default class TulipList extends React.Component<ITulipListProps, ITulipListPropsState> {
@@ -91,60 +105,77 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     sp.setup({
       spfxContext:this.props.context
     });
-    console.log("component did mount")
      this._setListStates();
   }
 
-  private async _getCurrentListItemsPnp():Promise<ITulipsListItem[]>{
-    var allItems = await sp.web.lists.getByTitle(this.props.listName).items.get();
-    return allItems as unknown as Promise<ITulipsListItem[]>;
+  //Gets all items in requested list (list is set by props)
+  private async _getCurrentListItems():Promise<ITulipsListItem[]>{
+    try {
+      const allItems = await sp.web.lists.getByTitle(this.props.listName).items.get();
+      return allItems as unknown as Promise<ITulipsListItem[]>;
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  private async _getTulipResponsibleInfo():Promise<ITulipResponsibleItem[]>{
-    const tulipResponsibleInfo = await sp.web.lists.getByTitle(this.props.listName).items.select("TulipResponsible/Title").expand("TulipResponsible").getAll();
-    return tulipResponsibleInfo as unknown as Promise<ITulipResponsibleItem[]>;
+  //Gets title of all of the list item responsible in the current list items
+  private async _getTulipResponsibleTitle():Promise<ITulipResponsibleItem[]>{
+    try {
+       const tulipResponsibleInfo = await sp.web.lists.getByTitle(this.props.listName).items.select("TulipResponsible/Title").expand("TulipResponsible").getAll();
+        return tulipResponsibleInfo as unknown as Promise<ITulipResponsibleItem[]>;
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  private async _getAuthorInfo():Promise<IAuthorItem[]>{
-    const authorInfo = await sp.web.lists.getByTitle(this.props.listName).items.select("Author/Title").expand("Author").getAll();
-    return authorInfo as unknown as Promise<IAuthorItem[]>;
-
+   //Gets title of all of the list creators in the current list items
+  private async _getAuthorTitle():Promise<IAuthorItem[]>{
+    try {
+      const authorInfo = await sp.web.lists.getByTitle(this.props.listName).items.select("Author/Title").expand("Author").getAll();
+      return authorInfo as unknown as Promise<IAuthorItem[]>;
+    } catch (error) {
+      console.error(error);
+    }
   }
 
 
+  //Sets states to provide render() with necessary information
   private async _setListStates(){
-    console.log("bind details list")
 
-   await this._getCurrentListItemsPnp().then(listItems=>{
-      this.setState({
-        listItems:listItems,
+    try {
+      await this._getCurrentListItems().then(listItems=>{
+        this.setState({
+          listItems:listItems,
+        });
       });
-    });
 
-     await this._getTulipResponsibleInfo().then(listItems=>{
-      this.setState({
-        tulipResponsibleItems:listItems,
+        await this._getTulipResponsibleTitle().then(listItems=>{
+        this.setState({
+          tulipResponsibleItems:listItems,
+        });
       });
-    });
 
-    console.log(this.state.tulipResponsibleItems)
+      console.log(this.state.tulipResponsibleItems)
 
-    await this._getAuthorInfo().then(listItems=>{
-      this.setState({
-        authorItems:listItems,
-        finishLoading:true
+      await this._getAuthorTitle().then(listItems=>{
+        this.setState({
+          authorItems:listItems,
+          finishLoading:true
+        });
       });
-    });
+    } catch (error) {
+      console.error(error);
+    }
 
-    console.log(this.state.authorItems)
   }
 
+  //Gets user by id
+  // public async _getUserName(id: number){
+  //       const user = await sp.web.getUserById(id)();
+  //       return user.Title;
+  // }
 
-  public async _getUserNamePnp(id: number){
-        const user = await sp.web.getUserById(id)();
-        return user.Title;
-  }
-
+  //Handles deletion click and triggers _deleteListItem if deletion is confirmed
   private _clickHandler(item: ITulipsListItem){
     let deletionConfirmed = confirm("Do you really want to delete this item?");
     console.log(deletionConfirmed);
@@ -154,11 +185,12 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     }
   }
 
+//Deletes an item
  public async _deleteListItem(item: ITulipsListItem) {
   const list = sp.web.lists.getByTitle(this.props.listName);
   try {
     await list.items.getById(item.ID).delete().then();
-    this._triggerEmail(item);
+    this._sendEmail(item);
     this._setListStates();
   } catch (error) {
     console.error(error);
@@ -166,60 +198,48 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
 }
 
 
-
+//Gets & returns the email of the requested person (by id) in string format
 public async _getUserEmailPnp(id: number){
-  const user = await sp.web.getUserById(id)();
-  const email = user.Email.toString();
-  console.log("User email fetched is: " + email)
-  return email;
+  try {
+    const user = await sp.web.getUserById(id)();
+    const email = user.Email.toString();
+    console.log("User email fetched is: " + email)
+    return email;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
+//Gets & returns current user in string format
 private async _getCurrentLoggedInUser(){
-  const loggedInUser = await sp.web.currentUser();
-  const loggedInUserName = loggedInUser.Title.toString();
-  return loggedInUserName;
+  try {
+    const loggedInUser = await sp.web.currentUser();
+    const loggedInUserName = loggedInUser.Title.toString();
+    return loggedInUserName;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
  //Sends email to the tulip creator and tulip responsible
- private async _triggerEmail(item:ITulipsListItem){
-  let MailBody = '', MailSubject = 'Tulip removal'
+  private async _sendEmail(item:ITulipsListItem){
   const tulipResponsible = await this._getUserEmailPnp(item.TulipResponsibleId);
   const tulipCreator = await this._getUserEmailPnp(item.AuthorId);
   const deletionName = await this._getCurrentLoggedInUser();
 
-  MailBody    =  `'<p>Hi,<p> <p>${item.Title} (ID: ${item.ID}) has been removed by ${deletionName} from Enfokam Tulips'`;
-  var taMailBody = {
-    properties: {
-      __metadata: { 'type': 'SP.Utilities.EmailProperties' },
-      From: "From: no-reply@sharepointonline.com",
-      To: { 'results': [tulipResponsible, tulipCreator] },
-      Body: MailBody,
-      Subject: MailSubject,
+  const emailProps: IEmailProperties = {
+    To: [tulipResponsible, tulipCreator],
+    Subject: "Tulip Removal",
+    Body: `'<p>Hi,<p> <p>${item.Title} (ID: ${item.ID}) has been removed by ${deletionName} from Enfokam Tulips.'`,
+    AdditionalHeaders: {
+        "content-type": "text/html"
     }
   };
-
-    const digestCache: IDigestCache = this.props.context.serviceScope.consume(DigestCache.serviceKey);
-          digestCache.fetchDigest(this.props.context.pageContext.web.serverRelativeUrl).then((digest: string): void => {
-
-            $.ajax({
-              contentType: 'application/json',
-              url: this.props.context.pageContext.web.absoluteUrl + "/_api/SP.Utilities.Utility.SendEmail",
-              type: "POST",
-              data: JSON.stringify(taMailBody),
-              headers: {
-                "Accept": "application/json;odata=verbose",
-                "content-type": "application/json;odata=verbose",
-                "X-RequestDigest": digest
-              },
-              success: function (data) {
-                console.log("Success");
-              },
-              error: function (data) {
-
-                console.log("Error: " + JSON.stringify(data));
-              }
-            });
-          });
+    try {
+      await sp.utility.sendEmail(emailProps);
+    } catch (error) {
+      console.error(error)
+    }
   }
 
 }
