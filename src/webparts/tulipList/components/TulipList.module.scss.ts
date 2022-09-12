@@ -1,11 +1,12 @@
 /* tslint:disable */
 require("./TulipList.module.css");
 const styles = {
-  tulipList: 'tulipList_e1c55df1',
-  container: 'container_e1c55df1',
-  title: 'title_e1c55df1',
-  subTitle: 'subTitle_e1c55df1',
-  defaultButton: 'defaultButton_e1c55df1'
+  tulipList: 'tulipList_3d33d19b',
+  container: 'container_3d33d19b',
+  title: 'title_3d33d19b',
+  subTitle: 'subTitle_3d33d19b',
+  defaultButton: 'defaultButton_3d33d19b',
+  noItems: 'noItems_3d33d19b'
 };
 
 export default styles;

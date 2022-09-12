@@ -2,7 +2,7 @@ import * as React from 'react';
 import styles from './TulipList.module.scss';
 import { ITulipListProps } from './ITulipListProps';
 import { ITulipsListItem } from '../../../models/ITulipsListItem';
-import { DefaultButton, Spinner, SpinnerSize } from 'office-ui-fabric-react';
+import { DefaultButton, Spinner, SpinnerSize, tdProperties } from 'office-ui-fabric-react';
 import { sp } from '@pnp/pnpjs';
 import { IAuthorItem } from '../../../models/IAuthorItem';
 import { ITulipResponsibleItem } from '../../../models/ITulipResponsibleItem';
@@ -69,32 +69,37 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
           <div className={ styles.container }>
               <div className={ styles.title }>{this.props.title}</div>
                 <div className={ styles.subTitle }>List: {this.props.listName}</div>
-              <table>
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Title</th>
-                      <th>Manufacturing Price</th>
-                      <th>Retail Price</th>
-                      <th>Tulip Responsible</th>
-                      <th>Tulip creator</th>
-                    </tr>
-                  </thead>
-                { this.state.listItems &&  this.state.listItems.map((item, index) =>
-                  <tbody>
-                      <tr key={item.ID}>
-                        <td>{item.ID}</td>
-                        <td>{item.Title}</td>
-                        <td>{item.ManufacturingPrice}</td>
-                        <td>{item.RetailPrice * 1}</td>
-                        <td>{this.state.tulipResponsibleItems[index].TulipResponsible.Title}</td>
-                        <td>{this.state.authorItems[index].Author.Title}</td>
-                        <DefaultButton className={styles.defaultButton} onClick={() => this._clickHandler(item)}>Delete Item</DefaultButton>
-                      </tr>
-                  </tbody>
-                )
+                {this.state.listItems.length > 0
+                   ? <table>
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Manufacturing Price</th>
+                            <th>Retail Price</th>
+                            <th>Tulip Responsible</th>
+                            <th>Tulip creator</th>
+                          </tr>
+                        </thead>
+                      { this.state.listItems &&  this.state.listItems.map((item, index) =>
+                        <tbody>
+                            <tr key={item.ID}>
+                              <td>{item.ID}</td>
+                              <td>{item.Title}</td>
+                              <td>{item.ManufacturingPrice}</td>
+                              <td>{item.RetailPrice * 1}</td>
+                              {this.state.tulipResponsibleItems[index].TulipResponsible != undefined
+                              ?<td>{this.state.tulipResponsibleItems[index].TulipResponsible.Title}</td>
+                              : <td>No responsible</td> }
+                              <td>{this.state.authorItems[index].Author.Title}</td>
+                              <DefaultButton className={styles.defaultButton} onClick={() => this._clickHandler(item)}>Delete Item</DefaultButton>
+                            </tr>
+                        </tbody>
+                      )
+                    }
+                    </table>
+                :<p className={styles.noItems}>This list has no items</p>
               }
-              </table>
             </div>
           </div>
       );
