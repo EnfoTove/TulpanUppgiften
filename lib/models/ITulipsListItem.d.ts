@@ -3,11 +3,7 @@ export interface ITulipsListItem {
     Title: string;
     ManufacturingPrice?: number;
     RetailPrice?: number;
-    TulipResponsible?: {
-        Id: number;
-    };
-    Author?: {
-        Id: number;
-    };
+    TulipResponsibleId?: number;
+    AuthorId: number;
 }
 //# sourceMappingURL=ITulipsListItem.d.ts.map

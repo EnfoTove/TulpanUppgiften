@@ -12,7 +12,7 @@ export interface ITulipListPropsState {
     authorItems: IAuthorItem[];
     tulipResponsibleItem: ITulipResponsibleItem;
     tulipResponsibleItems: ITulipResponsibleItem[];
-    loading: boolean;
+    finishLoading: boolean;
 }
 export default class TulipList extends React.Component<ITulipListProps, ITulipListPropsState> {
     static siteURL: string;
@@ -20,15 +20,14 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     render(): React.ReactElement<ITulipListProps>;
     componentDidMount(): void;
     private _getCurrentListItemsPnp;
-    private _getUserInfo;
     private _getTulipResponsibleInfo;
-    private _getListItems;
-    bindDetailsList(): any;
+    private _getAuthorInfo;
+    private _setListStates;
     _getUserNamePnp(id: number): Promise<string>;
-    private _getUserName;
     private _clickHandler;
-    private _deleteListItem;
-    private _getUserEmail;
+    _deleteListItem(item: ITulipsListItem): Promise<void>;
+    _getUserEmailPnp(id: number): Promise<string>;
     private _getCurrentLoggedInUser;
+    private _triggerEmail;
 }
 //# sourceMappingURL=TulipList.d.ts.map
