@@ -14,10 +14,10 @@ export interface ITulipListPropsState{
   listItems: ITulipsListItem[],
   title:string,
   listName: string
-  authorItem: IAuthorItem,
-  authorItems: IAuthorItem[],
-  tulipResponsibleItem: ITulipResponsibleItem,
-  tulipResponsibleItems: ITulipResponsibleItem[],
+  authorItem?: IAuthorItem,
+  authorItems?: IAuthorItem[],
+  tulipResponsibleItem?: ITulipResponsibleItem,
+  tulipResponsibleItems?: ITulipResponsibleItem[],
   finishLoading: boolean,
 }
 
@@ -54,13 +54,14 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
       title: " ",
       listName: this.props.listName,
       authorItem: {},
-      authorItems: [],
+      authorItems: [{}],
       tulipResponsibleItem: {},
-      tulipResponsibleItems: [],
+      tulipResponsibleItems: [{}],
       finishLoading: false,
     };
     TulipList.siteURL=this.props.websiteURL;
   }
+
   public render(): React.ReactElement<ITulipListProps> {
     if(this.state.finishLoading){
       return (

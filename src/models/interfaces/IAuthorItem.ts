@@ -1,3 +1,3 @@
 export interface IAuthorItem{
-  Author?: {Title: string};
+  Author?: {Title?: string};
 }

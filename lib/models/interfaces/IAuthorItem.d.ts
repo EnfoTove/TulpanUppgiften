@@ -1,6 +1,6 @@
 export interface IAuthorItem {
     Author?: {
-        Title: string;
+        Title?: string;
     };
 }
 //# sourceMappingURL=IAuthorItem.d.ts.map

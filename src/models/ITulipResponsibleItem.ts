@@ -1,3 +1,3 @@
 export interface ITulipResponsibleItem{
-  TulipResponsible?: {Title: string};
+  TulipResponsible?: {Title?: string};
 }

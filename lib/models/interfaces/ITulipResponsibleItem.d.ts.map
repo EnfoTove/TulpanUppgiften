@@ -1,1 +1,1 @@
-{"version":3,"file":"ITulipResponsibleItem.d.ts","sourceRoot":"","sources":["../../../src/models/interfaces/ITulipResponsibleItem.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,qBAAqB;IACpC,gBAAgB,CAAC,EAAE;QAAC,KAAK,EAAE,MAAM,CAAA;KAAC,CAAC;CACpC"}
+{"version":3,"file":"ITulipResponsibleItem.d.ts","sourceRoot":"","sources":["../../../src/models/interfaces/ITulipResponsibleItem.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,qBAAqB;IACpC,gBAAgB,CAAC,EAAE;QAAC,KAAK,CAAC,EAAE,MAAM,CAAA;KAAC,CAAC;CACrC"}

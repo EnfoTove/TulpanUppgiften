@@ -4,6 +4,6 @@ export interface ITulipsListItem {
     ManufacturingPrice?: number;
     RetailPrice?: number;
     TulipResponsibleId?: number;
-    AuthorId: number;
+    AuthorId?: number;
 }
 //# sourceMappingURL=ITulipsListItem.d.ts.map

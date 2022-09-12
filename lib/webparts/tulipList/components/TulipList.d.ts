@@ -9,10 +9,10 @@ export interface ITulipListPropsState {
     listItems: ITulipsListItem[];
     title: string;
     listName: string;
-    authorItem: IAuthorItem;
-    authorItems: IAuthorItem[];
-    tulipResponsibleItem: ITulipResponsibleItem;
-    tulipResponsibleItems: ITulipResponsibleItem[];
+    authorItem?: IAuthorItem;
+    authorItems?: IAuthorItem[];
+    tulipResponsibleItem?: ITulipResponsibleItem;
+    tulipResponsibleItems?: ITulipResponsibleItem[];
     finishLoading: boolean;
 }
 export interface TypedHash<T> {

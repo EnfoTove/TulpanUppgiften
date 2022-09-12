@@ -1,6 +1,6 @@
 export interface ITulipResponsibleItem {
     TulipResponsible?: {
-        Title: string;
+        Title?: string;
     };
 }
 //# sourceMappingURL=ITulipResponsibleItem.d.ts.map
