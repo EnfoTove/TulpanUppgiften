@@ -3,7 +3,7 @@ import styles from './TulipList.module.scss';
 import { ITulipListProps } from './ITulipListProps';
 import { ITulipsListItem } from '../../../models/ITulipsListItem';
 import { DefaultButton, Spinner, SpinnerSize, tdProperties } from 'office-ui-fabric-react';
-import { sp } from '@pnp/pnpjs';
+import { ConsoleListener, sp } from '@pnp/pnpjs';
 import { IAuthorItem } from '../../../models/IAuthorItem';
 import { ITulipResponsibleItem } from '../../../models/ITulipResponsibleItem';
 import "@pnp/sp/sputilities";
@@ -233,8 +233,18 @@ private async _getCurrentLoggedInUser(){
   const tulipCreator = await this._getUserEmailPnp(item.AuthorId);
   const deletionName = await this._getCurrentLoggedInUser();
 
+  const receiverList = [tulipResponsible, tulipCreator]
+  const filteredReceiversList = []
+  receiverList.forEach(element => {
+    if (element === null || element === undefined){
+      console.log("Element not added in new receivers list")
+    }else{
+      filteredReceiversList.push(element);
+    }
+  });
+
   const emailProps: IEmailProperties = {
-    To: [tulipResponsible, tulipCreator],
+    To: filteredReceiversList,//[tulipResponsible, tulipCreator],
     Subject: "Tulip Removal",
     Body: `'<p>Hi,<p> <p>${item.Title} (ID: ${item.ID}) has been removed by ${deletionName} from Enfokam Tulips.'`,
     AdditionalHeaders: {
