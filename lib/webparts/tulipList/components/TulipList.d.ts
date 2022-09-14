@@ -14,6 +14,8 @@ export interface ITulipListPropsState {
     tulipResponsibleItem?: ITulipResponsibleItem;
     tulipResponsibleItems?: ITulipResponsibleItem[];
     finishLoading: boolean;
+    showDeleteBox: boolean;
+    focusItem: ITulipsListItem;
 }
 export interface TypedHash<T> {
     [key: string]: T;
@@ -32,12 +34,13 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     constructor(props: ITulipListProps, state: ITulipListPropsState);
     render(): React.ReactElement<ITulipListProps>;
     componentDidMount(): void;
+    private _closeDialog;
     private _getCurrentListItems;
     private _getTulipResponsibleTitle;
     private _getAuthorTitle;
     private _setListStates;
     private _clickHandler;
-    _deleteListItem(item: ITulipsListItem): Promise<void>;
+    _deleteListItem(): Promise<void>;
     _getUserEmailPnp(id: number): Promise<string>;
     private _getCurrentLoggedInUser;
     private _sendEmail;

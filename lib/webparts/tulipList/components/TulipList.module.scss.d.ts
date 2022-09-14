@@ -5,6 +5,7 @@ declare const styles: {
     subTitle: string;
     defaultButton: string;
     noItems: string;
+    deleteBox: string;
 };
 export default styles;
 //# sourceMappingURL=TulipList.module.scss.d.ts.map

@@ -2,12 +2,13 @@ import * as React from 'react';
 import styles from './TulipList.module.scss';
 import { ITulipListProps } from './ITulipListProps';
 import { ITulipsListItem } from '../../../models/ITulipsListItem';
-import { DefaultButton, Spinner, SpinnerSize, tdProperties } from 'office-ui-fabric-react';
+import { DefaultButton, Spinner, SpinnerSize, tdProperties, TooltipHost, PrimaryButton } from 'office-ui-fabric-react';
 import { ConsoleListener, sp } from '@pnp/pnpjs';
 import { IAuthorItem } from '../../../models/IAuthorItem';
 import { ITulipResponsibleItem } from '../../../models/ITulipResponsibleItem';
 import "@pnp/sp/sputilities";
 import { IEmailProperties } from "@pnp/sp/sputilities";
+import { DialogFooter, DialogContent } from 'office-ui-fabric-react/lib/Dialog';
 
 export interface ITulipListPropsState{
   listItem: ITulipsListItem,
@@ -19,6 +20,8 @@ export interface ITulipListPropsState{
   tulipResponsibleItem?: ITulipResponsibleItem,
   tulipResponsibleItems?: ITulipResponsibleItem[],
   finishLoading: boolean,
+  showDeleteBox: boolean;
+  focusItem: ITulipsListItem;
 }
 
 export interface TypedHash<T> {
@@ -58,6 +61,15 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
       tulipResponsibleItem: {},
       tulipResponsibleItems: [{}],
       finishLoading: false,
+      showDeleteBox:false,
+      focusItem: {
+        ID: null,
+        Title: " ",
+        ManufacturingPrice: null,
+        RetailPrice: null,
+        TulipResponsibleId: null,
+        AuthorId:null
+      }
     };
     TulipList.siteURL=this.props.websiteURL;
   }
@@ -94,12 +106,28 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
                               <td>{this.state.authorItems[index].Author.Title}</td>
                               <DefaultButton className={styles.defaultButton} onClick={() => this._clickHandler(item)}>Delete Item</DefaultButton>
                             </tr>
+
                         </tbody>
                       )
                     }
                     </table>
                 :<p className={styles.noItems}>This list has no items</p>
               }
+                      {this.state.showDeleteBox?
+                      <DialogContent
+                      className={styles.deleteBox}
+                      title='Delete?'
+                      subText="Do you really want to delete this item?"
+                      onDismiss={()=>this._closeDialog()}
+                      showCloseButton={true}
+                      >
+                      <DialogFooter>
+                          <DefaultButton text='Cancel' title='Cancel' onClick={() => this._closeDialog()} />
+                          <PrimaryButton text='OK' title='OK' onClick={() => { this._deleteListItem();}} />
+                      </DialogFooter>
+                      </DialogContent>
+                       : null
+                      }
             </div>
           </div>
       );
@@ -113,6 +141,15 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     });
      this._setListStates();
   }
+
+  //Closes delete dialog after dismiss by setting showDeleteBox to false
+  private _closeDialog(){
+    this.setState({
+      showDeleteBox:false
+    })
+  }
+
+
 
   //Gets all items in requested list (list is set by props)
   private async _getCurrentListItems():Promise<ITulipsListItem[]>{
@@ -183,24 +220,32 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
 
   //Handles deletion click and triggers _deleteListItem if deletion is confirmed
   private _clickHandler(item: ITulipsListItem){
-    let deletionConfirmed = confirm("Do you really want to delete this item?");
-    console.log(deletionConfirmed);
+    // let deletionConfirmed = confirm("Do you really want to delete this item?");
+    // console.log(deletionConfirmed);
 
-    if(deletionConfirmed){
-      this._deleteListItem(item);
-    }
+    // if(deletionConfirmed){
+    //   this._deleteListItem(item);
+    // }
+
+    this.setState({
+      showDeleteBox:true,
+      focusItem:item
+    })
   }
 
 //Deletes an item
- public async _deleteListItem(item: ITulipsListItem) {
+ public async _deleteListItem() {
   const list = sp.web.lists.getByTitle(this.props.listName);
   try {
-    await list.items.getById(item.ID).delete().then();
-    this._sendEmail(item);
+    await list.items.getById(this.state.focusItem.ID).delete().then();
+    this._sendEmail(this.state.focusItem);
     this._setListStates();
   } catch (error) {
     console.error(error);
   }
+  this.setState({
+    showDeleteBox:false
+  })
 }
 
 
