@@ -14,6 +14,7 @@ export interface ITulipListPropsState {
     tulipResponsibleItem?: ITulipResponsibleItem;
     tulipResponsibleItems?: ITulipResponsibleItem[];
     finishLoading: boolean;
+    deleteBoxVisible: boolean;
 }
 export interface TypedHash<T> {
     [key: string]: T;

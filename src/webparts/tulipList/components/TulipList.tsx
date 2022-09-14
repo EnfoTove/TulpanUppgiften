@@ -58,6 +58,7 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
       tulipResponsibleItem: {},
       tulipResponsibleItems: [{}],
       finishLoading: false,
+      deleteBoxVisible:false
     };
     TulipList.siteURL=this.props.websiteURL;
   }
