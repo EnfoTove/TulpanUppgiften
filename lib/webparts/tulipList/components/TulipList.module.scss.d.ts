@@ -3,6 +3,7 @@ declare const styles: {
     container: string;
     title: string;
     subTitle: string;
+    newItemButton: string;
     defaultButton: string;
     noItems: string;
     dialog: string;

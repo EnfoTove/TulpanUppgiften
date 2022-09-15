@@ -1,28 +1,15 @@
 import * as React from 'react';
 import styles from './TulipList.module.scss';
 import { ITulipListProps } from './ITulipListProps';
-import { ITulipsListItem } from '../../../models/ITulipsListItem';
-import { DefaultButton, Spinner, SpinnerSize, tdProperties, TooltipHost, PrimaryButton } from 'office-ui-fabric-react';
-import { ConsoleListener, sp } from '@pnp/pnpjs';
-import { IAuthorItem } from '../../../models/IAuthorItem';
-import { ITulipResponsibleItem } from '../../../models/ITulipResponsibleItem';
+import { DefaultButton, Spinner, SpinnerSize, tdProperties, TooltipHost, PrimaryButton, TooltipHostBase, DialogContent, DialogFooter } from 'office-ui-fabric-react';
+import { sp } from '@pnp/pnpjs';
 import "@pnp/sp/sputilities";
 import { IEmailProperties } from "@pnp/sp/sputilities";
-import { DialogFooter, DialogContent } from 'office-ui-fabric-react/lib/Dialog';
+import { ITulipListPropsState } from '../../../models/interfaces/ITulipListPropsState';
+import { ITulipsListItem } from '../../../models/interfaces/ITulipsListItem';
+import { ITulipResponsibleItem } from '../../../models/interfaces/ITulipResponsibleItem';
+import { IAuthorItem } from '../../../models/interfaces/IAuthorItem';
 
-export interface ITulipListPropsState{
-  listItem: ITulipsListItem,
-  listItems: ITulipsListItem[],
-  title:string,
-  listName: string
-  authorItem?: IAuthorItem,
-  authorItems?: IAuthorItem[],
-  tulipResponsibleItem?: ITulipResponsibleItem,
-  tulipResponsibleItems?: ITulipResponsibleItem[],
-  finishLoading: boolean,
-  showDeleteBox: boolean;
-  focusItem: ITulipsListItem;
-}
 
 export interface TypedHash<T> {
   [key: string]: T;
@@ -62,9 +49,10 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
       tulipResponsibleItems: [{}],
       finishLoading: false,
       showDeleteBox:false,
+      showAddItemForm: false,
       focusItem: {
         ID: null,
-        Title: " ",
+        Title: "",
         ManufacturingPrice: null,
         RetailPrice: null,
         TulipResponsibleId: null,
@@ -81,6 +69,11 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
           <div className={ styles.container }>
               <div className={ styles.title }>{this.props.title}</div>
                 <div className={ styles.subTitle }>List: {this.props.listName}</div>
+                <PrimaryButton className={styles.newItemButton} onClick={()=>this.setState({showAddItemForm:true})}> + New! </PrimaryButton>
+                {this.state.showAddItemForm?
+                  this._getAddItemForm()
+                  :null
+                }
                 {this.state.listItems.length > 0
                    ? <table>
                         <thead>
@@ -113,21 +106,10 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
                     </table>
                 :<p className={styles.noItems}>This list has no items</p>
               }
-                      {this.state.showDeleteBox?
-                      <DialogContent
-                      className={styles.dialog}
-                      title='Delete?'
-                      subText="Do you really want to delete this item?"
-                      onDismiss={()=>this._closeDialog()}
-                      showCloseButton={true}
-                      >
-                      <DialogFooter className={styles.dialogFooter}>
-                          <DefaultButton className={styles.cancelButton} text='Cancel' title='Cancel' onClick={() => this._closeDialog()} />
-                          <PrimaryButton text='OK' title='OK' onClick={() => { this._deleteListItem();}} />
-                      </DialogFooter>
-                      </DialogContent>
-                       : null
-                      }
+              {this.state.showDeleteBox?
+              this._getDialog()
+                : null
+              }
             </div>
           </div>
       );
@@ -143,13 +125,11 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
   }
 
   //Closes delete dialog after dismiss by setting showDeleteBox to false
-  private _closeDialog(){
+  private _closeDialog=()=>{
     this.setState({
       showDeleteBox:false
     })
   }
-
-
 
   //Gets all items in requested list (list is set by props)
   private async _getCurrentListItems():Promise<ITulipsListItem[]>{
@@ -184,7 +164,7 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
 
   //Sets states to provide render() with necessary information
   private async _setListStates(){
-
+    console.log("IN SET LIST STATES")
     try {
       await this._getCurrentListItems().then(listItems=>{
         this.setState({
@@ -226,7 +206,7 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     // if(deletionConfirmed){
     //   this._deleteListItem(item);
     // }
-
+console.log("ITEM TITLE IS: " + item.Title)
     this.setState({
       showDeleteBox:true,
       focusItem:item
@@ -234,8 +214,8 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
   }
 
 //Deletes an item
- public async _deleteListItem() {
-  const list = sp.web.lists.getByTitle(this.props.listName);
+ public async _deleteListItem (){
+  const list = sp.web.lists.getByTitle(this.state.listName);
   try {
     await list.items.getById(this.state.focusItem.ID).delete().then();
     this._sendEmail(this.state.focusItem);
@@ -243,9 +223,7 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
   } catch (error) {
     console.error(error);
   }
-  this.setState({
-    showDeleteBox:false
-  })
+  this._closeDialog()
 }
 
 
@@ -301,6 +279,31 @@ private async _getCurrentLoggedInUser(){
     } catch (error) {
       console.error(error)
     }
+  }
+
+  private _getDialog(){
+    return(
+        <DialogContent
+          className={styles.dialog}
+          title='Delete?'
+          subText="Do you really want to delete this item?"
+          onDismiss={()=>this._closeDialog()}
+          showCloseButton={true}
+          >
+          <DialogFooter className={styles.dialogFooter}>
+              <DefaultButton className={styles.cancelButton} text='Cancel' title='Cancel' onClick={() => this._closeDialog()} />
+              <PrimaryButton text='OK' title='OK' onClick={() => { this._deleteListItem()}} />
+          </DialogFooter>
+      </DialogContent>
+    )
+  }
+
+  private _getAddItemForm(){
+  return (
+    <h1>HEJ</h1>
+
+  )
+
   }
 
 }

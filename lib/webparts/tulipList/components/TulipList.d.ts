@@ -1,22 +1,7 @@
 import * as React from 'react';
 import { ITulipListProps } from './ITulipListProps';
-import { ITulipsListItem } from '../../../models/ITulipsListItem';
-import { IAuthorItem } from '../../../models/IAuthorItem';
-import { ITulipResponsibleItem } from '../../../models/ITulipResponsibleItem';
 import "@pnp/sp/sputilities";
-export interface ITulipListPropsState {
-    listItem: ITulipsListItem;
-    listItems: ITulipsListItem[];
-    title: string;
-    listName: string;
-    authorItem?: IAuthorItem;
-    authorItems?: IAuthorItem[];
-    tulipResponsibleItem?: ITulipResponsibleItem;
-    tulipResponsibleItems?: ITulipResponsibleItem[];
-    finishLoading: boolean;
-    showDeleteBox: boolean;
-    focusItem: ITulipsListItem;
-}
+import { ITulipListPropsState } from '../../../models/interfaces/ITulipListPropsState';
 export interface TypedHash<T> {
     [key: string]: T;
 }
@@ -44,5 +29,7 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     _getUserEmailPnp(id: number): Promise<string>;
     private _getCurrentLoggedInUser;
     private _sendEmail;
+    private _getDialog;
+    private _getAddItemForm;
 }
 //# sourceMappingURL=TulipList.d.ts.map

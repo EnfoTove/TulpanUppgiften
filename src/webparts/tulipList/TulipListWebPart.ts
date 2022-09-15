@@ -8,9 +8,9 @@ import {
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import * as strings from 'TulipListWebPartStrings';
 import { ITulipListProps } from './components/ITulipListProps';
-import { ITulipsListItem } from '../../models/ITulipsListItem';
 import TulipList from './components/TulipList';
 import { sp } from '@pnp/pnpjs';
+import { ITulipsListItem } from '../../models/interfaces/ITulipsListItem';
 
 export interface ITulipListWebPartProps {
   description: string;

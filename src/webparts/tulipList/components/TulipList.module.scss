@@ -1,93 +1,106 @@
 @import '~office-ui-fabric-react/dist/sass/References.scss';
 
+$primary-border: 1px solid rgb(225, 222, 222);
+
+
 .tulipList {
   padding-bottom: 1rem;
   font-family:Arial, Helvetica, sans-serif;
+  border: $primary-border;
 
   .container {
     position:relative;
     max-width: 800px;
     margin: 0px auto;
     padding-bottom:1rem;
-  }
 
-  .title {
-    max-width:100%;
-    background-color:#85a8a8;
-    padding:16px;
-    text-align:center;
-    @include ms-font-xl;
-    @include ms-fontColor-black;
-    font-weight: 400;
-  }
-
-  .subTitle {
-    @include ms-font-m;
-    @include ms-fontColor-black;
-    max-width:100%;
-    text-align:center;
-    margin-top:16px;
-  }
-
-  table{
-    margin:24px auto;
-    td{
-      text-align:center;
-    }
-
-    th, td {
-      border-bottom: 1px solid #ddd;
-    }
-
-    td{
-      @include ms-font-m;
-    }
-
-    th{
-      font-weight: 400;
-      @include ms-font-m;
-      @include ms-fontColor-black;
-      padding-bottom: 10px;
-    }
-
-    .defaultButton{
-     margin:5px 5px 5px 20px;
-     padding:2px;
-    }
-  }
-
-  .noItems{
-    padding:16px;
-  }
-
-  .dialog{
-    position: absolute;
-    top:40%;
-    left:50%;
-    transform:translateX(-50%);
-    width:60%;
-    margin:0 auto;
-    border:1px solid rgb(225, 222, 222);
-    background-color: #FFF;
-
-    :nth-child(1){
-      border:none;
-    }
-
-
-    :nth-child(2){
-      p{
-        font-size: 14px;
+      .title {
+        max-width:100%;
+        background-color:#85a8a8;
+        padding:16px;
+        text-align:center;
+        @include ms-font-xl;
+        @include ms-fontColor-black;
+        font-weight: 400;
       }
-    }
 
-    .dialogFooter{
-      margin-top:4rem;
-    }
+      .subTitle {
+        @include ms-font-m;
+        @include ms-fontColor-black;
+        max-width:100%;
+        text-align:center;
+        margin-top:16px;
+      }
 
-    .cancelButton{
-      border:1px solid rgb(225, 222, 222);
-    }
+      .newItemButton{
+        margin-left: 2rem;
+        background-color:#85a8a8;
+        border: $primary-border;
+        @include ms-fontColor-black;
+        border-radius: 5%;
+      }
 
+      table{
+        margin:24px auto;
+        td{
+          text-align:center;
+        }
+
+        th, td {
+          border-bottom: 1px solid #ddd;
+        }
+
+        td{
+          @include ms-font-m;
+        }
+
+        th{
+          font-weight: 400;
+          @include ms-font-m;
+          @include ms-fontColor-black;
+          padding-bottom: 10px;
+        }
+
+        .defaultButton{
+        margin:5px 5px 5px 20px;
+        padding:2px;
+        }
+      }
+
+      .noItems{
+        padding:16px;
+      }
+
+      .dialog{
+        position: absolute;
+        top:40%;
+        left:50%;
+        transform:translateX(-50%);
+        width:60%;
+        margin:0 auto;
+        border:$primary-border;
+        background-color: #FFF;
+
+        :nth-child(1){
+          border:none;
+        }
+
+
+        :nth-child(2){
+          p{
+            font-size: 14px;
+          }
+        }
+
+        .dialogFooter{
+          margin-top:4rem;
+        }
+
+        .cancelButton{
+          border:$primary-border;
+        }
+
+      }
   }
+
 }
