@@ -5,6 +5,7 @@
   font-family:Arial, Helvetica, sans-serif;
 
   .container {
+    position:relative;
     max-width: 800px;
     margin: 0px auto;
     padding-bottom:1rem;
@@ -59,12 +60,34 @@
     padding:16px;
   }
 
-  .deleteBox{
-    width:50%;
+  .dialog{
+    position: absolute;
+    top:40%;
+    left:50%;
+    transform:translateX(-50%);
+    width:60%;
     margin:0 auto;
     border:1px solid rgb(225, 222, 222);
+    background-color: #FFF;
+
     :nth-child(1){
       border:none;
     }
+
+
+    :nth-child(2){
+      p{
+        font-size: 14px;
+      }
+    }
+
+    .dialogFooter{
+      margin-top:4rem;
+    }
+
+    .cancelButton{
+      border:1px solid rgb(225, 222, 222);
+    }
+
   }
 }

@@ -115,14 +115,14 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
               }
                       {this.state.showDeleteBox?
                       <DialogContent
-                      className={styles.deleteBox}
+                      className={styles.dialog}
                       title='Delete?'
                       subText="Do you really want to delete this item?"
                       onDismiss={()=>this._closeDialog()}
                       showCloseButton={true}
                       >
-                      <DialogFooter>
-                          <DefaultButton text='Cancel' title='Cancel' onClick={() => this._closeDialog()} />
+                      <DialogFooter className={styles.dialogFooter}>
+                          <DefaultButton className={styles.cancelButton} text='Cancel' title='Cancel' onClick={() => this._closeDialog()} />
                           <PrimaryButton text='OK' title='OK' onClick={() => { this._deleteListItem();}} />
                       </DialogFooter>
                       </DialogContent>
