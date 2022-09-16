@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styles from './TulipList.module.scss';
 import { ITulipListProps } from './ITulipListProps';
-import { DefaultButton, Spinner, SpinnerSize, PrimaryButton, DialogContent, DialogFooter } from 'office-ui-fabric-react';
+import { DefaultButton, Spinner, SpinnerSize, PrimaryButton, DialogContent, DialogFooter, Label, Icon } from 'office-ui-fabric-react';
 import { sp } from '@pnp/pnpjs';
 import "@pnp/sp/sputilities";
 import { IEmailProperties } from "@pnp/sp/sputilities";
@@ -68,7 +68,6 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     };
     this._handleChange = this._handleChange.bind(this);
     // this._handleSubmit = this._handleSubmit.bind(this);
-
 
     TulipList.siteURL=this.props.websiteURL;
   }
@@ -338,30 +337,39 @@ private async  _addNewItem(this){
     console.log( "USER: " + this.state.newTulipResponsible)
   }
   private _getAddItemForm(){
+    const CancelIcon = () => <Icon iconName="Cancel" />
+
   return(
-    <form>
-    <label>
-      Title:
-      <input name="newTulipName" value={this.state.newTulipName} onChange={this._handleChange} />
-    </label>
-    <label>
-      Manufacturing Price:
-      <input name="newTulipManufacturingPrice" value={this.state.newTulipManufacturingPrice} onChange={this._handleChange} />
-    </label>
-    <PeoplePicker context={this.props.context as any}
-            ensureUser
-            groupName={'EnfokamTulipsTove'}
-            webAbsoluteUrl= {TulipList.siteURL}
-            onChange={this._getPeoplePickerItems.bind(this)}>
-          </PeoplePicker>
-            <p>
-              <PrimaryButton
-                text='Save'
-                className='button'
-                onClick={this._addNewItem.bind(this)}
+    <div className={styles.addItemForm}>
+      <p className={styles.formHeader}>New item</p>
+      <div className={styles.cancelIcon} onClick={()=>this.setState({showAddItemForm:false})}>
+      <CancelIcon></CancelIcon>
+      </div>
+      <form>
+      <Label required> Title:</Label>
+        <input name="newTulipName" value={this.state.newTulipName} onChange={this._handleChange}/>
+      <Label> Manufacturing price:</Label>
+        <input name="newTulipManufacturingPrice" value={this.state.newTulipManufacturingPrice} onChange={this._handleChange} />
+      <PeoplePicker context={this.props.context as any}
+              titleText='Tulip responsible:'
+              ensureUser
+              groupName={'EnfokamTulipsTove'}
+              webAbsoluteUrl= {TulipList.siteURL}
+              onChange={this._getPeoplePickerItems.bind(this)}>
+            </PeoplePicker>
+
+                <PrimaryButton
+                  text='Save'
+                  className='button'
+                  onClick={this._addNewItem.bind(this)}
+                />
+
+              <DefaultButton
+              text='Cancel'
+              onClick={()=>this.setState({showAddItemForm:false})}
               />
-            </p>
-  </form>
+        </form>
+    </div>
   )
 
 

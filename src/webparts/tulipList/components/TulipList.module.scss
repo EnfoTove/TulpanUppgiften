@@ -101,6 +101,55 @@ $primary-border: 1px solid rgb(225, 222, 222);
         }
 
       }
+      .addItemForm{
+        position:absolute;
+        width:80%;
+        height:25rem;
+        background-color:#fff;
+        border:$primary-border;
+        left: 50%;
+        transform:translateX(-50%);
+        z-index:1;
+
+        .formHeader{
+          padding:16px;
+          text-align:center;
+          @include ms-font-xl;
+          @include ms-fontColor-black;
+          font-weight: 400;
+        }
+
+        .cancelIcon{
+          position:absolute;
+          top:5px;
+          right:5px;
+
+          :hover{
+            cursor: pointer;
+          }
+        }
+
+        form{
+          width:50%;
+          margin-left:10px;
+
+
+          label{
+            display:block;
+            @include ms-font-m;
+            @include ms-fontColor-black;
+          }
+
+          input, textarea{
+            display: block;
+            margin: 5px 0;
+          }
+
+          button{
+            margin:8px 4px;
+          }
+        }
+      }
   }
 
 }
