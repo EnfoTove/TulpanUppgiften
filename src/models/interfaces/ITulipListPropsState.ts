@@ -1,6 +1,7 @@
 import { ITulipsListItem } from "./ITulipsListItem";
 import { IAuthorItem } from "./IAuthorItem";
 import { ITulipResponsibleItem } from "./ITulipResponsibleItem";
+import { IUserItem } from "./IUserItem";
 
 export interface ITulipListPropsState{
   listItem: ITulipsListItem,
@@ -15,4 +16,7 @@ export interface ITulipListPropsState{
   showDeleteBox: boolean;
   showAddItemForm:boolean;
   focusItem: ITulipsListItem;
+  newTulipName: string;
+  newTulipManufacturingPrice?: number;
+  newTulipResponsible?: IUserItem;
 }

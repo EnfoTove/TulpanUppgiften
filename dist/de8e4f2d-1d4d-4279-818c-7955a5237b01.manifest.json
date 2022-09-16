@@ -41,10 +41,19 @@
         "defaultPath": "lib/webparts/tulipList/loc/en-us.js",
         "type": "localizedPath"
       },
+      "ControlStrings": {
+        "defaultPath": "node_modules/@pnp/spfx-controls-react/lib/loc/en-us.js",
+        "type": "localizedPath"
+      },
       "@microsoft/sp-property-pane": {
         "type": "component",
         "version": "1.11.0",
         "id": "f9e737b7-f0df-4597-ba8c-3060f82380db"
+      },
+      "@microsoft/sp-lodash-subset": {
+        "type": "component",
+        "version": "1.15.2",
+        "id": "73e1dc6c-8441-42cc-ad47-4bd3659f8a3a"
       },
       "@microsoft/sp-core-library": {
         "type": "component",
@@ -67,6 +76,11 @@
         "version": "16.8.5",
         "id": "aa0a46ec-1505-43cd-a44a-93f3a5aa460a",
         "failoverPath": "node_modules/react-dom/dist/react-dom.js"
+      },
+      "@microsoft/sp-http": {
+        "type": "component",
+        "version": "1.11.0",
+        "id": "c07208f0-ea3b-4c1a-9965-ac1b825211a6"
       }
     }
   }

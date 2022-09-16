@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styles from './TulipList.module.scss';
 import { ITulipListProps } from './ITulipListProps';
-import { DefaultButton, Spinner, SpinnerSize, tdProperties, TooltipHost, PrimaryButton, TooltipHostBase, DialogContent, DialogFooter } from 'office-ui-fabric-react';
+import { DefaultButton, Spinner, SpinnerSize, PrimaryButton, DialogContent, DialogFooter } from 'office-ui-fabric-react';
 import { sp } from '@pnp/pnpjs';
 import "@pnp/sp/sputilities";
 import { IEmailProperties } from "@pnp/sp/sputilities";
@@ -9,6 +9,10 @@ import { ITulipListPropsState } from '../../../models/interfaces/ITulipListProps
 import { ITulipsListItem } from '../../../models/interfaces/ITulipsListItem';
 import { ITulipResponsibleItem } from '../../../models/interfaces/ITulipResponsibleItem';
 import { IAuthorItem } from '../../../models/interfaces/IAuthorItem';
+import {
+  PeoplePicker,
+  } from '@pnp/spfx-controls-react/lib/PeoplePicker';
+import { ComponentState } from 'react';
 
 
 export interface TypedHash<T> {
@@ -57,8 +61,15 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
         RetailPrice: null,
         TulipResponsibleId: null,
         AuthorId:null
-      }
+      },
+      newTulipName:null,
+      newTulipManufacturingPrice:null,
+      newTulipResponsible:null,
     };
+    this._handleChange = this._handleChange.bind(this);
+    // this._handleSubmit = this._handleSubmit.bind(this);
+
+
     TulipList.siteURL=this.props.websiteURL;
   }
 
@@ -69,7 +80,7 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
           <div className={ styles.container }>
               <div className={ styles.title }>{this.props.title}</div>
                 <div className={ styles.subTitle }>List: {this.props.listName}</div>
-                <PrimaryButton className={styles.newItemButton} onClick={()=>this.setState({showAddItemForm:true})}> + New! </PrimaryButton>
+                <PrimaryButton className={styles.newItemButton} onClick={()=>this.setState({showAddItemForm:true})}> + New </PrimaryButton>
                 {this.state.showAddItemForm?
                   this._getAddItemForm()
                   :null
@@ -281,9 +292,27 @@ private async _getCurrentLoggedInUser(){
     }
   }
 
+//
+private async  _addNewItem(this){
+      await sp.web.lists.getByTitle(this.props.listName).items.add({
+      Title: this.state.newTulipName,
+      ManufacturingPrice: this.state.newTulipManufacturingPrice,
+      TulipResponsibleId: this.state.newTulipResponsible.id
+    }).then(
+      this.setState({
+        newTulipName: "",
+        newTulipManufacturingPrice:"",
+        newTulipResponsible:""
+      })
+    )
+
+
+}
+
+//Returns dialog asking for comfirmation about deletion
   private _getDialog(){
     return(
-        <DialogContent
+      <DialogContent
           className={styles.dialog}
           title='Delete?'
           subText="Do you really want to delete this item?"
@@ -298,14 +327,58 @@ private async _getCurrentLoggedInUser(){
     )
   }
 
-  private _getAddItemForm(){
-  return (
-    <h1>HEJ</h1>
 
+  private _getPeoplePickerItems(event) {
+    // console.log("IN GET PEOPLE PICKER ITEMS")
+    // console.log('Items:', items);
+    console.log({event})
+    this.setState({
+       newTulipResponsible: event[0]
+      });
+    console.log( "USER: " + this.state.newTulipResponsible)
+  }
+  private _getAddItemForm(){
+  return(
+    <form>
+    <label>
+      Title:
+      <input name="newTulipName" value={this.state.newTulipName} onChange={this._handleChange} />
+    </label>
+    <label>
+      Manufacturing Price:
+      <input name="newTulipManufacturingPrice" value={this.state.newTulipManufacturingPrice} onChange={this._handleChange} />
+    </label>
+    <PeoplePicker context={this.props.context as any}
+            ensureUser
+            groupName={'EnfokamTulipsTove'}
+            webAbsoluteUrl= {TulipList.siteURL}
+            onChange={this._getPeoplePickerItems.bind(this)}>
+          </PeoplePicker>
+            <p>
+              <PrimaryButton
+                text='Save'
+                className='button'
+                onClick={this._addNewItem.bind(this)}
+              />
+            </p>
+  </form>
   )
+
 
   }
 
-}
+  private _handleChange(e:any){
+    e.preventDefault();
+    this.setState({ [e.target.name]: e.target.value } as ComponentState, ()=>{
+      console.log("new tulip resp: " + this.state.newTulipResponsible)
+    });
+  }
 
+  // private _handleSubmit(e:any) {
+  //   e.preventDefault();
+  //   this._addNewItem(e);
+  // }
+
+
+}
 

@@ -29,7 +29,10 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     _getUserEmailPnp(id: number): Promise<string>;
     private _getCurrentLoggedInUser;
     private _sendEmail;
+    private _addNewItem;
     private _getDialog;
+    private _getPeoplePickerItems;
     private _getAddItemForm;
+    private _handleChange;
 }
 //# sourceMappingURL=TulipList.d.ts.map

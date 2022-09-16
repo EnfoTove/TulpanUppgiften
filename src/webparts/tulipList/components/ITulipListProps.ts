@@ -6,5 +6,5 @@ export interface ITulipListProps {
   listItems: ITulipsListItem[];
   listName:string;
   websiteURL: string;
-  context:WebPartContext;
+  context: WebPartContext;
 }
