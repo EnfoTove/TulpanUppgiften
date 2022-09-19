@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styles from './TulipList.module.scss';
 import { ITulipListProps } from './ITulipListProps';
-import { DefaultButton, Spinner, SpinnerSize, PrimaryButton, DialogContent, DialogFooter, Icon, TextField, HighContrastSelectorBlack, IIconProps } from 'office-ui-fabric-react';
+import { DefaultButton, Spinner, SpinnerSize, PrimaryButton, DialogContent, DialogFooter, Icon, TextField, HighContrastSelectorBlack, IIconProps, imageProperties } from 'office-ui-fabric-react';
 import { sp } from '@pnp/pnpjs';
 import "@pnp/sp/sputilities";
 import { IEmailProperties } from "@pnp/sp/sputilities";
@@ -14,6 +14,7 @@ import {
   } from '@pnp/spfx-controls-react/lib/PeoplePicker';
 import { ComponentState } from 'react';
 import { Field } from 'react-final-form';
+import { ITulipImage } from '../../../models/interfaces/ITulipImage';
 
 
 export interface TypedHash<T> {
@@ -43,6 +44,7 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
           Title: " ",
           ManufacturingPrice: null,
           RetailPrice: null,
+          Image:null,
           TulipResponsibleId: null,
           AuthorId:null
         },
@@ -60,6 +62,7 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
         Title: "",
         ManufacturingPrice: null,
         RetailPrice: null,
+        Image:null,
         TulipResponsibleId: null,
         AuthorId:null
       },
@@ -101,6 +104,7 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
                             <th>Title</th>
                             <th>Manufacturing Price</th>
                             <th>Retail Price</th>
+                            <th>Tulip Image</th>
                             <th>Tulip Responsible</th>
                             <th>Tulip creator</th>
                           </tr>
@@ -112,6 +116,9 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
                               <td>{item.Title}</td>
                               <td>{item.ManufacturingPrice}</td>
                               <td>{item.RetailPrice * 1}</td>
+                              {/* {
+                                <img src={this.state.tulipImages[index].image.serverRelativeUrl}></img>
+                              } */}
                               {this.state.tulipResponsibleItems[index].TulipResponsible != undefined
                               ?<td>{this.state.tulipResponsibleItems[index].TulipResponsible.Title}</td>
                               : <td>No responsible</td> }
@@ -130,11 +137,14 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
                 : null
               }
             </div>
+            {console.log(this.state.listItems[0])}
+            {console.log(this.state.listItems[0].Image)}
           </div>
       );
     }
     return (<Spinner size={SpinnerSize.large}/>)
   }
+
 
     componentDidMount() {
     sp.setup({
@@ -180,6 +190,19 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     }
   }
 
+  //  //Gets path to image
+  //  private async _getTulipImage():Promise<ITulipImage[]>{
+  //   console.log("Getting image")
+  //   try {
+  //      const imageInfo = await sp.web.lists.getByTitle(this.props.listName).items.select("Image/serverRelativeURL").expand("Image").getAll();
+  //      console.log(imageInfo)
+  //       return imageInfo as unknown as Promise<ITulipImage[]>;
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+
+  // }
+
 
   //Sets states to provide render() with necessary information
   private async _setListStates(){
@@ -208,6 +231,13 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     } catch (error) {
       console.error(error);
     }
+
+    // await this._getTulipImage().then(listItems=>{
+    //   this.setState({
+    //     tulipImages:listItems,
+    //   });
+    // });
+
 
   }
 

@@ -2,6 +2,7 @@ import { ITulipsListItem } from "./ITulipsListItem";
 import { IAuthorItem } from "./IAuthorItem";
 import { ITulipResponsibleItem } from "./ITulipResponsibleItem";
 import { IUserItem } from "./IUserItem";
+import { ITulipImage } from "./ITulipImage";
 
 export interface ITulipListPropsState{
   listItem: ITulipsListItem,
@@ -12,6 +13,8 @@ export interface ITulipListPropsState{
   authorItems?: IAuthorItem[],
   tulipResponsibleItem?: ITulipResponsibleItem,
   tulipResponsibleItems?: ITulipResponsibleItem[],
+  tulipImage?: ITulipImage,
+  tulipImages?: ITulipImage[],
   finishLoading: boolean,
   showDeleteBox: boolean;
   showAddItemForm:boolean;
