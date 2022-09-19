@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styles from './TulipList.module.scss';
 import { ITulipListProps } from './ITulipListProps';
-import { DefaultButton, Spinner, SpinnerSize, PrimaryButton, DialogContent, DialogFooter, Icon, TextField, HighContrastSelectorBlack } from 'office-ui-fabric-react';
+import { DefaultButton, Spinner, SpinnerSize, PrimaryButton, DialogContent, DialogFooter, Icon, TextField, HighContrastSelectorBlack, IIconProps } from 'office-ui-fabric-react';
 import { sp } from '@pnp/pnpjs';
 import "@pnp/sp/sputilities";
 import { IEmailProperties } from "@pnp/sp/sputilities";
@@ -76,13 +76,19 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
   }
 
   public render(): React.ReactElement<ITulipListProps> {
+    const addIcon: IIconProps = { iconName: 'Add' };
     if(this.state.finishLoading){
       return (
         <div className={ styles.tulipList }>
           <div className={ styles.container }>
               <div className={ styles.title }>{this.props.title}</div>
                 <div className={ styles.subTitle }>List: {this.props.listName}</div>
-                <PrimaryButton className={styles.newItemButton} onClick={()=>this.setState({showAddItemForm:true})}> + New </PrimaryButton>
+                <DefaultButton
+                text="New item"
+                iconProps={addIcon}
+                className={styles.newItemButton}
+                onClick={()=>this.setState({showAddItemForm:true})}
+                />
                 {this.state.showAddItemForm?
                   this._getAddItemForm()
                   :null
