@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styles from './TulipList.module.scss';
 import { ITulipListProps } from './ITulipListProps';
-import { DefaultButton, Spinner, SpinnerSize, PrimaryButton, DialogContent, DialogFooter, Label, Icon, TextField } from 'office-ui-fabric-react';
+import { DefaultButton, Spinner, SpinnerSize, PrimaryButton, DialogContent, DialogFooter, Icon, TextField, HighContrastSelectorBlack } from 'office-ui-fabric-react';
 import { sp } from '@pnp/pnpjs';
 import "@pnp/sp/sputilities";
 import { IEmailProperties } from "@pnp/sp/sputilities";
@@ -213,13 +213,6 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
 
   //Handles deletion click and triggers _deleteListItem if deletion is confirmed
   private _clickHandler(item: ITulipsListItem){
-    // let deletionConfirmed = confirm("Do you really want to delete this item?");
-    // console.log(deletionConfirmed);
-
-    // if(deletionConfirmed){
-    //   this._deleteListItem(item);
-    // }
-console.log("ITEM TITLE IS: " + item.Title)
     this.setState({
       showDeleteBox:true,
       focusItem:item
@@ -302,40 +295,45 @@ private _checkIfNumber(value:any):boolean{
 
 private _checkIfNullOrEmpty(value:any):boolean{
   let isNullOrEmpty;
-  value === null || value === " " ?  isNullOrEmpty=true : isNullOrEmpty=false
+  value === null || value === ""  ?  isNullOrEmpty=true : isNullOrEmpty=false
   return isNullOrEmpty
 }
 
 private async  _addNewItem(this){
-  if(this._checkIfNullOrEmpty(this.state.newTulipName)){
-    this.setState({
-      nullTitlePost:true
-    })
-    this._handleChange()
-  }
+let noTitle = this._checkIfNullOrEmpty(this.state.newTulipName)
+noTitle?this.setState({nullTitlePost:true}):this.setState({nullTitlePost:false})
+let nonNumericMP = !this._checkIfNumber(this.state.newTulipManufacturingPrice) && this.state.newTulipManufacturingPrice!=null
+nonNumericMP?this.setState({nonNumericPost:true}):this.setState({nonNumericPost:false})
 
- if (this._checkIfNumber(this.state.newTulipManufacturingPrice)){
-   console.log("Number")
-  }
-else if(!this._checkIfNumber(this.state.newTulipManufacturingPrice) && this.state.newTulipManufacturingPrice !== null){
-    console.log("not a number ")
-    this.setState({
-      nonNumericPost:true
-     })
- }
+console.log("mp: " + this.state.newTulipManufacturingPrice + "error should show: " + this.state.nonNumericPost)
 
-  if (!this.state.nullTitlePost && !this.state.nonNumericPost){
+  if (!noTitle && !nonNumericMP){
+    console.log(this.state.nullTitlePost)
+    console.log("Posting this: " + this.state.newTulipName)
+    if(this.state.newTulipResponsible != null){
     await sp.web.lists.getByTitle(this.props.listName).items.add({
     Title: this.state.newTulipName,
     ManufacturingPrice: this.state.newTulipManufacturingPrice,
-    TulipResponsibleId: this.state.newTulipResponsible.id
-  }).then(
-    this.setState({
-      newTulipName: "",
-      newTulipManufacturingPrice:"",
-      newTulipResponsible:""
-    })
-  )
+      TulipResponsibleId: this.state.newTulipResponsible.id
+    }).then(
+      this.setState({
+        newTulipName: "",
+        newTulipManufacturingPrice:"",
+        newTulipResponsible:""
+      })
+    )
+}
+else{
+  await sp.web.lists.getByTitle(this.props.listName).items.add({
+    Title: this.state.newTulipName,
+    ManufacturingPrice: this.state.newTulipManufacturingPrice,
+    }).then(
+      this.setState({
+        newTulipName: "",
+        newTulipManufacturingPrice:"",
+      })
+    )
+}
   }
 }
 
@@ -359,8 +357,6 @@ else if(!this._checkIfNumber(this.state.newTulipManufacturingPrice) && this.stat
 
 
   private _getPeoplePickerItems(event) {
-    // console.log("IN GET PEOPLE PICKER ITEMS")
-    // console.log('Items:', items);
     console.log({event})
     this.setState({
        newTulipResponsible: event[0]
@@ -382,8 +378,8 @@ else if(!this._checkIfNumber(this.state.newTulipManufacturingPrice) && this.stat
         : <TextField label="Title" required name="newTulipName" value={this.state.newTulipName} onChange={this._handleChange}/>
         }
         {this.state.nonNumericPost?
-        <TextField label="Manufacturing price" name="newTulipManufacturingPrice" value={this.state.newTulipManufacturingPrice} onChange={this._handleChange} errorMessage="Please enter a valid number"/>
-        : <TextField label="Manufacturing price" name="newTulipManufacturingPrice" value={this.state.newTulipManufacturingPrice} onChange={this._handleChange} />
+          <TextField label="Manufacturing price" name="newTulipManufacturingPrice" value={this.state.newTulipManufacturingPrice} onChange={this._handleChange} errorMessage="Please enter a valid number"/>
+         :<TextField label="Manufacturing price" name="newTulipManufacturingPrice" value={this.state.newTulipManufacturingPrice} onChange={this._handleChange} />
         }
       <PeoplePicker context={this.props.context as any}
               personSelectionLimit={1}
@@ -393,13 +389,11 @@ else if(!this._checkIfNumber(this.state.newTulipManufacturingPrice) && this.stat
               webAbsoluteUrl= {TulipList.siteURL}
               onChange={this._getPeoplePickerItems.bind(this)}>
             </PeoplePicker>
-
                 <PrimaryButton
                   text='Save'
                   className='button'
                   onClick={this._addNewItem.bind(this)}
                 />
-
               <DefaultButton
               text='Cancel'
               onClick={()=>this.setState({showAddItemForm:false})}
@@ -419,8 +413,14 @@ else if(!this._checkIfNumber(this.state.newTulipManufacturingPrice) && this.stat
 
 
     if (e.target.value!=null){
-      console.log(e.target.name + "is empty")
           if(this._checkIfNullOrEmpty(this.state.newTulipName)){
+            console.log("no title")
+            this.setState({
+              nullTitlePost:true
+            })
+          }
+          else{
+            console.log(" title")
             this.setState({
               nullTitlePost:false
             })
@@ -428,6 +428,9 @@ else if(!this._checkIfNumber(this.state.newTulipManufacturingPrice) && this.stat
 
          if (this._checkIfNumber(this.state.newTulipManufacturingPrice)){
            console.log("Number")
+           this.setState({
+             nonNumericPost:false
+            })
           }
         else if(!this._checkIfNumber(this.state.newTulipManufacturingPrice) && this.state.newTulipManufacturingPrice !== null){
             console.log("not a number " + this._checkIfNumber(this.state.newTulipManufacturingPrice))
@@ -450,6 +453,34 @@ else if(!this._checkIfNumber(this.state.newTulipManufacturingPrice) && this.stat
     console.log('Sleep done!');
 }
 
+private _checkValues(){
+  if(this._checkIfNullOrEmpty(this.state.newTulipName)){
+    console.log("no title")
+    this.setState({
+      nullTitlePost:true
+    })
+  }
+  else{
+    console.log(" title")
+    this.setState({
+      nullTitlePost:false
+    })
+  }
+
+ if (this._checkIfNumber(this.state.newTulipManufacturingPrice)){
+   console.log("Number")
+   this.setState({
+     nonNumericPost:false
+    })
+  }
+else if(!this._checkIfNumber(this.state.newTulipManufacturingPrice) && this.state.newTulipManufacturingPrice !== null){
+    console.log("not a number " + this._checkIfNumber(this.state.newTulipManufacturingPrice))
+    this.setState({
+      nonNumericPost:true
+     })
+ }
+
+}
 
 }
 

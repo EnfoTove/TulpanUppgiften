@@ -37,5 +37,6 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     private _getAddItemForm;
     private _handleChange;
     private _delayBlocking;
+    private _checkValues;
 }
 //# sourceMappingURL=TulipList.d.ts.map
