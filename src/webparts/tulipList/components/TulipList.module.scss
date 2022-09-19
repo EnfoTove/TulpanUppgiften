@@ -103,16 +103,17 @@ $primary-border: 1px solid rgb(225, 222, 222);
       }
       .addItemForm{
         position:absolute;
-        width:80%;
+        width:60%;
         height:25rem;
         background-color:#fff;
         border:$primary-border;
+        top:5%;
         left: 50%;
         transform:translateX(-50%);
         z-index:1;
+        padding:1rem;
 
         .formHeader{
-          padding:16px;
           text-align:center;
           @include ms-font-xl;
           @include ms-fontColor-black;
@@ -121,8 +122,12 @@ $primary-border: 1px solid rgb(225, 222, 222);
 
         .cancelIcon{
           position:absolute;
-          top:5px;
-          right:5px;
+          top:6px;
+          right:6px;
+
+          i{
+            font-size: 1.1rem;
+          }
 
           :hover{
             cursor: pointer;
@@ -131,8 +136,6 @@ $primary-border: 1px solid rgb(225, 222, 222);
 
         form{
           width:50%;
-          margin-left:10px;
-
 
           label{
             display:block;

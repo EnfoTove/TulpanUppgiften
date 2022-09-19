@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styles from './TulipList.module.scss';
 import { ITulipListProps } from './ITulipListProps';
-import { DefaultButton, Spinner, SpinnerSize, PrimaryButton, DialogContent, DialogFooter, Label, Icon } from 'office-ui-fabric-react';
+import { DefaultButton, Spinner, SpinnerSize, PrimaryButton, DialogContent, DialogFooter, Label, Icon, TextField } from 'office-ui-fabric-react';
 import { sp } from '@pnp/pnpjs';
 import "@pnp/sp/sputilities";
 import { IEmailProperties } from "@pnp/sp/sputilities";
@@ -13,6 +13,7 @@ import {
   PeoplePicker,
   } from '@pnp/spfx-controls-react/lib/PeoplePicker';
 import { ComponentState } from 'react';
+import { Field } from 'react-final-form';
 
 
 export interface TypedHash<T> {
@@ -65,6 +66,8 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
       newTulipName:null,
       newTulipManufacturingPrice:null,
       newTulipResponsible:null,
+      nullTitlePost:false,
+      nonNumericPost: false
     };
     this._handleChange = this._handleChange.bind(this);
     // this._handleSubmit = this._handleSubmit.bind(this);
@@ -276,6 +279,8 @@ private async _getCurrentLoggedInUser(){
     }
   });
 
+
+
   const emailProps: IEmailProperties = {
     To: filteredReceiversList,//[tulipResponsible, tulipCreator],
     Subject: "Tulip Removal",
@@ -291,21 +296,47 @@ private async _getCurrentLoggedInUser(){
     }
   }
 
-//
+private _checkIfNumber(value:any):boolean{
+  return /^\d*?\.?\d+$/.test(value)
+}
+
+private _checkIfNullOrEmpty(value:any):boolean{
+  let isNullOrEmpty;
+  value === null || value === " " ?  isNullOrEmpty=true : isNullOrEmpty=false
+  return isNullOrEmpty
+}
+
 private async  _addNewItem(this){
-      await sp.web.lists.getByTitle(this.props.listName).items.add({
-      Title: this.state.newTulipName,
-      ManufacturingPrice: this.state.newTulipManufacturingPrice,
-      TulipResponsibleId: this.state.newTulipResponsible.id
-    }).then(
-      this.setState({
-        newTulipName: "",
-        newTulipManufacturingPrice:"",
-        newTulipResponsible:""
-      })
-    )
+  if(this._checkIfNullOrEmpty(this.state.newTulipName)){
+    this.setState({
+      nullTitlePost:true
+    })
+    this._handleChange()
+  }
 
+ if (this._checkIfNumber(this.state.newTulipManufacturingPrice)){
+   console.log("Number")
+  }
+else if(!this._checkIfNumber(this.state.newTulipManufacturingPrice) && this.state.newTulipManufacturingPrice !== null){
+    console.log("not a number ")
+    this.setState({
+      nonNumericPost:true
+     })
+ }
 
+  if (!this.state.nullTitlePost && !this.state.nonNumericPost){
+    await sp.web.lists.getByTitle(this.props.listName).items.add({
+    Title: this.state.newTulipName,
+    ManufacturingPrice: this.state.newTulipManufacturingPrice,
+    TulipResponsibleId: this.state.newTulipResponsible.id
+  }).then(
+    this.setState({
+      newTulipName: "",
+      newTulipManufacturingPrice:"",
+      newTulipResponsible:""
+    })
+  )
+  }
 }
 
 //Returns dialog asking for comfirmation about deletion
@@ -346,11 +377,16 @@ private async  _addNewItem(this){
       <CancelIcon></CancelIcon>
       </div>
       <form>
-      <Label required> Title:</Label>
-        <input name="newTulipName" value={this.state.newTulipName} onChange={this._handleChange}/>
-      <Label> Manufacturing price:</Label>
-        <input name="newTulipManufacturingPrice" value={this.state.newTulipManufacturingPrice} onChange={this._handleChange} />
+        {this.state.nullTitlePost ?
+        <TextField label="Title" required name="newTulipName" value={this.state.newTulipName} onChange={this._handleChange}  errorMessage="Please enter a title"/>
+        : <TextField label="Title" required name="newTulipName" value={this.state.newTulipName} onChange={this._handleChange}/>
+        }
+        {this.state.nonNumericPost?
+        <TextField label="Manufacturing price" name="newTulipManufacturingPrice" value={this.state.newTulipManufacturingPrice} onChange={this._handleChange} errorMessage="Please enter a valid number"/>
+        : <TextField label="Manufacturing price" name="newTulipManufacturingPrice" value={this.state.newTulipManufacturingPrice} onChange={this._handleChange} />
+        }
       <PeoplePicker context={this.props.context as any}
+              personSelectionLimit={1}
               titleText='Tulip responsible:'
               ensureUser
               groupName={'EnfokamTulipsTove'}
@@ -378,14 +414,41 @@ private async  _addNewItem(this){
   private _handleChange(e:any){
     e.preventDefault();
     this.setState({ [e.target.name]: e.target.value } as ComponentState, ()=>{
-      console.log("new tulip resp: " + this.state.newTulipResponsible)
+      console.log(e.target.value)
     });
+
+
+    if (e.target.value!=null){
+      console.log(e.target.name + "is empty")
+          if(this._checkIfNullOrEmpty(this.state.newTulipName)){
+            this.setState({
+              nullTitlePost:false
+            })
+          }
+
+         if (this._checkIfNumber(this.state.newTulipManufacturingPrice)){
+           console.log("Number")
+          }
+        else if(!this._checkIfNumber(this.state.newTulipManufacturingPrice) && this.state.newTulipManufacturingPrice !== null){
+            console.log("not a number " + this._checkIfNumber(this.state.newTulipManufacturingPrice))
+            this.setState({
+              nonNumericPost:true
+             })
+         }
+
+    }
+
   }
 
-  // private _handleSubmit(e:any) {
-  //   e.preventDefault();
-  //   this._addNewItem(e);
-  // }
+  //Main part of code comes from: https://www.delftstack.com/howto/typescript/typescript-sleeping-a-thread/
+  private _delayBlocking(milliseconds: number){
+    const timeInitial : any = new Date();
+    var timeNow : any = new Date();
+    for ( ; timeNow - timeInitial < milliseconds; ){
+        timeNow = new Date();
+    }
+    console.log('Sleep done!');
+}
 
 
 }

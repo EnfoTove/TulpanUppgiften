@@ -17,6 +17,8 @@ export interface ITulipListPropsState{
   showAddItemForm:boolean;
   focusItem: ITulipsListItem;
   newTulipName: string;
-  newTulipManufacturingPrice?: number;
+  newTulipManufacturingPrice?: string;
   newTulipResponsible?: IUserItem;
+  nullTitlePost: boolean;
+  nonNumericPost:boolean;
 }
