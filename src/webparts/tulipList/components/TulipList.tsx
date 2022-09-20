@@ -101,11 +101,10 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
                    ? <table>
                         <thead>
                           <tr>
-                            <th>ID</th>
+                            <th>Tulip Image</th>
                             <th>Title</th>
                             <th>Manufacturing Price</th>
                             <th>Retail Price</th>
-                            <th>Tulip Image</th>
                             <th>Tulip Responsible</th>
                             <th>Tulip creator</th>
                           </tr>
@@ -113,19 +112,19 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
                       { this.state.listItems &&  this.state.listItems.map((item, index) =>
                         <tbody>
                             <tr key={item.ID}>
-                              <td>{item.ID}</td>
+                              {item.Image?
+                                <td><img src={this._getImgUrl(item)}/></td>
+                                :null
+                              }
                               <td>{item.Title}</td>
                               <td>{item.ManufacturingPrice}</td>
                               <td>{item.RetailPrice * 1}</td>
-                              {this._testing(item).serverRelativeUrl}
-                              {/* <img src={}}></img> */}
                               {this.state.tulipResponsibleItems[index].TulipResponsible != undefined
                               ?<td>{this.state.tulipResponsibleItems[index].TulipResponsible.Title}</td>
                               : <td>No responsible</td> }
                               <td>{this.state.authorItems[index].Author.Title}</td>
-                              <DefaultButton className={styles.defaultButton} onClick={() => this._clickHandler(item)}>Delete Item</DefaultButton>
+                              <DefaultButton className={styles.defaultButton} onClick={() => this._clickHandler(item)}>Delete</DefaultButton>
                             </tr>
-
                         </tbody>
                       )
                     }
@@ -145,13 +144,17 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     return (<Spinner size={SpinnerSize.large}/>)
   }
 
-  private _testing(item:ITulipsListItem){
+  private _getImgUrl(item:ITulipsListItem){
     let imageString = JSON.stringify(item.Image)
     let imageObj = JSON.parse(imageString);
     let jsonObject: ITulipImage = JSON.parse(imageObj);
     console.log(typeof jsonObject)
     console.log(jsonObject)
-    return jsonObject;
+    const serverUrl=jsonObject.serverUrl;
+    const serverRelativeUrl=jsonObject.serverRelativeUrl;
+    const fullUrl= serverUrl+serverRelativeUrl;
+    console.log("full url " + fullUrl)
+    return fullUrl;
   }
 
     componentDidMount() {

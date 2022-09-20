@@ -18,7 +18,7 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     static siteURL: string;
     constructor(props: ITulipListProps, state: ITulipListPropsState);
     render(): React.ReactElement<ITulipListProps>;
-    private _testing;
+    private _getImgUrl;
     componentDidMount(): void;
     private _closeDialog;
     private _getCurrentListItems;
