@@ -1,11 +1,10 @@
 import { WebPartContext } from "@microsoft/sp-webpart-base";
-import { ButtonClickedCallback, ButtonClickedCallbackIndex } from "../../../models";
-import { ITulipsListItem } from "../../../models/ITulipsListItem";
+import { ITulipsListItem } from "../../../models/interfaces/ITulipsListItem";
 
 export interface ITulipListProps {
   title: string;
   listItems: ITulipsListItem[];
   listName:string;
   websiteURL: string;
-  context:WebPartContext;
+  context: WebPartContext;
 }

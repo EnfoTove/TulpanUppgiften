@@ -1,8 +1,11 @@
+import { ITulipImage } from "./ITulipImage";
+
 export interface ITulipsListItem{
   ID?: number;
   Title: string;
   ManufacturingPrice?: number;
   RetailPrice?: number;
-  TulipResponsible?:{Id:number};
-  Author?: {Id:number}
+  Image?: ITulipImage;
+  TulipResponsibleId?: number;
+  AuthorId: number;
 }

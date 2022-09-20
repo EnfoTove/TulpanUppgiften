@@ -1,16 +1,35 @@
 import * as React from 'react';
 import styles from './TulipList.module.scss';
 import { ITulipListProps } from './ITulipListProps';
-import { ITulipsListItem } from '../../../models/ITulipsListItem';
-import * as $ from 'jquery';
-import { DefaultButton } from 'office-ui-fabric-react';
-import { SPHttpClient, ISPHttpClientOptions, SPHttpClientResponse, IDigestCache, DigestCache } from '@microsoft/sp-http';
+import { DefaultButton, Spinner, SpinnerSize, PrimaryButton, DialogContent, DialogFooter, Icon, TextField, HighContrastSelectorBlack, IIconProps, imageProperties, ImageIcon } from 'office-ui-fabric-react';
+import { sp } from '@pnp/pnpjs';
+import "@pnp/sp/sputilities";
+import { IEmailProperties } from "@pnp/sp/sputilities";
+import { ITulipListPropsState } from '../../../models/interfaces/ITulipListPropsState';
+import { ITulipsListItem } from '../../../models/interfaces/ITulipsListItem';
+import { ITulipResponsibleItem } from '../../../models/interfaces/ITulipResponsibleItem';
+import { IAuthorItem } from '../../../models/interfaces/IAuthorItem';
+import {
+  PeoplePicker,
+  } from '@pnp/spfx-controls-react/lib/PeoplePicker';
+import { ComponentState } from 'react';
+import { Field } from 'react-final-form';
+import { ITulipImage } from '../../../models/interfaces/ITulipImage';
+import { split } from 'lodash';
 
-export interface ITulipListPropsState{
-  listItem: ITulipsListItem,
-  listItems: ITulipsListItem[],
-  title:string,
-  listName: string
+
+export interface TypedHash<T> {
+  [key: string]: T;
+}
+
+export interface EmailProperties {
+  To: string[];
+  CC?: string[];
+  BCC?: string[];
+  Subject: string;
+  Body: string;
+  AdditionalHeaders?: TypedHash<string>;
+  From?: string;
 }
 
 export default class TulipList extends React.Component<ITulipListProps, ITulipListPropsState> {
@@ -26,212 +45,489 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
           Title: " ",
           ManufacturingPrice: null,
           RetailPrice: null,
-          TulipResponsible: {Id: null},
-          Author:{Id: null}
+          Image:null,
+          TulipResponsibleId: null,
+          AuthorId:null
         },
       title: " ",
       listName: this.props.listName,
+      authorItem: {},
+      authorItems: [{}],
+      tulipResponsibleItem: {},
+      tulipResponsibleItems: [{}],
+      finishLoading: false,
+      showDeleteBox:false,
+      showAddItemForm: false,
+      focusItem: {
+        ID: null,
+        Title: "",
+        ManufacturingPrice: null,
+        RetailPrice: null,
+        Image:null,
+        TulipResponsibleId: null,
+        AuthorId:null
+      },
+      newTulipName:null,
+      newTulipManufacturingPrice:null,
+      newTulipResponsible:null,
+      nullTitlePost:false,
+      nonNumericPost: false
     };
+    this._handleChange = this._handleChange.bind(this);
+    // this._handleSubmit = this._handleSubmit.bind(this);
+
     TulipList.siteURL=this.props.websiteURL;
   }
+
   public render(): React.ReactElement<ITulipListProps> {
-    return (
-      <div className={ styles.tulipList }>
-        <div className={ styles.container }>
-            <div className={ styles.title }>{this.props.title}</div>
-              <div className={ styles.subTitle }>List: {this.props.listName}</div>
-            <table>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Manufacturing Price</th>
-                    <th>Retail Price</th>
-                    <th>Tulip Responsible</th>
-                    <th>Tulip creator</th>
-                  </tr>
-                </thead>
-              { this.state.listItems &&  this.state.listItems.map((item) =>
-                <tbody>
-                    <tr  key={item.ID}>
-                      <td>{item.ID}</td>
-                      <td>{item.Title}</td>
-                      <td>{item.ManufacturingPrice}</td>
-                      <td>{item.RetailPrice * 1}</td>
-                      <td>{this._getUserName(item.TulipResponsible.Id)}</td>
-                      <td>{this._getUserName(item.Author.Id)}</td>
-                      <DefaultButton className={styles.defaultButton} onClick={() => this._clickHandler(item)}>Delete Item</DefaultButton>
-                    </tr>
-                </tbody>
-              )
-            }
-            </table>
+    const addIcon: IIconProps = { iconName: 'Add' };
+    if(this.state.finishLoading){
+      return (
+        <div className={ styles.tulipList }>
+          <div className={ styles.container }>
+              <div className={ styles.title }>{this.props.title}</div>
+                <div className={ styles.subTitle }>List: {this.props.listName}</div>
+                <DefaultButton
+                text="New item"
+                iconProps={addIcon}
+                className={styles.newItemButton}
+                onClick={()=>this.setState({showAddItemForm:true})}
+                />
+                {this.state.showAddItemForm?
+                  this._getAddItemForm()
+                  :null
+                }
+                {this.state.listItems.length > 0
+                   ? <table>
+                        <thead>
+                          <tr>
+                            <th>Tulip Image</th>
+                            <th>Title</th>
+                            <th>Manufacturing Price</th>
+                            <th>Retail Price</th>
+                            <th>Tulip Responsible</th>
+                            <th>Tulip creator</th>
+                          </tr>
+                        </thead>
+                      { this.state.listItems &&  this.state.listItems.map((item, index) =>
+                        <tbody>
+                            <tr key={item.ID}>
+                              {item.Image?
+                                <td><img src={this._getImgUrl(item)}/></td>
+                                :null
+                              }
+                              <td>{item.Title}</td>
+                              <td>{item.ManufacturingPrice}</td>
+                              <td>{item.RetailPrice * 1}</td>
+                              {this.state.tulipResponsibleItems[index].TulipResponsible != undefined
+                              ?<td>{this.state.tulipResponsibleItems[index].TulipResponsible.Title}</td>
+                              : <td>No responsible</td> }
+                              <td>{this.state.authorItems[index].Author.Title}</td>
+                              <DefaultButton className={styles.defaultButton} onClick={() => this._clickHandler(item)}>Delete</DefaultButton>
+                            </tr>
+                        </tbody>
+                      )
+                    }
+                    </table>
+                :<p className={styles.noItems}>This list has no items</p>
+              }
+              {this.state.showDeleteBox?
+              this._getDialog()
+                : null
+              }
+            </div>
+            {console.log(this.state.listItems[0])}
+            {/* {console.log(this._testing())} */}
           </div>
-        </div>
-    );
+      );
+    }
+    return (<Spinner size={SpinnerSize.large}/>)
   }
 
-  componentDidMount() {
-    console.log("component did mount")
-    this.bindDetailsList();
+  private _getImgUrl(item:ITulipsListItem){
+    let imageString = JSON.stringify(item.Image)
+    let imageObj = JSON.parse(imageString);
+    let jsonObject: ITulipImage = JSON.parse(imageObj);
+    console.log(typeof jsonObject)
+    console.log(jsonObject)
+    const serverUrl=jsonObject.serverUrl;
+    const serverRelativeUrl=jsonObject.serverRelativeUrl;
+    const fullUrl= serverUrl+serverRelativeUrl;
+    console.log("full url " + fullUrl)
+    return fullUrl;
   }
 
+    componentDidMount() {
+    sp.setup({
+      spfxContext:this.props.context
+    });
+     this._setListStates();
+  }
 
-  private _getListItems(): Promise<ITulipsListItem[]>{
-    console.log("get list items")
-    const url = TulipList.siteURL + `/_api/web/lists/getbytitle('${this.props.listName}')/items?$select= ID, Title, ManufacturingPrice, RetailPrice, TulipResponsible/Id, Author/Id&$expand=TulipResponsible/Id, Author/AuthorId`;
-    return this.props.context.spHttpClient.get(url, SPHttpClient.configurations.v1)
-    .then(response=>{
-      return response.json();
+  //Closes delete dialog after dismiss by setting showDeleteBox to false
+  private _closeDialog=()=>{
+    this.setState({
+      showDeleteBox:false
     })
-    .then(json=>{
-      return json.value;
-    })as Promise<ITulipsListItem[]>;
   }
 
-  public bindDetailsList():any{
-    console.log("bind details list")
+  //Gets all items in requested list (list is set by props)
+  private async _getCurrentListItems():Promise<ITulipsListItem[]>{
+    try {
+      const allItems = await sp.web.lists.getByTitle(this.props.listName).items.get();
+      return allItems as unknown as Promise<ITulipsListItem[]>;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
-    this._getListItems().then(listItems=>{
-      this.setState({
-        listItems:listItems,
+  //Gets title of all of the list item responsible in the current list items
+  private async _getTulipResponsibleTitle():Promise<ITulipResponsibleItem[]>{
+    try {
+       const tulipResponsibleInfo = await sp.web.lists.getByTitle(this.props.listName).items.select("TulipResponsible/Title").expand("TulipResponsible").getAll();
+        return tulipResponsibleInfo as unknown as Promise<ITulipResponsibleItem[]>;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+   //Gets title of all of the list creators in the current list items
+  private async _getAuthorTitle():Promise<IAuthorItem[]>{
+    try {
+      const authorInfo = await sp.web.lists.getByTitle(this.props.listName).items.select("Author/Title").expand("Author").getAll();
+      return authorInfo as unknown as Promise<IAuthorItem[]>;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  //  //Gets path to image
+  //  private async _getTulipImage():Promise<ITulipImage[]>{
+  //   console.log("Getting image")
+  //   try {
+  //      const imageInfo = await sp.web.lists.getByTitle(this.props.listName).items.select("Image/serverRelativeURL").expand("Image").getAll();
+  //      console.log(imageInfo)
+  //       return imageInfo as unknown as Promise<ITulipImage[]>;
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+
+  // }
+
+
+  //Sets states to provide render() with necessary information
+  private async _setListStates(){
+    console.log("IN SET LIST STATES")
+    try {
+      await this._getCurrentListItems().then(listItems=>{
+        this.setState({
+          listItems:listItems,
+        });
       });
-    });
-  }
 
+        await this._getTulipResponsibleTitle().then(listItems=>{
+        this.setState({
+          tulipResponsibleItems:listItems,
+        });
+      });
 
-  private _getUserName(Id:number): string{
-    let tulipResponsibleEmail = null;
-    $.ajax({
-      url:  `${TulipList.siteURL}/_api/web/getuserbyid(${Id})`,
-      type: "GET",
-      headers: {
-        "Accept": "application/json; odata=verbose"
-      },
-      async: false,
-      success: function(data) {
-        tulipResponsibleEmail = data.d.Title;
-      },
-      error: function(error) {
-        console.log("Error with fetching user name: " + error);
-      }
-    });
-    return tulipResponsibleEmail;
-  }
+      console.log(this.state.tulipResponsibleItems)
 
-    private _clickHandler(item: ITulipsListItem){
-      let deletionConfirmed = confirm("Do you really want to delete this item?");
-      console.log(deletionConfirmed);
-
-      if(deletionConfirmed){
-        this._deleteListItem(item);
-      }
+      await this._getAuthorTitle().then(listItems=>{
+        this.setState({
+          authorItems:listItems,
+          finishLoading:true
+        });
+      });
+    } catch (error) {
+      console.error(error);
     }
 
-  private _deleteListItem(item: ITulipsListItem):void {
-    const endpoint: string = this.props.context.pageContext.web.absoluteUrl
-    + `/_api/web/lists/getbytitle('${this.props.listName}')/items(${item.ID})`
+    // await this._getTulipImage().then(listItems=>{
+    //   this.setState({
+    //     tulipImages:listItems,
+    //   });
+    // });
 
-    const headers: any = { 'X-HTTP-Method': 'DELETE', 'IF-MATCH': '*'}
 
-    const spHttpClientOptions: ISPHttpClientOptions = {
-      "headers": headers
-    }
+  }
 
-     this.props.context.spHttpClient.post(endpoint, SPHttpClient.configurations.v1, spHttpClientOptions)
-     .then((response: SPHttpClientResponse)=>{
-      if (response.status=== 204){
-        console.log("deletion done");
-        this._triggerEmail(item)
-        this.bindDetailsList();
-      }
-      else{
-        let errormsg: string = "An error has occured: " + response.status + response.statusText
-        console.log(errormsg)
-      }
-     })
+  //Gets user by id
+  // public async _getUserName(id: number){
+  //       const user = await sp.web.getUserById(id)();
+  //       return user.Title;
+  // }
+
+  //Handles deletion click and triggers _deleteListItem if deletion is confirmed
+  private _clickHandler(item: ITulipsListItem){
+    this.setState({
+      showDeleteBox:true,
+      focusItem:item
+    })
+  }
+
+//Deletes an item
+ public async _deleteListItem (){
+  const list = sp.web.lists.getByTitle(this.state.listName);
+  try {
+    await list.items.getById(this.state.focusItem.ID).delete().then();
+    this._sendEmail(this.state.focusItem);
+    this._setListStates();
+  } catch (error) {
+    console.error(error);
+  }
+  this._closeDialog()
 }
 
-//Gets and returns the email address of the user by the id that's passed in.
-private _getUserEmail(Id:number):number{
-  let tulipResponsibleEmail = null;
-    $.ajax({
-      url: this.props.context.pageContext.web.absoluteUrl + `/_api/web/getuserbyid(${Id})`,
-      type: "GET",
-      headers: {
-          "Accept": "application/json; odata=verbose"
-      },
-      async: false,
-      success: function(data) {
-        tulipResponsibleEmail = data.d.Email;
-        },
-        error: function(error) {
-          console.log("Error with fetching user email" + error);
-        }
-      });
-      return tulipResponsibleEmail;
+
+//Gets & returns the email of the requested person (by id) in string format
+public async _getUserEmailPnp(id: number){
+  try {
+    const user = await sp.web.getUserById(id)();
+    const email = user.Email.toString();
+    console.log("User email fetched is: " + email)
+    return email;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-private _getCurrentLoggedInUser():string{
-let loggedInUserTitle = null;
-$.ajax({
-  url: this.props.context.pageContext.web.absoluteUrl + `/_api/Web/currentUser`,
-  type: "GET",
-  headers: {
-      "Accept": "application/json; odata=verbose"
-  },
-  async: false,
-  success: function(data) {
-    loggedInUserTitle = data.d.Title;
-    },
-    error: function(error) {
-      console.log("Error with fecthing current logged in user: " + error);
-    }
-  });
-  console.log("INLOGGAD ANVÄNDARE:" + loggedInUserTitle)
-  return loggedInUserTitle;
+//Gets & returns current user in string format
+private async _getCurrentLoggedInUser(){
+  try {
+    const loggedInUser = await sp.web.currentUser();
+    const loggedInUserName = loggedInUser.Title.toString();
+    return loggedInUserName;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
  //Sends email to the tulip creator and tulip responsible
- private _triggerEmail(item:ITulipsListItem):any{
-  let MailBody = '', MailSubject = 'Tulip removal'
-  const tulipResponsible = this._getUserEmail(item.TulipResponsible.Id);
-  const tulipCreator = this._getUserEmail(item.Author.Id);
-  MailBody    =  `'<p>Hi,<p> <p>${item.Title} (ID: ${item.ID}) has been removed by ${this._getCurrentLoggedInUser()} from Enfokam Tulips'`;
-  var taMailBody = {
-    properties: {
-      __metadata: { 'type': 'SP.Utilities.EmailProperties' },
-      From: "From: no-reply@sharepointonline.com",
-      To: { 'results': [tulipResponsible, tulipCreator] },
-      Body: MailBody,
-      Subject: MailSubject,
+  private async _sendEmail(item:ITulipsListItem){
+  const tulipResponsible = await this._getUserEmailPnp(item.TulipResponsibleId);
+  const tulipCreator = await this._getUserEmailPnp(item.AuthorId);
+  const deletionName = await this._getCurrentLoggedInUser();
+
+  const receiverList = [tulipResponsible, tulipCreator]
+  const filteredReceiversList = []
+  receiverList.forEach(element => {
+    if (element === null || element === undefined){
+      console.log("Element not added in new receivers list")
+    }else{
+      filteredReceiversList.push(element);
+    }
+  });
+
+
+
+  const emailProps: IEmailProperties = {
+    To: filteredReceiversList,//[tulipResponsible, tulipCreator],
+    Subject: "Tulip Removal",
+    Body: `'<p>Hi,<p> <p>${item.Title} (ID: ${item.ID}) has been removed by ${deletionName} from Enfokam Tulips.'`,
+    AdditionalHeaders: {
+        "content-type": "text/html"
     }
   };
+    try {
+      await sp.utility.sendEmail(emailProps);
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
-  const digestCache: IDigestCache = this.props.context.serviceScope.consume(DigestCache.serviceKey);
-        digestCache.fetchDigest(this.props.context.pageContext.web.serverRelativeUrl).then((digest: string): void => {
+private _checkIfNumber(value:any):boolean{
+  return /^\d*?\.?\d+$/.test(value)
+}
 
-          $.ajax({
-            contentType: 'application/json',
-            url: this.props.context.pageContext.web.absoluteUrl + "/_api/SP.Utilities.Utility.SendEmail",
-            type: "POST",
-            data: JSON.stringify(taMailBody),
-            headers: {
-              "Accept": "application/json;odata=verbose",
-              "content-type": "application/json;odata=verbose",
-              "X-RequestDigest": digest
-            },
-            success: function (data) {
-              console.log("Success");
-            },
-            error: function (data) {
+private _checkIfNullOrEmpty(value:any):boolean{
+  let isNullOrEmpty;
+  value === null || value === ""  ?  isNullOrEmpty=true : isNullOrEmpty=false
+  return isNullOrEmpty
+}
 
-              console.log("Error: " + JSON.stringify(data));
-            }
-          });
-        });
+private async  _addNewItem(this){
+let noTitle = this._checkIfNullOrEmpty(this.state.newTulipName)
+noTitle?this.setState({nullTitlePost:true}):this.setState({nullTitlePost:false})
+let nonNumericMP = !this._checkIfNumber(this.state.newTulipManufacturingPrice) && this.state.newTulipManufacturingPrice!=null
+nonNumericMP?this.setState({nonNumericPost:true}):this.setState({nonNumericPost:false})
+
+console.log("mp: " + this.state.newTulipManufacturingPrice + "error should show: " + this.state.nonNumericPost)
+
+  if (!noTitle && !nonNumericMP){
+    console.log(this.state.nullTitlePost)
+    console.log("Posting this: " + this.state.newTulipName)
+    if(this.state.newTulipResponsible != null){
+    await sp.web.lists.getByTitle(this.props.listName).items.add({
+    Title: this.state.newTulipName,
+    ManufacturingPrice: this.state.newTulipManufacturingPrice,
+      TulipResponsibleId: this.state.newTulipResponsible.id
+    }).then(
+      this.setState({
+        newTulipName: "",
+        newTulipManufacturingPrice:"",
+        newTulipResponsible:""
+      })
+    )
+}
+else{
+  await sp.web.lists.getByTitle(this.props.listName).items.add({
+    Title: this.state.newTulipName,
+    ManufacturingPrice: this.state.newTulipManufacturingPrice,
+    }).then(
+      this.setState({
+        newTulipName: "",
+        newTulipManufacturingPrice:"",
+      })
+    )
+}
+  }
+}
+
+//Returns dialog asking for comfirmation about deletion
+  private _getDialog(){
+    return(
+      <DialogContent
+          className={styles.dialog}
+          title='Delete?'
+          subText="Do you really want to delete this item?"
+          onDismiss={()=>this._closeDialog()}
+          showCloseButton={true}
+          >
+          <DialogFooter className={styles.dialogFooter}>
+              <DefaultButton className={styles.cancelButton} text='Cancel' title='Cancel' onClick={() => this._closeDialog()} />
+              <PrimaryButton text='OK' title='OK' onClick={() => { this._deleteListItem()}} />
+          </DialogFooter>
+      </DialogContent>
+    )
+  }
+
+
+  private _getPeoplePickerItems(event) {
+    console.log({event})
+    this.setState({
+       newTulipResponsible: event[0]
+      });
+    console.log( "USER: " + this.state.newTulipResponsible)
+  }
+  private _getAddItemForm(){
+    const CancelIcon = () => <Icon iconName="Cancel" />
+
+  return(
+    <div className={styles.addItemForm}>
+      <p className={styles.formHeader}>New item</p>
+      <div className={styles.cancelIcon} onClick={()=>this.setState({showAddItemForm:false})}>
+      <CancelIcon></CancelIcon>
+      </div>
+      <form>
+        {this.state.nullTitlePost ?
+        <TextField label="Title" required name="newTulipName" value={this.state.newTulipName} onChange={this._handleChange}  errorMessage="Please enter a title"/>
+        : <TextField label="Title" required name="newTulipName" value={this.state.newTulipName} onChange={this._handleChange}/>
+        }
+        {this.state.nonNumericPost?
+          <TextField label="Manufacturing price" name="newTulipManufacturingPrice" value={this.state.newTulipManufacturingPrice} onChange={this._handleChange} errorMessage="Please enter a valid number"/>
+         :<TextField label="Manufacturing price" name="newTulipManufacturingPrice" value={this.state.newTulipManufacturingPrice} onChange={this._handleChange} />
+        }
+      <PeoplePicker context={this.props.context as any}
+              personSelectionLimit={1}
+              titleText='Tulip responsible:'
+              ensureUser
+              groupName={'EnfokamTulipsTove'}
+              webAbsoluteUrl= {TulipList.siteURL}
+              onChange={this._getPeoplePickerItems.bind(this)}>
+            </PeoplePicker>
+                <PrimaryButton
+                  text='Save'
+                  className='button'
+                  onClick={this._addNewItem.bind(this)}
+                />
+              <DefaultButton
+              text='Cancel'
+              onClick={()=>this.setState({showAddItemForm:false})}
+              />
+        </form>
+    </div>
+  )
+
+
+  }
+
+  private _handleChange(e:any){
+    e.preventDefault();
+    this.setState({ [e.target.name]: e.target.value } as ComponentState, ()=>{
+      console.log(e.target.value)
+    });
+
+
+    if (e.target.value!=null){
+          if(this._checkIfNullOrEmpty(this.state.newTulipName)){
+            console.log("no title")
+            this.setState({
+              nullTitlePost:true
+            })
+          }
+          else{
+            console.log(" title")
+            this.setState({
+              nullTitlePost:false
+            })
+          }
+
+         if (this._checkIfNumber(this.state.newTulipManufacturingPrice)){
+           console.log("Number")
+           this.setState({
+             nonNumericPost:false
+            })
+          }
+        else if(!this._checkIfNumber(this.state.newTulipManufacturingPrice) && this.state.newTulipManufacturingPrice !== null){
+            console.log("not a number " + this._checkIfNumber(this.state.newTulipManufacturingPrice))
+            this.setState({
+              nonNumericPost:true
+             })
+         }
+
+    }
+
+  }
+
+  //Main part of code comes from: https://www.delftstack.com/howto/typescript/typescript-sleeping-a-thread/
+  private _delayBlocking(milliseconds: number){
+    const timeInitial : any = new Date();
+    var timeNow : any = new Date();
+    for ( ; timeNow - timeInitial < milliseconds; ){
+        timeNow = new Date();
+    }
+    console.log('Sleep done!');
+}
+
+private _checkValues(){
+  if(this._checkIfNullOrEmpty(this.state.newTulipName)){
+    console.log("no title")
+    this.setState({
+      nullTitlePost:true
+    })
+  }
+  else{
+    console.log(" title")
+    this.setState({
+      nullTitlePost:false
+    })
+  }
+
+ if (this._checkIfNumber(this.state.newTulipManufacturingPrice)){
+   console.log("Number")
+   this.setState({
+     nonNumericPost:false
+    })
+  }
+else if(!this._checkIfNumber(this.state.newTulipManufacturingPrice) && this.state.newTulipManufacturingPrice !== null){
+    console.log("not a number " + this._checkIfNumber(this.state.newTulipManufacturingPrice))
+    this.setState({
+      nonNumericPost:true
+     })
+ }
+
 }
 
 }
-
 
