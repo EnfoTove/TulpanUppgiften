@@ -3,12 +3,14 @@ import { IAuthorItem } from "./IAuthorItem";
 import { ITulipResponsibleItem } from "./ITulipResponsibleItem";
 import { IUserItem } from "./IUserItem";
 import { ITulipImage } from "./ITulipImage";
+import { WebPartContext } from "@microsoft/sp-webpart-base";
 
 export interface ITulipListPropsState{
   listItem: ITulipsListItem,
   listItems: ITulipsListItem[],
   title:string,
-  listName: string
+  listName: string,
+  context:WebPartContext,
   authorItem?: IAuthorItem,
   authorItems?: IAuthorItem[],
   tulipResponsibleItem?: ITulipResponsibleItem,

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styles from './TulipList.module.scss';
 import { ITulipListProps } from './ITulipListProps';
-import { DefaultButton, Spinner, SpinnerSize, PrimaryButton, DialogContent, DialogFooter, Icon, TextField, HighContrastSelectorBlack, IIconProps, imageProperties, ImageIcon } from 'office-ui-fabric-react';
+import { DefaultButton, Spinner, SpinnerSize, PrimaryButton, DialogContent, DialogFooter, Icon, TextField, HighContrastSelectorBlack, IIconProps, ImageIcon, styled } from 'office-ui-fabric-react';
 import { sp } from '@pnp/pnpjs';
 import "@pnp/sp/sputilities";
 import { IEmailProperties } from "@pnp/sp/sputilities";
@@ -16,6 +16,8 @@ import { ComponentState } from 'react';
 import { Field } from 'react-final-form';
 import { ITulipImage } from '../../../models/interfaces/ITulipImage';
 import { split } from 'lodash';
+import Fileuploader from '../../../reusableComponents/FileUploader';
+import AddItemForm from '../../../reusableComponents/AddItemForm';
 
 
 export interface TypedHash<T> {
@@ -31,6 +33,9 @@ export interface EmailProperties {
   AdditionalHeaders?: TypedHash<string>;
   From?: string;
 }
+
+
+export const PropertyContext: any = React.createContext(undefined);
 
 export default class TulipList extends React.Component<ITulipListProps, ITulipListPropsState> {
 
@@ -51,6 +56,7 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
         },
       title: " ",
       listName: this.props.listName,
+      context:this.props.context,
       authorItem: {},
       authorItems: [{}],
       tulipResponsibleItem: {},
@@ -67,13 +73,13 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
         TulipResponsibleId: null,
         AuthorId:null
       },
-      newTulipName:null,
+      newTulipName:"majsans tulpan",
       newTulipManufacturingPrice:null,
       newTulipResponsible:null,
       nullTitlePost:false,
       nonNumericPost: false
     };
-    this._handleChange = this._handleChange.bind(this);
+    //this._handleChange = this._handleChange.bind(this);
     // this._handleSubmit = this._handleSubmit.bind(this);
 
     TulipList.siteURL=this.props.websiteURL;
@@ -94,7 +100,9 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
                 onClick={()=>this.setState({showAddItemForm:true})}
                 />
                 {this.state.showAddItemForm?
-                  this._getAddItemForm()
+                  <PropertyContext.Provider value={this.state}>
+                  <AddItemForm context={this.props.context} listName={this.props.listName} hideComponent={this._closeAddItemForm}/>
+                  </PropertyContext.Provider>
                   :null
                 }
                 {this.state.listItems.length > 0
@@ -137,7 +145,6 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
               }
             </div>
             {console.log(this.state.listItems[0])}
-            {/* {console.log(this._testing())} */}
           </div>
       );
     }
@@ -145,6 +152,7 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
   }
 
   private _getImgUrl(item:ITulipsListItem){
+    console.log("IMG OBJ FOR" + item.Title + " " + item.Image)
     let imageString = JSON.stringify(item.Image)
     let imageObj = JSON.parse(imageString);
     let jsonObject: ITulipImage = JSON.parse(imageObj);
@@ -161,13 +169,19 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     sp.setup({
       spfxContext:this.props.context
     });
-     this._setListStates();
+     this.setListStates();
   }
 
   //Closes delete dialog after dismiss by setting showDeleteBox to false
   private _closeDialog=()=>{
     this.setState({
       showDeleteBox:false
+    })
+  }
+
+  private _closeAddItemForm=()=>{
+    this.setState({
+      showAddItemForm:false
     })
   }
 
@@ -201,22 +215,8 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     }
   }
 
-  //  //Gets path to image
-  //  private async _getTulipImage():Promise<ITulipImage[]>{
-  //   console.log("Getting image")
-  //   try {
-  //      const imageInfo = await sp.web.lists.getByTitle(this.props.listName).items.select("Image/serverRelativeURL").expand("Image").getAll();
-  //      console.log(imageInfo)
-  //       return imageInfo as unknown as Promise<ITulipImage[]>;
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-
-  // }
-
-
   //Sets states to provide render() with necessary information
-  private async _setListStates(){
+  public async setListStates(){
     console.log("IN SET LIST STATES")
     try {
       await this._getCurrentListItems().then(listItems=>{
@@ -243,20 +243,8 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
       console.error(error);
     }
 
-    // await this._getTulipImage().then(listItems=>{
-    //   this.setState({
-    //     tulipImages:listItems,
-    //   });
-    // });
-
-
   }
 
-  //Gets user by id
-  // public async _getUserName(id: number){
-  //       const user = await sp.web.getUserById(id)();
-  //       return user.Title;
-  // }
 
   //Handles deletion click and triggers _deleteListItem if deletion is confirmed
   private _clickHandler(item: ITulipsListItem){
@@ -272,7 +260,7 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
   try {
     await list.items.getById(this.state.focusItem.ID).delete().then();
     this._sendEmail(this.state.focusItem);
-    this._setListStates();
+    this.setListStates();
   } catch (error) {
     console.error(error);
   }
@@ -319,8 +307,6 @@ private async _getCurrentLoggedInUser(){
     }
   });
 
-
-
   const emailProps: IEmailProperties = {
     To: filteredReceiversList,//[tulipResponsible, tulipCreator],
     Subject: "Tulip Removal",
@@ -335,54 +321,6 @@ private async _getCurrentLoggedInUser(){
       console.error(error)
     }
   }
-
-private _checkIfNumber(value:any):boolean{
-  return /^\d*?\.?\d+$/.test(value)
-}
-
-private _checkIfNullOrEmpty(value:any):boolean{
-  let isNullOrEmpty;
-  value === null || value === ""  ?  isNullOrEmpty=true : isNullOrEmpty=false
-  return isNullOrEmpty
-}
-
-private async  _addNewItem(this){
-let noTitle = this._checkIfNullOrEmpty(this.state.newTulipName)
-noTitle?this.setState({nullTitlePost:true}):this.setState({nullTitlePost:false})
-let nonNumericMP = !this._checkIfNumber(this.state.newTulipManufacturingPrice) && this.state.newTulipManufacturingPrice!=null
-nonNumericMP?this.setState({nonNumericPost:true}):this.setState({nonNumericPost:false})
-
-console.log("mp: " + this.state.newTulipManufacturingPrice + "error should show: " + this.state.nonNumericPost)
-
-  if (!noTitle && !nonNumericMP){
-    console.log(this.state.nullTitlePost)
-    console.log("Posting this: " + this.state.newTulipName)
-    if(this.state.newTulipResponsible != null){
-    await sp.web.lists.getByTitle(this.props.listName).items.add({
-    Title: this.state.newTulipName,
-    ManufacturingPrice: this.state.newTulipManufacturingPrice,
-      TulipResponsibleId: this.state.newTulipResponsible.id
-    }).then(
-      this.setState({
-        newTulipName: "",
-        newTulipManufacturingPrice:"",
-        newTulipResponsible:""
-      })
-    )
-}
-else{
-  await sp.web.lists.getByTitle(this.props.listName).items.add({
-    Title: this.state.newTulipName,
-    ManufacturingPrice: this.state.newTulipManufacturingPrice,
-    }).then(
-      this.setState({
-        newTulipName: "",
-        newTulipManufacturingPrice:"",
-      })
-    )
-}
-  }
-}
 
 //Returns dialog asking for comfirmation about deletion
   private _getDialog(){
@@ -402,132 +340,4 @@ else{
     )
   }
 
-
-  private _getPeoplePickerItems(event) {
-    console.log({event})
-    this.setState({
-       newTulipResponsible: event[0]
-      });
-    console.log( "USER: " + this.state.newTulipResponsible)
-  }
-  private _getAddItemForm(){
-    const CancelIcon = () => <Icon iconName="Cancel" />
-
-  return(
-    <div className={styles.addItemForm}>
-      <p className={styles.formHeader}>New item</p>
-      <div className={styles.cancelIcon} onClick={()=>this.setState({showAddItemForm:false})}>
-      <CancelIcon></CancelIcon>
-      </div>
-      <form>
-        {this.state.nullTitlePost ?
-        <TextField label="Title" required name="newTulipName" value={this.state.newTulipName} onChange={this._handleChange}  errorMessage="Please enter a title"/>
-        : <TextField label="Title" required name="newTulipName" value={this.state.newTulipName} onChange={this._handleChange}/>
-        }
-        {this.state.nonNumericPost?
-          <TextField label="Manufacturing price" name="newTulipManufacturingPrice" value={this.state.newTulipManufacturingPrice} onChange={this._handleChange} errorMessage="Please enter a valid number"/>
-         :<TextField label="Manufacturing price" name="newTulipManufacturingPrice" value={this.state.newTulipManufacturingPrice} onChange={this._handleChange} />
-        }
-      <PeoplePicker context={this.props.context as any}
-              personSelectionLimit={1}
-              titleText='Tulip responsible:'
-              ensureUser
-              groupName={'EnfokamTulipsTove'}
-              webAbsoluteUrl= {TulipList.siteURL}
-              onChange={this._getPeoplePickerItems.bind(this)}>
-            </PeoplePicker>
-                <PrimaryButton
-                  text='Save'
-                  className='button'
-                  onClick={this._addNewItem.bind(this)}
-                />
-              <DefaultButton
-              text='Cancel'
-              onClick={()=>this.setState({showAddItemForm:false})}
-              />
-        </form>
-    </div>
-  )
-
-
-  }
-
-  private _handleChange(e:any){
-    e.preventDefault();
-    this.setState({ [e.target.name]: e.target.value } as ComponentState, ()=>{
-      console.log(e.target.value)
-    });
-
-
-    if (e.target.value!=null){
-          if(this._checkIfNullOrEmpty(this.state.newTulipName)){
-            console.log("no title")
-            this.setState({
-              nullTitlePost:true
-            })
-          }
-          else{
-            console.log(" title")
-            this.setState({
-              nullTitlePost:false
-            })
-          }
-
-         if (this._checkIfNumber(this.state.newTulipManufacturingPrice)){
-           console.log("Number")
-           this.setState({
-             nonNumericPost:false
-            })
-          }
-        else if(!this._checkIfNumber(this.state.newTulipManufacturingPrice) && this.state.newTulipManufacturingPrice !== null){
-            console.log("not a number " + this._checkIfNumber(this.state.newTulipManufacturingPrice))
-            this.setState({
-              nonNumericPost:true
-             })
-         }
-
-    }
-
-  }
-
-  //Main part of code comes from: https://www.delftstack.com/howto/typescript/typescript-sleeping-a-thread/
-  private _delayBlocking(milliseconds: number){
-    const timeInitial : any = new Date();
-    var timeNow : any = new Date();
-    for ( ; timeNow - timeInitial < milliseconds; ){
-        timeNow = new Date();
-    }
-    console.log('Sleep done!');
 }
-
-private _checkValues(){
-  if(this._checkIfNullOrEmpty(this.state.newTulipName)){
-    console.log("no title")
-    this.setState({
-      nullTitlePost:true
-    })
-  }
-  else{
-    console.log(" title")
-    this.setState({
-      nullTitlePost:false
-    })
-  }
-
- if (this._checkIfNumber(this.state.newTulipManufacturingPrice)){
-   console.log("Number")
-   this.setState({
-     nonNumericPost:false
-    })
-  }
-else if(!this._checkIfNumber(this.state.newTulipManufacturingPrice) && this.state.newTulipManufacturingPrice !== null){
-    console.log("not a number " + this._checkIfNumber(this.state.newTulipManufacturingPrice))
-    this.setState({
-      nonNumericPost:true
-     })
- }
-
-}
-
-}
-
