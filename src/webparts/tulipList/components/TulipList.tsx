@@ -1,23 +1,16 @@
 import * as React from 'react';
 import styles from './TulipList.module.scss';
 import { ITulipListProps } from './ITulipListProps';
-import { DefaultButton, Spinner, SpinnerSize, PrimaryButton, DialogContent, DialogFooter, Icon, TextField, HighContrastSelectorBlack, IIconProps, ImageIcon, styled } from 'office-ui-fabric-react';
+import { DefaultButton, Spinner, SpinnerSize, IIconProps} from 'office-ui-fabric-react';
 import { sp } from '@pnp/pnpjs';
 import "@pnp/sp/sputilities";
-import { IEmailProperties } from "@pnp/sp/sputilities";
 import { ITulipListPropsState } from '../../../models/interfaces/ITulipListPropsState';
 import { ITulipsListItem } from '../../../models/interfaces/ITulipsListItem';
 import { ITulipResponsibleItem } from '../../../models/interfaces/ITulipResponsibleItem';
 import { IAuthorItem } from '../../../models/interfaces/IAuthorItem';
-import {
-  PeoplePicker,
-  } from '@pnp/spfx-controls-react/lib/PeoplePicker';
-import { ComponentState } from 'react';
-import { Field } from 'react-final-form';
 import { ITulipImage } from '../../../models/interfaces/ITulipImage';
-import { split } from 'lodash';
-import Fileuploader from '../../../reusableComponents/FileUploader';
 import AddItemForm from '../../../reusableComponents/AddItemForm';
+import DeleteItem from '../../../reusableComponents/DeleteItem';
 
 
 export interface TypedHash<T> {
@@ -33,9 +26,6 @@ export interface EmailProperties {
   AdditionalHeaders?: TypedHash<string>;
   From?: string;
 }
-
-
-export const PropertyContext: any = React.createContext(undefined);
 
 export default class TulipList extends React.Component<ITulipListProps, ITulipListPropsState> {
 
@@ -72,15 +62,8 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
         Image:null,
         TulipResponsibleId: null,
         AuthorId:null
-      },
-      newTulipName:"majsans tulpan",
-      newTulipManufacturingPrice:null,
-      newTulipResponsible:null,
-      nullTitlePost:false,
-      nonNumericPost: false
+      }
     };
-    //this._handleChange = this._handleChange.bind(this);
-    // this._handleSubmit = this._handleSubmit.bind(this);
 
     TulipList.siteURL=this.props.websiteURL;
   }
@@ -100,9 +83,7 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
                 onClick={()=>this.setState({showAddItemForm:true})}
                 />
                 {this.state.showAddItemForm?
-                  <PropertyContext.Provider value={this.state}>
-                  <AddItemForm context={this.props.context} listName={this.props.listName} hideComponent={this._closeAddItemForm}/>
-                  </PropertyContext.Provider>
+                  <AddItemForm context={this.props.context} listName={this.props.listName} hideComponent={this._closeAddItemForm} setListStates={()=>this.setListStates()}/>
                   :null
                 }
                 {this.state.listItems.length > 0
@@ -120,9 +101,10 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
                       { this.state.listItems &&  this.state.listItems.map((item, index) =>
                         <tbody>
                             <tr key={item.ID}>
-                              {item.Image?
-                                <td><img src={this._getImgUrl(item)}/></td>
-                                :null
+                              {console.log(item)}
+                              {item.Image!="null" || item.Image!==null
+                               ?<td><img src={this._getImgUrl(item)}/></td>
+                                :<td>No img</td>
                               }
                               <td>{item.Title}</td>
                               <td>{item.ManufacturingPrice}</td>
@@ -140,29 +122,34 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
                 :<p className={styles.noItems}>This list has no items</p>
               }
               {this.state.showDeleteBox?
-              this._getDialog()
+              <DeleteItem listName={this.props.listName} focusItem={this.state.focusItem} setListStates={()=>this.setListStates()} closeDialog={this._closeDialog}/>
                 : null
               }
             </div>
-            {console.log(this.state.listItems[0])}
           </div>
       );
     }
     return (<Spinner size={SpinnerSize.large}/>)
   }
 
+
   private _getImgUrl(item:ITulipsListItem){
-    console.log("IMG OBJ FOR" + item.Title + " " + item.Image)
-    let imageString = JSON.stringify(item.Image)
-    let imageObj = JSON.parse(imageString);
-    let jsonObject: ITulipImage = JSON.parse(imageObj);
-    console.log(typeof jsonObject)
-    console.log(jsonObject)
-    const serverUrl=jsonObject.serverUrl;
-    const serverRelativeUrl=jsonObject.serverRelativeUrl;
-    const fullUrl= serverUrl+serverRelativeUrl;
-    console.log("full url " + fullUrl)
-    return fullUrl;
+      // console.log("IMG OBJ FOR" + item.Title + " " + item.Image.serverRelativeUrl)
+      try{
+        let imageString = JSON.stringify(item.Image)
+        let imageObj = JSON.parse(imageString);
+        console.log("IMG OBJ AFTER PARSE" + imageObj)
+        let jsonObject: ITulipImage = JSON.parse(imageObj);
+        const serverUrl=jsonObject.serverUrl;
+        const serverRelativeUrl=jsonObject.serverRelativeUrl;
+        const fullUrl= serverUrl+serverRelativeUrl;
+        console.log("full url " + fullUrl)
+      return fullUrl;
+      }
+      catch(e){
+        console.error(e);
+      }
+      return "imageNotFound"
   }
 
     componentDidMount() {
@@ -231,8 +218,6 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
         });
       });
 
-      console.log(this.state.tulipResponsibleItems)
-
       await this._getAuthorTitle().then(listItems=>{
         this.setState({
           authorItems:listItems,
@@ -252,92 +237,6 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
       showDeleteBox:true,
       focusItem:item
     })
-  }
-
-//Deletes an item
- public async _deleteListItem (){
-  const list = sp.web.lists.getByTitle(this.state.listName);
-  try {
-    await list.items.getById(this.state.focusItem.ID).delete().then();
-    this._sendEmail(this.state.focusItem);
-    this.setListStates();
-  } catch (error) {
-    console.error(error);
-  }
-  this._closeDialog()
-}
-
-
-//Gets & returns the email of the requested person (by id) in string format
-public async _getUserEmailPnp(id: number){
-  try {
-    const user = await sp.web.getUserById(id)();
-    const email = user.Email.toString();
-    console.log("User email fetched is: " + email)
-    return email;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-//Gets & returns current user in string format
-private async _getCurrentLoggedInUser(){
-  try {
-    const loggedInUser = await sp.web.currentUser();
-    const loggedInUserName = loggedInUser.Title.toString();
-    return loggedInUserName;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
- //Sends email to the tulip creator and tulip responsible
-  private async _sendEmail(item:ITulipsListItem){
-  const tulipResponsible = await this._getUserEmailPnp(item.TulipResponsibleId);
-  const tulipCreator = await this._getUserEmailPnp(item.AuthorId);
-  const deletionName = await this._getCurrentLoggedInUser();
-
-  const receiverList = [tulipResponsible, tulipCreator]
-  const filteredReceiversList = []
-  receiverList.forEach(element => {
-    if (element === null || element === undefined){
-      console.log("Element not added in new receivers list")
-    }else{
-      filteredReceiversList.push(element);
-    }
-  });
-
-  const emailProps: IEmailProperties = {
-    To: filteredReceiversList,//[tulipResponsible, tulipCreator],
-    Subject: "Tulip Removal",
-    Body: `'<p>Hi,<p> <p>${item.Title} (ID: ${item.ID}) has been removed by ${deletionName} from Enfokam Tulips.'`,
-    AdditionalHeaders: {
-        "content-type": "text/html"
-    }
-  };
-    try {
-      await sp.utility.sendEmail(emailProps);
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-//Returns dialog asking for comfirmation about deletion
-  private _getDialog(){
-    return(
-      <DialogContent
-          className={styles.dialog}
-          title='Delete?'
-          subText="Do you really want to delete this item?"
-          onDismiss={()=>this._closeDialog()}
-          showCloseButton={true}
-          >
-          <DialogFooter className={styles.dialogFooter}>
-              <DefaultButton className={styles.cancelButton} text='Cancel' title='Cancel' onClick={() => this._closeDialog()} />
-              <PrimaryButton text='OK' title='OK' onClick={() => { this._deleteListItem()}} />
-          </DialogFooter>
-      </DialogContent>
-    )
   }
 
 }

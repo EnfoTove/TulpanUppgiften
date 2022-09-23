@@ -1,0 +1,38 @@
+@import '~office-ui-fabric-react/dist/sass/References.scss';
+
+
+$primary-border: 1px solid rgb(225, 222, 222);
+
+  .dialog{
+    display: flex;
+    flex-direction: column;
+    gap:8rem;
+    position: absolute;
+    top:20%;
+    left:50%;
+    transform:translateX(-50%);
+    width:60%;
+    margin:0 auto;
+    border:$primary-border;
+    background-color: #FFF;
+
+    :nth-child(1){
+      border:none;
+    }
+
+    :nth-child(2){
+      p{
+        font-size: 14px;
+      }
+    }
+
+    .dialogFooter{
+      margin:0;
+      .cancelButton{
+        border:$primary-border;
+      }
+    }
+
+
+  }
+

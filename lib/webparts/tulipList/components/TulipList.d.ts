@@ -14,7 +14,6 @@ export interface EmailProperties {
     AdditionalHeaders?: TypedHash<string>;
     From?: string;
 }
-export declare const PropertyContext: any;
 export default class TulipList extends React.Component<ITulipListProps, ITulipListPropsState> {
     static siteURL: string;
     constructor(props: ITulipListProps, state: ITulipListPropsState);
@@ -28,10 +27,5 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
     private _getAuthorTitle;
     setListStates(): Promise<void>;
     private _clickHandler;
-    _deleteListItem(): Promise<void>;
-    _getUserEmailPnp(id: number): Promise<string>;
-    private _getCurrentLoggedInUser;
-    private _sendEmail;
-    private _getDialog;
 }
 //# sourceMappingURL=TulipList.d.ts.map

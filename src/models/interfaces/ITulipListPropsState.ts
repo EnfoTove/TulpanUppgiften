@@ -21,9 +21,4 @@ export interface ITulipListPropsState{
   showDeleteBox: boolean;
   showAddItemForm:boolean;
   focusItem: ITulipsListItem;
-  newTulipName: string;
-  newTulipManufacturingPrice?: string;
-  newTulipResponsible?: IUserItem;
-  nullTitlePost: boolean;
-  nonNumericPost:boolean;
 }

@@ -2,18 +2,19 @@ import * as React from 'react';
 import { DefaultButton, Icon, PrimaryButton, TextField } from 'office-ui-fabric-react';
 import { PeoplePicker } from '@pnp/spfx-controls-react/lib/PeoplePicker';
 import TulipList from '../webparts/tulipList/components/TulipList';
-import styles from '../webparts/tulipList/components/TulipList.module.scss';
-import Fileuploader from './FileUploader';
-import { ConsoleListener, sp } from '@pnp/pnpjs';
+import styles from './AddItem.module.scss';
+import {sp } from '@pnp/pnpjs';
 import { IUserItem } from '../models/interfaces/IUserItem';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { ComponentState } from 'react';
 import "@pnp/sp/webs";
+import { delay } from 'lodash';
 
 export interface IAddItemForm1Props{
   listName:string,
   context:WebPartContext,
-  hideComponent: ()=>void
+  hideComponent: ()=>void,
+  setListStates: ()=>void
 }
 
 export interface IAddItemForm1PropsState{
@@ -52,27 +53,25 @@ export default class  AddItemForm1 extends React.Component<IAddItemForm1Props, I
         </div>
         <form>
           {this.state.nullTitlePost ?
-          <TextField label="Title" required name="newTulipName" value={this.state.newTulipName} onChange={this._handleChange}  errorMessage="Please enter a title"/>
-          : <TextField label="Title" required name="newTulipName" value={this.state.newTulipName} onChange={this._handleChange}/>
+          <TextField label="Title" required name="newTulipName" value={this.state.newTulipName} onChange={this._handleChange} className={styles.textField}  errorMessage="Please enter a title"/>
+          : <TextField label="Title" required name="newTulipName" value={this.state.newTulipName} onChange={this._handleChange} className={styles.textField}/>
           }
           {this.state.nonNumericPost?
-            <TextField label="Manufacturing price" name="newTulipManufacturingPrice" value={this.state.newTulipManufacturingPrice} onChange={this._handleChange} errorMessage="Please enter a valid number"/>
-          :<TextField label="Manufacturing price" name="newTulipManufacturingPrice" value={this.state.newTulipManufacturingPrice} onChange={this._handleChange} />
+            <TextField label="Manufacturing price" name="newTulipManufacturingPrice" value={this.state.newTulipManufacturingPrice} onChange={this._handleChange} className={styles.textField} errorMessage="Please enter a valid number"/>
+          :<TextField label="Manufacturing price" name="newTulipManufacturingPrice" value={this.state.newTulipManufacturingPrice} onChange={this._handleChange} className={styles.textField}/>
           }
+          <label className={styles.fileUploadLabel}>Tulip image</label>
+            <input type="file" onChange={this._onFileChange}/>
           <PeoplePicker context={this.props.context as any}
                 personSelectionLimit={1}
-                titleText='Tulip responsible:'
+                titleText='Tulip responsible'
                 ensureUser
                 groupName={'EnfokamTulipsTove'}
                 webAbsoluteUrl= {TulipList.siteURL}
                 onChange={this._getPeoplePickerItems.bind(this)}/>
-              {/* <Fileuploader/> */}
               <div>
-                  <input type="file" onChange={this._onFileChange} />
-                  <PrimaryButton onClick={this._onFileUpload}>
-                  Upload
-                  </PrimaryButton>
               </div>
+              <div className={styles.footerButtons}>
                   <PrimaryButton
                     text='Save'
                     className='button'
@@ -81,22 +80,17 @@ export default class  AddItemForm1 extends React.Component<IAddItemForm1Props, I
                 <DefaultButton
                 text='Cancel'
                 onClick={this.props.hideComponent}
-
                 />
+              </div>
         </form>
     </div>
   )
 
 }
 
-// componentDidMount() {
-//   sp.setup({
-//     spfxContext:this.props.context
-//   });
-// }
 
   private _getPeoplePickerItems(event) {
-    console.log({event})
+    //({event})
     this.setState({
        newTulipResponsible: event[0]
       });
@@ -107,32 +101,32 @@ export default class  AddItemForm1 extends React.Component<IAddItemForm1Props, I
   private _handleChange(e:any){
     e.preventDefault();
     this.setState({ [e.target.name]: e.target.value } as ComponentState, ()=>{
-      console.log(e.target.value)
+     // console.log(e.target.value)
     });
 
 
     if (e.target.value!=null){
           if(this._checkIfNullOrEmpty(this.state.newTulipName)){
-            console.log("no title")
+           // console.log("no title")
             this.setState({
               nullTitlePost:true
             })
           }
           else{
-            console.log(" title")
+            //console.log(" title")
             this.setState({
               nullTitlePost:false
             })
           }
 
           if (this._checkIfNumber(this.state.newTulipManufacturingPrice)){
-            console.log("Number")
+           // console.log("Number")
             this.setState({
               nonNumericPost:false
             })
           }
         else if(!this._checkIfNumber(this.state.newTulipManufacturingPrice) && this.state.newTulipManufacturingPrice !== null){
-            console.log("not a number " + this._checkIfNumber(this.state.newTulipManufacturingPrice))
+           // console.log("not a number " + this._checkIfNumber(this.state.newTulipManufacturingPrice))
             this.setState({
               nonNumericPost:true
               })
@@ -143,41 +137,42 @@ export default class  AddItemForm1 extends React.Component<IAddItemForm1Props, I
   }
 
   private async _addNewItem(this){
-    console.log("MAN PRICE: " + this.state.newTulipManufacturingPrice)
     let noTitle = this._checkIfNullOrEmpty(this.state.newTulipName)
     noTitle?this.state.nullTitlePost = true : this.state.nullTitlePost= false
     let nonNumericMP = !this._checkIfNumber(this.state.newTulipManufacturingPrice) && this.state.newTulipManufacturingPrice!=null
     nonNumericMP?this.state.nonNumericPost=true:this.state.nonNumericPost=false
 
-    console.log("mp: " + this.state.newTulipManufacturingPrice + "error should show: " + this.state.nonNumericPost)
-
       if (!noTitle && !nonNumericMP){
-        console.log(this.state.nullTitlePost)
-        console.log("Posting this: " + this.state.newTulipName)
         if(this.state.newTulipResponsible != null){
         await sp.web.lists.getByTitle(this.props.listName).items.add({
           Title: this.state.newTulipName,
           ManufacturingPrice: this.state.newTulipManufacturingPrice,
           TulipResponsibleId: this.state.newTulipResponsible.id,
           Image:JSON.stringify(this.state.img)
-        }).then(
+        })
+        .then(
           this.setState({
             newTulipName: "",
             newTulipManufacturingPrice:"",
             newTulipResponsible:"",
-            selectedFile:null
+            selectedFile:{name:null},
           })
         )
     }
     else{
-      await sp.web.lists.getByTitle(this.state.listName).items.add({
+      await sp.web.lists.getByTitle(this.props.listName).items.add({
         Title: this.state.newTulipName,
         ManufacturingPrice: this.state.newTulipManufacturingPrice,
+        Image:JSON.stringify(this.state.img)
         });
         this.state.newTulipName= "";
         this.state.newTulipManufacturingPrice="";
+        this.selectedFile=null;
     }
 
+    this.props.hideComponent();
+    //this.props.setListStates();
+    location.reload();
   }
 
 }
@@ -193,10 +188,9 @@ private _checkIfNullOrEmpty(value:any):boolean{
 
 
 private _onFileChange = event => {
-
 	// Update the state
 	this.setState({ selectedFile: event.target.files[0] });
-
+  this._onFileUpload();
 	};
 
 	// On file upload (click the upload button)
@@ -214,10 +208,9 @@ private _onFileChange = event => {
       "fileName":this.state.selectedFile.name,
       "type":"thumbnail",
       "serverUrl": "https://wcqvp.sharepoint.com",
-      "serverRelativeUrl": fileItem.data.ServerRelativeUrl,
+      "serverRelativeUrl": fileItem.data.ServerRelativeUrl
      };
 
-     console.log("IMG SERVER RELATIVE URL " + img.serverRelativeUrl)
      this.setState({
       img:img
      })

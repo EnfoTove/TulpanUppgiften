@@ -1,0 +1,77 @@
+@import '~office-ui-fabric-react/dist/sass/References.scss';
+
+
+$primary-border: 1px solid rgb(225, 222, 222);
+
+.addItemForm{
+  position:absolute;
+  width:60%;
+  height:350px;
+  background-color:#fff;
+  border:$primary-border;
+  top:5%;
+  left: 50%;
+  transform:translateX(-50%);
+  z-index:1;
+  padding:1rem;
+
+  .formHeader{
+    text-align:center;
+    @include ms-font-xl;
+    @include ms-fontColor-black;
+    font-weight: 400;
+    margin:0.4rem;
+  }
+
+  .cancelIcon{
+    position:absolute;
+    top:6px;
+    right:6px;
+
+    i{
+      font-size: 1.1rem;
+    }
+
+    :hover{
+      cursor: pointer;
+    }
+  }
+
+  form{
+    width:50%;
+
+    .textField{
+      margin-bottom:0.5rem;
+    }
+
+    label{
+      @include ms-font-m;
+      @include ms-fontColor-black;
+    }
+
+    .fileUploadLabel{
+      font-family: "Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    input, textarea{
+      display: block;
+      margin: 0.5rem 0;
+    }
+
+    .footerButtons{
+      display:flex;
+      gap:0.5rem;
+      width:fit-content;
+      position:absolute;
+      right:1rem;
+      bottom:1rem;
+    }
+    button{
+      margin-top:0.5rem;
+    }
+  }
+}
+
