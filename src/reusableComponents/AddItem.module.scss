@@ -87,11 +87,15 @@ $primary-border: 1px solid rgb(225, 222, 222);
         padding: 0.5rem 0;
         font-weight: 600;
 
+
         .selectedFile{
           font-weight: 400;
         }
       }
 
+      .fileCustom:hover{
+        cursor: pointer;
+      }
 
       }
 

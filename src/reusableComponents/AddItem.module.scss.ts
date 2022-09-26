@@ -1,15 +1,15 @@
 /* tslint:disable */
 require("./AddItem.module.css");
 const styles = {
-  addItemForm: 'addItemForm_0eb8eb08',
-  formHeader: 'formHeader_0eb8eb08',
-  cancelIcon: 'cancelIcon_0eb8eb08',
-  textField: 'textField_0eb8eb08',
-  fileUploadLabel: 'fileUploadLabel_0eb8eb08',
-  footerButtons: 'footerButtons_0eb8eb08',
-  defaultFileUploader: 'defaultFileUploader_0eb8eb08',
-  fileCustom: 'fileCustom_0eb8eb08',
-  selectedFile: 'selectedFile_0eb8eb08'
+  addItemForm: 'addItemForm_d0617ccf',
+  formHeader: 'formHeader_d0617ccf',
+  cancelIcon: 'cancelIcon_d0617ccf',
+  textField: 'textField_d0617ccf',
+  fileUploadLabel: 'fileUploadLabel_d0617ccf',
+  footerButtons: 'footerButtons_d0617ccf',
+  defaultFileUploader: 'defaultFileUploader_d0617ccf',
+  fileCustom: 'fileCustom_d0617ccf',
+  selectedFile: 'selectedFile_d0617ccf'
 };
 
 export default styles;
