@@ -60,8 +60,14 @@ export default class  AddItemForm1 extends React.Component<IAddItemForm1Props, I
             <TextField label="Manufacturing price" name="newTulipManufacturingPrice" value={this.state.newTulipManufacturingPrice} onChange={this._handleChange} className={styles.textField} errorMessage="Please enter a valid number"/>
           :<TextField label="Manufacturing price" name="newTulipManufacturingPrice" value={this.state.newTulipManufacturingPrice} onChange={this._handleChange} className={styles.textField}/>
           }
-          <label className={styles.fileUploadLabel}>Tulip image</label>
-            <input type="file" onChange={this._onFileChange}/>
+          <label className={styles.fileUploadLabel}>
+            Tulip image
+            <input type="file" className={styles.defaultFileUploader} aria-label="File browser" onChange={this._onFileChange}/>
+            <span className={styles.fileCustom}>
+              Browse image
+            <span className={styles.selectedFile}>{this.state.selectedFile.name}</span>
+            </span>
+          </label>
           <PeoplePicker context={this.props.context as any}
                 personSelectionLimit={1}
                 titleText='Tulip responsible'

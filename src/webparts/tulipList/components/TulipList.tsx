@@ -134,22 +134,43 @@ export default class TulipList extends React.Component<ITulipListProps, ITulipLi
 
 
   private _getImgUrl(item:ITulipsListItem){
-      // console.log("IMG OBJ FOR" + item.Title + " " + item.Image.serverRelativeUrl)
-      try{
-        let imageString = JSON.stringify(item.Image)
-        let imageObj = JSON.parse(imageString);
-        console.log("IMG OBJ AFTER PARSE" + imageObj)
-        let jsonObject: ITulipImage = JSON.parse(imageObj);
-        const serverUrl=jsonObject.serverUrl;
-        const serverRelativeUrl=jsonObject.serverRelativeUrl;
-        const fullUrl= serverUrl+serverRelativeUrl;
-        console.log("full url " + fullUrl)
-      return fullUrl;
-      }
-      catch(e){
-        console.error(e);
-      }
-      return "imageNotFound"
+
+    try{
+      let imageObj = JSON.parse(JSON.stringify(item.Image));
+
+      const key1 = imageObj.replace("'fileName'",'"fileName"')
+      const key2 = key1.replace("'serverRelativeUrl'",'"serverRelativeUrl"')
+      const key3 = key2.replace("'serverUrl'",'"serverUrl"')
+      const key4 = key3.replace("'/sites/EnfokamTulipsTove/SiteAssets/Lists/8740d2c9-ba96-4ade-ab01-cbe3a336cfbd/bluetulip.jfif'", '"/sites/EnfokamTulipsTove/SiteAssets/Lists/8740d2c9-ba96-4ade-ab01-cbe3a336cfbd/bluetulip.jfif"')
+      const key5 = key4.replace("'/sites/EnfokamTulipsTove/SiteAssets/Lists/8740d2c9-ba96-4ade-ab01-cbe3a336cfbd/yellowtulip.jfif'", '"/sites/EnfokamTulipsTove/SiteAssets/Lists/8740d2c9-ba96-4ade-ab01-cbe3a336cfbd/yellowtulip.jfif"')
+      const key6 = key5.replace("'/sites/EnfokamTulipsTove/SiteAssets/Lists/8740d2c9-ba96-4ade-ab01-cbe3a336cfbd/redtulip.jfif'", '"/sites/EnfokamTulipsTove/SiteAssets/Lists/8740d2c9-ba96-4ade-ab01-cbe3a336cfbd/redtulip.jfif"')
+      const key7 = key6.replace("'/sites/EnfokamTulipsTove/SiteAssets/Lists/8740d2c9-ba96-4ade-ab01-cbe3a336cfbd/blacktulip.jfif'", '"/sites/EnfokamTulipsTove/SiteAssets/Lists/8740d2c9-ba96-4ade-ab01-cbe3a336cfbd/blacktulip.jfif"')
+      const key8 = key7.replace("'/sites/EnfokamTulipsTove/SiteAssets/Lists/8740d2c9-ba96-4ade-ab01-cbe3a336cfbd/whitetulip.jfif'", '"/sites/EnfokamTulipsTove/SiteAssets/Lists/8740d2c9-ba96-4ade-ab01-cbe3a336cfbd/whitetulip.jfif"')
+      const key9 = key8.replace("'https://wcqvp.sharepoint.com'", '"https://wcqvp.sharepoint.com"')
+      const key10 = key9.replace("'redtulip.jfif'",'"redtulip.jfif"')
+      const key11= key10.replace("'bluetulip.jfif'",'"bluetulip.jfif"')
+      const key12 = key11.replace("'yellowtulip.jfif'",'"yellowtulip.jfif"')
+      const key13 = key12.replace("'whitetulip.jfif'",'"whitetulip.jfif"')
+      const key14 = key13.replace("'blacktulip.jfif'",'"blacktulip.jfif"')
+
+      console.log("IMG OBJ BF PARSE" + key14)
+      let jsonObject: ITulipImage = JSON.parse(key14);
+      console.log("IMG OBJ AFTER PARSE" + jsonObject)
+
+      const serverUrl=jsonObject.serverUrl;
+      console.log("Server url: " + serverUrl)
+      const serverRelativeUrl=jsonObject.serverRelativeUrl;
+      console.log("Server rel url: " +  serverRelativeUrl)
+
+      const fullUrl= serverUrl+serverRelativeUrl;
+      console.log("full url " + fullUrl)
+    return fullUrl;
+    }
+    catch(e){
+      console.error(e);
+    }
+    return "imageNotFound"
+
   }
 
     componentDidMount() {
